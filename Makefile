@@ -1,5 +1,5 @@
-STUID = 221220000
-STUNAME = 张三
+STUID = 2023080902011
+STUNAME = WhaleFall
 
 # DO NOT modify the following code!!!
 
