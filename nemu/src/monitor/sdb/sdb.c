@@ -84,9 +84,10 @@ static int cmd_x(char *args) {
     printf("%#x", vaddr_read(addr, n));
   } else {
     for (int i = 0; i < n; i++) {
-      printf("%02x\t", vaddr_read(addr + i, 1));
+      printf("%02x  ", vaddr_read(addr + i, 1));
     }
   }
+  printf("\n");
 
   return 0;
 }
