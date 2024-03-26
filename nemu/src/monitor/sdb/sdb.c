@@ -77,7 +77,7 @@ static int cmd_x(char *args) {
   // if (expr >= args_end) expr = NULL;
 
   int n, addr;
-  sscanf(args, "%d %d", &n, &addr);
+  sscanf(args, "%d %x", &n, &addr);
 
   printf("%#x:\t", addr);
   if (n <= 4) {
