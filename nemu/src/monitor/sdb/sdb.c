@@ -19,6 +19,8 @@
 #include <readline/history.h>
 #include "sdb.h"
 
+#include <memory/vaddr.h>
+
 static int is_batch_mode = false;
 
 void init_regex();
@@ -62,6 +64,33 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+static int cmd_x(char *args) {
+  // char *args_end = args_end + strlen(args);
+
+  // char *n = strtok(args, " ");
+  // if (n == NULL) {
+  //   printf("Invalid arguments. Check help please\n");
+  //   return 0;
+  // }
+
+  // char *expr = n + strlen(n) + 1;
+  // if (expr >= args_end) expr = NULL;
+
+  int n, addr;
+  sscanf(args, "%d %d", &n, &addr);
+
+  printf("%#x:\t", addr);
+  if (n <= 4) {
+    printf("%#x", vaddr_read(addr, n));
+  } else {
+    for (int i = 0; i < n; i++) {
+      printf("%02x\t", vaddr_read(addr + i, 1));
+    }
+  }
+
+  return 0;
+}
+
 static int cmd_q(char *args) {
   set_nemu_state(4, 0, 0);
   return -1;
@@ -78,7 +107,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step through N commands", cmd_si},
-  { "info", "Display regs or watchpoints", cmd_info}
+  { "info", "Display regs or watchpoints", cmd_info},
+  { "x", "Read n bytes from the addr", cmd_x}
   /* TODO: Add more commands */
 
 };
