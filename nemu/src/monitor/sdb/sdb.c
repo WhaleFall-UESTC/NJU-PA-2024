@@ -65,28 +65,17 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-  // char *args_end = args_end + strlen(args);
-
-  // char *n = strtok(args, " ");
-  // if (n == NULL) {
-  //   printf("Invalid arguments. Check help please\n");
-  //   return 0;
-  // }
-
-  // char *expr = n + strlen(n) + 1;
-  // if (expr >= args_end) expr = NULL;
 
   int n, addr;
   sscanf(args, "%d %x", &n, &addr);
 
   printf("%#x:\t", addr);
-  // if (n <= 4) {
-  //   printf("%#x", vaddr_read(addr, n));
-  // } else {
-    for (int i = 0; i < n; i++) {
-      printf("%02x  ", vaddr_read(addr + i, 1));
-    }
-  // }
+  if (n <= 4) 
+    printf("%#x\t", vaddr_read(addr, n));
+
+  for (int i = 0; i < n; i++) {
+    printf("%02x  ", vaddr_read(addr + i, 1));
+  }
   printf("\n");
 
   return 0;
