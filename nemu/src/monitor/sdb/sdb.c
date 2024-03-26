@@ -52,14 +52,14 @@ static int cmd_si(char *args) {
   return 0;
 }
 
-// static int cmd_info(char *args) {
-//   if (strcmp(args, "r") == 0) {
-//     isa_reg_display(args);
-//   } else if (strcmp(args, "w") == 0) {
-
-//   }
-//   return 0;
-// }
+static int cmd_info(char *args) {
+  if (strcmp(args, "r") == 0) {
+    isa_reg_display(args);
+  } else if (strcmp(args, "w") == 0) {
+    
+  }
+  return 0;
+}
 
 static int cmd_q(char *args) {
   set_nemu_state(4, 0, 0);
@@ -76,7 +76,8 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "Step through N commands", cmd_si}
+  { "si", "Step through N commands", cmd_si},
+  { "info", "Display regs or watchpoints", cmd_info}
   /* TODO: Add more commands */
 
 };
