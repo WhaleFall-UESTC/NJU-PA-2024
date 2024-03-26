@@ -69,13 +69,11 @@ static int cmd_x(char *args) {
   int n, addr;
   sscanf(args, "%d %x", &n, &addr);
 
-  printf("%#x:\t", addr);
-  if (n <= 4) 
-    printf("%#x\t", vaddr_read(addr, n));
-
+  printf("%#x: ", addr);
   for (int i = 0; i < n; i++) {
-    printf("%02x  ", vaddr_read(addr + i, 1));
+    printf("%02x ", vaddr_read(addr + i, 1));
   }
+  if (n <= 4) printf("\t%#x", vaddr_read(addr, n));
   printf("\n");
 
   return 0;
