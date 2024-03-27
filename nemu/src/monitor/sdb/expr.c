@@ -213,7 +213,7 @@ int choose_op(int p, int q) {
             default: continue;
           }
         }
-        if (++i > q) printf("Brackets should be matched"), assert(0);
+        if (i > q) printf("Brackets should be matched"), assert(0);
         break;
     }
   }
