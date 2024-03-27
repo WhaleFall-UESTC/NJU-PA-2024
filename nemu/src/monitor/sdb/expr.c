@@ -127,8 +127,6 @@ static bool make_token(char *e) {
             break;
           default: TODO();
         }
-
-
         break;
       }
     }
@@ -156,7 +154,105 @@ word_t expr(char *e, bool *success) {
 }
 
 
-
 int test_make_token(char *arg) {
   return make_token(arg);
+}
+
+
+
+bool check_parentheses(int p, int q) 
+{
+  if (tokens[p].type != '(' || tokens[q - 1].type != ')') return false;
+
+  short *stack_brackets = ((short*) calloc(nr_token + 1, sizeof(short)));
+  stack_brackets[0] = 1;
+  short rsp = 0;
+  bool leftmost_matched = false;
+
+  for (int i = p + 1; i < q; i++) {
+    switch (tokens[i].type) {
+      case '(':
+        if (leftmost_matched) return false;
+        stack_brackets[++rsp] = 1;
+        break;
+
+      case ')':
+        if (rsp < 0) return false;
+        if (stack_brackets[rsp] == 1) {
+          if (--rsp == -1) leftmost_matched = true;
+          break;
+        }else printf("Invalid expr\n"), assert(0);
+
+      default: continue;
+    }
+  }
+
+  if (rsp == -1) return true;
+  else printf("Invalid expr\n"), assert(0);
+}
+
+
+int choose_op(int p, int q) {
+  int op = 0, cnt_bracket;
+  for (int i = p; i < q; i++) {
+    switch (tokens[i].type) {
+      case '+':
+      case '-':
+        op = i; break;
+      case '*':
+      case '/':
+        op = (op == '+' || op == '-') ? op : i; break;
+      case '(':
+        cnt_bracket = 1;
+        while (cnt_bracket) {
+          switch (tokens[++i].type) {
+            case '(': cnt_bracket++; break;
+            case ')': cnt_bracket--; break;
+          }
+        }
+        if (++i > q) printf("Brackets should be matched"), assert(0);
+        break;
+    }
+  }
+
+  return op;
+}
+
+
+word_t eval(int p, int q) {
+  if (p > q) {
+    /* Bad experssion */
+    printf("p should be less than q\n"), assert(0);
+  }
+  else if (p == q) {
+    if (tokens[p].type != TK_NUM) printf("It should be a number\n"), assert(0);  
+    return atoi(tokens[p].str);
+  }
+  else if (check_parentheses(p, q)){
+    return eval(p + 1, q - 1);
+  }
+  else {
+    int op = choose_op(p, q);
+    int val1 = eval(p, op);
+    int val2 = eval(op + 1, q);
+
+    switch (tokens[op].type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': return val1 / val2;
+      default: assert(0);
+    }
+  }
+}
+
+int get_nr() {return nr_token;}
+
+
+void token_s(int p, int q) {
+  printf("tokens(%d, %d):\t", p, q);
+  for (int i = p; i < q; i++) {
+    printf("%s", tokens[i].str);
+  }
+  printf("\n");
 }

@@ -22,4 +22,11 @@ word_t expr(char *e, bool *success);
 
 int test_make_token(char *);
 
+word_t eval(int p, int q);
+int get_nr();
+
 #endif
+
+
+
+

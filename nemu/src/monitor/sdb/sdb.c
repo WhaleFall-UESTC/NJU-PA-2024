@@ -78,6 +78,13 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+
+static int cmd_p(char *args) {
+  printf("%u\n", eval(0, get_nr()));
+  return 0;
+}
+
+
 static int cmd_test(char *args) {
   test_make_token(args);
   return 0;
@@ -101,9 +108,10 @@ static struct {
   { "si", "Step through N commands", cmd_si},
   { "info", "Display regs or watchpoints", cmd_info},
   { "x", "Read n bytes from the addr", cmd_x},
+  { "p", "showthe value of the expression", cmd_p},
 
 
-  {"test", "test new code", cmd_test}
+  {"test", "test new function", cmd_test}
   /* TODO: Add more commands */
 
 };
