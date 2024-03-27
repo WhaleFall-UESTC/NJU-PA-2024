@@ -210,6 +210,7 @@ int choose_op(int p, int q) {
           switch (tokens[++i].type) {
             case '(': cnt_bracket++; break;
             case ')': cnt_bracket--; break;
+            default: continue;
           }
         }
         if (++i > q) printf("Brackets should be matched"), assert(0);
