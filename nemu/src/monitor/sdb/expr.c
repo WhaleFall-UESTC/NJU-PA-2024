@@ -100,7 +100,7 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        
         tokens[nr_token].type = rules[i].token_type;
 
         switch (rules[i].token_type) {
@@ -110,10 +110,15 @@ static bool make_token(char *e) {
               tokens[nr_token].str[substr_len] = '\0';
               nr_token ++;
               break;
-            } else {
+            } 
+            else {
               printf("Token too long\n");
               assert(0);
             }
+
+          case '+': case '-': case '*': case '/':
+          case '(': case ')':
+            break;
           
           case TK_NOTYPE:
           case TK_EQ:
