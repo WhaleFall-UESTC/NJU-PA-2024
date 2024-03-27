@@ -118,6 +118,7 @@ static bool make_token(char *e) {
 
           case '+': case '-': case '*': case '/':
           case '(': case ')':
+            nr_token++;
             break;
           
           case TK_NOTYPE:
