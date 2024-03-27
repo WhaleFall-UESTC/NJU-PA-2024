@@ -101,11 +101,14 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
+        tokens[nr_token].type = rules[i].token_type;
+
         switch (rules[i].token_type) {
           case TK_NUM:
             if (substr_len < 32) {
               memcpy(tokens[nr_token].str, substr_start, substr_len);
               tokens[nr_token].str[substr_len] = '\0';
+              nr_token ++;
               break;
             } else {
               panic("token too long");
@@ -116,6 +119,7 @@ static bool make_token(char *e) {
           case TK_EQ:
           default: TODO();
         }
+
 
         break;
       }
