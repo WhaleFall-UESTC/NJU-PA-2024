@@ -121,7 +121,9 @@ static bool make_token(char *e) {
             break;
           
           case TK_NOTYPE:
+            break;
           case TK_EQ:
+            break;
           default: TODO();
         }
 
