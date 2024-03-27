@@ -222,11 +222,11 @@ int choose_op(int p, int q) {
 
 
 word_t eval(int p, int q) {
-  if (p > q) {
+  if (p > q - 1) {
     /* Bad experssion */
     printf("p should be less than q\n"), assert(0);
   }
-  else if (p == q) {
+  else if (p == q - 1) {
     if (tokens[p].type != TK_NUM) printf("It should be a number\n"), assert(0);  
     return atoi(tokens[p].str);
   }
