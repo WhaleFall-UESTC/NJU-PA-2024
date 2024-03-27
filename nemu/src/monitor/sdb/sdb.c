@@ -78,6 +78,11 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_test(char *args) {
+  test_make_token(args);
+  return 0;
+}
+
 static int cmd_q(char *args) {
   set_nemu_state(4, 0, 0);
   return -1;
@@ -95,7 +100,10 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step through N commands", cmd_si},
   { "info", "Display regs or watchpoints", cmd_info},
-  { "x", "Read n bytes from the addr", cmd_x}
+  { "x", "Read n bytes from the addr", cmd_x},
+
+
+  {"test", "test new code", cmd_test}
   /* TODO: Add more commands */
 
 };

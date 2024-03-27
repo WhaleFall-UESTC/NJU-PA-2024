@@ -20,4 +20,6 @@
 
 word_t expr(char *e, bool *success);
 
+int test_make_token(char *);
+
 #endif

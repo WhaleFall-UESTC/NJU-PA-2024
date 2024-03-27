@@ -142,3 +142,9 @@ word_t expr(char *e, bool *success) {
 
   return 0;
 }
+
+
+
+int test_make_token(char *arg) {
+  return make_token(arg);
+}
