@@ -65,7 +65,6 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-
   int n, addr;
   sscanf(args, "%d %x", &n, &addr);
 
