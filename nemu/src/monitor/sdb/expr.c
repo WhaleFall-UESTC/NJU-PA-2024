@@ -254,7 +254,8 @@ int get_nr() {return nr_token;}
 void token_s(int p, int q) {
   printf("tokens(%d, %d):\t", p, q);
   for (int i = p; i < q; i++) {
-    printf("%s", tokens[i].str);
+    if (tokens[i].type == TK_NUM) printf("%s", tokens[i].str);
+    else printf("%c", tokens[i].type);
   }
   printf("\n");
 }
