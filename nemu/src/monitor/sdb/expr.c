@@ -111,7 +111,7 @@ static bool make_token(char *e) {
               nr_token ++;
               break;
             } else {
-              panic("token too long");
+              printf("Token too long\n");
               assert(0);
             }
           
