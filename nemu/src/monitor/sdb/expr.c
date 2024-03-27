@@ -155,7 +155,9 @@ word_t expr(char *e, bool *success) {
 
 
 int test_make_token(char *arg) {
+  printf("start running make_token\n");
   return make_token(arg);
+  printf("end running make_token\n");
 }
 
 
