@@ -261,6 +261,27 @@ int choose_op(int p, int q) {
   return op;
 }
 
+word_t compute(int type, int val1, int val2) {
+  switch (type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': return val1 / val2;
+      default: switch(type) {
+        case DEREF: return vaddr_read(val1, 4);
+        case TK_EQ: return val1 == val2;
+        case TK_NEQ: return val1!= val2;
+        case TK_L: return val1 < val2;
+        case TK_LE: return val1 <= val2;
+        case TK_G: return val1 > val2;
+        case TK_GE: return val1 >= val2;
+        case TK_AND: return val1 && val2;
+        case TK_OR: return val1 || val2;
+        default: assert(0);
+      }
+  }
+}
+
 
 word_t eval(int p, int q) {
   if (p > q - 1) {
@@ -278,21 +299,14 @@ word_t eval(int p, int q) {
     }
   }
   else if (tokens[p].type == DEREF) {
-    int addr = 0;
-    if (tokens[p + 1].type == '(') {
-      for (int i = p + 2; i < q; i++) {
-        if (tokens[i].type == ')') {
-          addr = eval(p + 2, i);
-          break;
-        }
-      }
-    } else if (tokens[p + 1].type == TK_HEX || tokens[p + 1].type == TK_NUM)
-      addr = eval(p + 1, p + 2);
-    else {
-      printf("Invalid expression\n");
-      assert(0);
+    if (tokens[p + 1].type == TK_NUM || tokens[p + 1].type == TK_HEX) {
+      return vaddr_read(eval(p + 1, p + 2), 4);
+    } else if (check_parentheses(p + 1, q)) {
+      return vaddr_read(eval(p + 2, q - 1), 4);
+    } else {
+      int op = choose_op(p + 1, q);
+      return compute(op, eval(p, op), eval(op + 1, q));
     }
-    return vaddr_read(addr, 4);
   }
   else if (check_parentheses(p, q)){
     return eval(p + 1, q - 1);
@@ -302,23 +316,7 @@ word_t eval(int p, int q) {
     int val1 = eval(p, op);
     int val2 = eval(op + 1, q);
 
-    switch (tokens[op].type) {
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
-      case '/': return val1 / val2;
-      default: switch(tokens[op].type) {
-        case TK_EQ: return val1 == val2;
-        case TK_NEQ: return val1!= val2;
-        case TK_L: return val1 < val2;
-        case TK_LE: return val1 <= val2;
-        case TK_G: return val1 > val2;
-        case TK_GE: return val1 >= val2;
-        case TK_AND: return val1 && val2;
-        case TK_OR: return val1 || val2;
-        default: assert(0);
-      }
-    }
+    return compute(tokens[op].type, val1, val2);
   }
 }
 
