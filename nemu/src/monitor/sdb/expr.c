@@ -120,8 +120,8 @@ static bool make_token(char *e) {
         
         tokens[nr_token].type = rules[i].token_type;
 
-        switch (rules[i].token_type) {
-          case TK_NUM:
+        switch (rules[i].token_type) { 
+          case TK_NUM: case TK_HEX:
             if (substr_len < 32) {
               memcpy(tokens[nr_token].str, substr_start, substr_len);
               tokens[nr_token].str[substr_len] = '\0';
@@ -138,9 +138,10 @@ static bool make_token(char *e) {
           case TK_EQ:
             break;
 
-          default: 
+          default: {
             nr_token++;
             break;
+          }
         }
         break;
       }
