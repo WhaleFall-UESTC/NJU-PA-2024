@@ -287,7 +287,7 @@ word_t eval(int p, int q) {
         }
       }
     } else if (tokens[p + 1].type == TK_HEX || tokens[p + 1].type == TK_NUM)
-      addr = eval(p + 1, q);
+      addr = eval(p + 1, p + 2);
     else {
       printf("Invalid expression\n");
       assert(0);
