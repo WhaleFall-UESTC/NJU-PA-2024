@@ -282,7 +282,7 @@ word_t eval(int p, int q) {
     if (tokens[p + 1].type == '(') {
       for (int i = p + 2; i < q; i++) {
         if (tokens[i].type == ')') {
-          addr = eval(p + 1, i + 1);
+          addr = eval(p + 2, i);
           break;
         }
       }
