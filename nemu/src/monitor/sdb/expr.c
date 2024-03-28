@@ -162,7 +162,7 @@ bool type_is_op(int type) {
   //   case TK_AND: case TK_OR:
   //     return true;
   //   default: return false;
-    case '(': case ')': return false;
+    case '(': case ')': case TK_NUM: case TK_HEX: return false;
     default: return true;
   }
 }
