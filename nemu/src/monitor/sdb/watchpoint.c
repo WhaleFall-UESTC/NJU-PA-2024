@@ -76,7 +76,7 @@ int check_wp() {
     tmp_new = expr(tmp_wp->expr, NULL);
     if (tmp_new != tmp_wp->value) {
       printf("Watchpoint %d:\n", tmp_wp->NO);
-      printf("Old value: %u\tNew value: %u", tmp_wp->value, tmp_new);
+      printf("Old value: %u\tNew value: %u\n", tmp_wp->value, tmp_new);
       tmp_wp->value = tmp_new;
       nemu_state.state = NEMU_STOP;
       return 0;
