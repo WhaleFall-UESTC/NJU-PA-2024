@@ -54,9 +54,9 @@ static struct rule {
 
   {"!=", TK_NEQ}, 
   {"<=", TK_LE}, 
-  {"\\<", TK_L},
+  {"<", TK_L},
   {">=", TK_GE},
-  {"\\>", TK_G},
+  {">", TK_G},
 
   {"&&", TK_AND},
   {"\\|\\|", TK_OR}
@@ -132,16 +132,14 @@ static bool make_token(char *e) {
               printf("Token too long\n");
               assert(0);
             }          
-          
+
           case TK_NOTYPE:
             break;
-          case TK_EQ:
-            break;
 
-          default: {
-            nr_token++;
+          default: 
+            nr_token++; 
             break;
-          }
+          
         }
         break;
       }
