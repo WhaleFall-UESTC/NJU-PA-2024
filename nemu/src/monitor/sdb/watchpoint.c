@@ -79,18 +79,16 @@ int check_wp() {
       printf("Old value: %u\tNew value: %u", tmp_wp->value, tmp_new);
       tmp_wp->value = tmp_new;
       nemu_state.state = NEMU_STOP;
-      free(tmp_wp);
       return 0;
     }
     tmp_wp = tmp_wp->next;
   }
-  free(tmp_wp);
   return 1;
 }
 
 void info_link(WP* l) {
   WP* tmp_wp = l;
-  printf("Breakpoints:\n");
+  printf("Watchpoints:\n");
   while (tmp_wp!= NULL) {
     printf("[%d]\texpr: %s\n", tmp_wp->NO, tmp_wp->expr);
     tmp_wp = tmp_wp->next;
