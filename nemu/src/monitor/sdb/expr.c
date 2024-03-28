@@ -225,26 +225,37 @@ bool check_parentheses(int p, int q)
 
 
 int choose_op(int p, int q) {
-  int op = 0, cnt_bracket;
+  int op = 0, cnt_bracket, cur_type;
   for (int i = p; i < q; i++) {
-    switch (tokens[i].type) {
-      case '+':
-      case '-':
-        op = i; break;
-      case '*':
-      case '/':
-        op = (op == '+' || op == '-') ? op : i; break;
-      case '(':
-        cnt_bracket = 1;
-        while (cnt_bracket) {
-          switch (tokens[++i].type) {
-            case '(': cnt_bracket++; break;
-            case ')': cnt_bracket--; break;
-            default: continue;
+    cur_type = tokens[i].type;
+    if (cur_type < 256) {
+      switch (cur_type) {
+        case '+':
+        case '-':
+          op = i; break;
+        case '*':
+        case '/':
+          op = (op == '+' || op == '-') ? op : i; break;
+        case '(':
+          cnt_bracket = 1;
+          while (cnt_bracket) {
+            switch (tokens[++i].type) {
+              case '(': cnt_bracket++; break;
+              case ')': cnt_bracket--; break;
+              default: continue;
+            }
           }
-        }
-        if (i > q) printf("Brackets should be matched"), assert(0);
-        break;
+          if (i > q) printf("Brackets should be matched"), assert(0);
+          break;
+      }
+    } else {
+      switch (cur_type) {
+        case TK_EQ: case TK_NEQ: case TK_L: case TK_LE:
+        case TK_G: case TK_GE:
+          op = i;
+        case TK_AND: case TK_OR:
+          op = (op != TK_AND && op != TK_OR) ? op : i;
+      }
     }
   }
 
