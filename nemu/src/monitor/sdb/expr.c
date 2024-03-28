@@ -59,7 +59,7 @@ static struct rule {
   {"\\>", TK_G},
 
   {"&&", TK_AND},
-  {"||", TK_OR}
+  {"\\|\\|", TK_OR}
 };
 
 #define NR_REGEX ARRLEN(rules)
