@@ -41,7 +41,7 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
-  {"={2}", TK_EQ},        // equal
+  {"/==/", TK_EQ},        // equal
 
   {"\\-", '-'}, 
   {"\\*", '*'}, 
@@ -50,7 +50,7 @@ static struct rule {
   {"\\)", ')'}, 
   {"[0-9]+", TK_NUM},
   {"0x[0-9a-z]+", TK_HEX}, 
-  {"0x[0-9A-Z]+", TK_HEX},
+  {"0X[0-9A-Z]+", TK_HEX},
 
   {"!=", TK_NEQ}, 
   {"<=", TK_LE}, 
