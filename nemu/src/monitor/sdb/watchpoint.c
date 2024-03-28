@@ -109,12 +109,20 @@ void append_wp(char *args) {
 }
 
 void remove_wp(int no) {
-  WP* tmp_wp = head;
-  while(tmp_wp != NULL) {
-    if (tmp_wp->next->NO == no) {
-      tmp_wp->next = tmp_wp->next->next;
-      free_wp(tmp_wp->next);
+  WP* cur = head;
+  WP* prev = NULL;
+
+  while(cur != NULL) {
+    if (cur->NO == no) {
+      if (prev == NULL) {
+        head = cur->next;
+      } else {
+        prev->next = cur->next;
+      }
+      free_wp(cur);
+      return;
     }
-    tmp_wp = tmp_wp->next;
+    prev = cur;
+    cur = cur->next;
   }
 }
