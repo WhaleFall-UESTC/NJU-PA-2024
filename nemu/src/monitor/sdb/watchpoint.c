@@ -30,7 +30,6 @@ typedef struct watchpoint {
 
 void init_wp(WP *wp) {
   memset(wp->expr, 0, 31);
-  wp->NO = 0;
   wp->next = NULL;
   wp->value = 0;
 }
