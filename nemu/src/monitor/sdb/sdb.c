@@ -79,8 +79,8 @@ static int cmd_x(char *args) {
 
 
 static int cmd_p(char *args) {
-  test_make_token(args);
-  printf("%u\n", eval(0, get_nr()));
+  bool success = true;
+  printf("%u\n", expr(args, &success));
   return 0;
 }
 
