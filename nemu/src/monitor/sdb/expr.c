@@ -49,7 +49,6 @@ static struct rule {
   {"\\(", '('}, 
   {"\\)", ')'}, 
   {"0x[0-9a-z]+", TK_HEX}, 
-  {"0X[0-9A-Z]+", TK_HEX},
   {"[0-9]+", TK_NUM},
   
 
@@ -272,15 +271,14 @@ word_t eval(int p, int q) {
     switch (tokens[p].type) {
       case TK_NUM: return atoi(tokens[p].str);
       case TK_HEX: 
-        sscanf(tokens[p].str, "%x", &tmp_eval);
+        sscanf(tokens[p].str, "0x%x", &tmp_eval);
         return tmp_eval;
       default: 
         printf("Not a number: %d\n", p); assert(0);
     }
   }
   else if (tokens[p].type == DEREF) {
-    int addr = 0;
-    sscanf(tokens[p + 1].str, "%x", &addr);
+    int addr = eval(p + 1, q);
     return vaddr_read(addr, 4);
   }
   else if (check_parentheses(p, q)){
