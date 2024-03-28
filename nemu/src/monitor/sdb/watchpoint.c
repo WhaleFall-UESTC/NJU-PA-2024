@@ -22,11 +22,22 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
+  char expr[32];
+  word_t value;
 
 } WP;
 
+
+void init_wp(WP *wp) {
+  memset(wp->expr, 0, 31);
+  wp->NO = 0;
+  wp->next = NULL;
+  wp->value = 0;
+}
+
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
+// head: watchpoint bring used.   free: free watchpoint
 
 void init_wp_pool() {
   int i;
@@ -41,3 +52,70 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+
+WP* new_up() {
+  if (free_ == NULL) return NULL;
+
+  WP *wp = free_;
+  free_ = wp->next;
+  init_wp(wp);
+
+  return wp;
+}
+
+
+void free_wp(WP *wp) {
+  wp->next = free_;
+  free_ = wp;
+}
+
+
+int check_wp() {
+  WP* tmp_wp = head;
+  word_t tmp_new = 0;
+  while (tmp_wp != NULL) {
+    tmp_new = expr(tmp_wp->expr, NULL);
+    if (tmp_new != tmp_wp->value) {
+      printf("Watchpoint %d:\n", tmp_wp->NO);
+      printf("Old value: %u\tNew value: %u", tmp_wp->value, tmp_new);
+      tmp_wp->value = tmp_new;
+      nemu_state.state = NEMU_STOP;
+      free(tmp_wp);
+      return 0;
+    }
+    tmp_wp = tmp_wp->next;
+  }
+  free(tmp_wp);
+  return 1;
+}
+
+void info_link(WP* l) {
+  WP* tmp_wp = l;
+  printf("Breakpoints:\n");
+  while (tmp_wp!= NULL) {
+    printf("[%d]\texpr: %s\n", tmp_wp->NO, tmp_wp->expr);
+    tmp_wp = tmp_wp->next;
+  }
+  free(tmp_wp);
+}
+void info_head() {info_link(head);}
+void info_free_() {info_link(free_);}
+
+void append_wp(char *args) {
+  WP *wp = new_up();
+  strcpy(wp->expr, args);
+  wp->next = head;
+  head = wp;
+  wp->value = expr(args, NULL);
+}
+
+void remove_wp(int no) {
+  WP* tmp_wp = head;
+  while(tmp_wp != NULL) {
+    if (tmp_wp->next->NO == no) {
+      tmp_wp->next = tmp_wp->next->next;
+      free_wp(tmp_wp->next);
+    }
+    tmp_wp = tmp_wp->next;
+  }
+}

@@ -20,11 +20,14 @@
 #include <memory/vaddr.h>
 
 word_t expr(char *e, bool *success);
-
 int test_make_token(char *);
-
 word_t eval(int p, int q);
-int get_nr();
+
+
+int check_wp();
+void info_head();
+void append_wp(char *);
+void remove_wp(int);
 
 #endif
 

@@ -58,7 +58,7 @@ static int cmd_info(char *args) {
     printf("Registers:\n");
     isa_reg_display(args);
   } else if (strcmp(args, "w") == 0) {
-    
+    info_head();
   }
   return 0;
 }
@@ -77,6 +77,12 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_d(char *args) {
+  int no = atoi(args);
+  if (no < 0 || no > 31) assert(0);
+  remove_wp(no);
+  return 0;
+}
 
 static int cmd_p(char *args) {
   bool success = true;
@@ -84,6 +90,10 @@ static int cmd_p(char *args) {
   return 0;
 }
 
+static int cmd_w(char *args) {
+  append_wp(args);
+  return 0;
+}
 
 static int cmd_test(char *args) {
   test_make_token(args);
@@ -109,7 +119,8 @@ static struct {
   { "info", "Display regs or watchpoints", cmd_info},
   { "x", "Read n bytes from the addr", cmd_x},
   { "p", "showthe value of the expression", cmd_p},
-
+  { "w", "Add watchpoint", cmd_w},
+  { "d", "Delete watchpoint", cmd_d},
 
   {"test", "test new function", cmd_test}
   /* TODO: Add more commands */
@@ -190,3 +201,5 @@ void init_sdb() {
   /* Initialize the watchpoint pool. */
   init_wp_pool();
 }
+
+
