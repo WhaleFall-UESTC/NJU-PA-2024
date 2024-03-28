@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
+#include <memory/vaddr.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -21,7 +22,9 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEX, TK_NEQ, TK_AND, TK_OR, 
+              TK_LE, TK_L, TK_GE, TK_G, 
+              DEREF
 
   /* TODO: Add more token types */
 
@@ -45,7 +48,18 @@ static struct rule {
   {"\\/", '/'}, 
   {"\\(", '('}, 
   {"\\)", ')'}, 
-  {"[0-9]+", TK_NUM}
+  {"[0-9]+", TK_NUM},
+  {"0x[0-9a-z]+", TK_HEX}, 
+  {"0x[0-9A-Z]+", TK_HEX},
+
+  {"!=", TK_NEQ}, 
+  {"<=", TK_LE}, 
+  {"\\<", TK_L},
+  {">=", TK_GE},
+  {"\\>", TK_G},
+
+  {"&&", TK_AND},
+  {"||", TK_OR}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -76,6 +90,9 @@ typedef struct token {
 
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
+
+word_t eval(int, int);
+word_t tmp_eval;
 
 static bool make_token(char *e) {
   int position = 0;
@@ -114,18 +131,16 @@ static bool make_token(char *e) {
             else {
               printf("Token too long\n");
               assert(0);
-            }
-
-          case '+': case '-': case '*': case '/':
-          case '(': case ')':
-            nr_token++;
-            break;
+            }          
           
           case TK_NOTYPE:
             break;
           case TK_EQ:
             break;
-          default: TODO();
+
+          default: 
+            nr_token++;
+            break;
         }
         break;
       }
@@ -141,6 +156,18 @@ static bool make_token(char *e) {
 }
 
 
+bool type_is_op(int type) {
+  switch (type) {
+  //   case '+': case '-': case '*': case '/':
+  //   case TK_EQ: case TK_NEQ: case TK_L: case TK_LE:
+  //   case TK_AND: case TK_OR:
+  //     return true;
+  //   default: return false;
+    case '(': case ')': return false;
+    default: return true;
+  }
+}
+
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -148,16 +175,19 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  
+  for (int i = 0; i < nr_token; i++) {
+    if (tokens[i].type == '*' && (i == 0 || type_is_op(tokens[i - 1].type))) {
+      tokens[i].type = DEREF;
+    }
+  }
 
-  return 0;
+  return eval(0, nr_token);
 }
 
 
 int test_make_token(char *arg) {
-  printf("start running make_token\n");
   return make_token(arg);
-  printf("end running make_token\n");
 }
 
 
@@ -228,8 +258,19 @@ word_t eval(int p, int q) {
     printf("p should be less than q\n"), assert(0);
   }
   else if (p == q - 1) {
-    if (tokens[p].type != TK_NUM) printf("It should be a number\n"), assert(0);  
-    return atoi(tokens[p].str);
+    switch (tokens[p].type) {
+      case TK_NUM: return atoi(tokens[p].str);
+      case TK_HEX: 
+        sscanf(tokens[p].str, "%x", &tmp_eval);
+        return tmp_eval;
+      default: 
+        printf("Not a number: %d\n", p); assert(0);
+    }
+  }
+  else if (tokens[p].type == DEREF) {
+    int addr = 0;
+    sscanf(tokens[p + 1].str, "%x", &addr);
+    return vaddr_read(addr, 4);
   }
   else if (check_parentheses(p, q)){
     return eval(p + 1, q - 1);
@@ -244,7 +285,17 @@ word_t eval(int p, int q) {
       case '-': return val1 - val2;
       case '*': return val1 * val2;
       case '/': return val1 / val2;
-      default: assert(0);
+      default: switch(tokens[op].type) {
+        case TK_EQ: return val1 == val2;
+        case TK_NEQ: return val1!= val2;
+        case TK_L: return val1 < val2;
+        case TK_LE: return val1 <= val2;
+        case TK_G: return val1 > val2;
+        case TK_GE: return val1 >= val2;
+        case TK_AND: return val1 && val2;
+        case TK_OR: return val1 || val2;
+        default: assert(0);
+      }
     }
   }
 }
