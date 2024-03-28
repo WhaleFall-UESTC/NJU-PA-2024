@@ -305,7 +305,7 @@ word_t eval(int p, int q) {
       return vaddr_read(eval(p + 2, q - 1), 4);
     } else {
       int op = choose_op(p + 1, q);
-      return compute(op, eval(p, op), eval(op + 1, q));
+      return compute(tokens[op].type, eval(p, op), eval(op + 1, q));
     }
   }
   else if (check_parentheses(p, q)){
