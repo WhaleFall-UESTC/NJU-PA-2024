@@ -33,7 +33,7 @@ static bool g_print_step = false;
 
 void device_update();
 
-
+#define CONFIG_WATCHPOINT
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_WATCHPOINT
   check_wp();
