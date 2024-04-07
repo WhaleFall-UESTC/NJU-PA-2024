@@ -27,6 +27,9 @@ enum {
   TYPE_N, // none
 };
 
+// BITS: 截取 x 从 lo 至 hi 的二进制位
+// SEXT: n 由 len 位符号拓展至 64 位
+
 #define src1R()  do { *src1 = R(rj); } while (0)
 #define simm12() do { *imm = SEXT(BITS(i, 21, 10), 12); } while (0)
 #define simm20() do { *imm = SEXT(BITS(i, 24, 5), 20) << 12; } while (0)

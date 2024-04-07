@@ -61,10 +61,10 @@ include $(NEMU_HOME)/scripts/native.mk
 endif
 
 
-.PHONY: count
+# .PHONY: count
 
-count:
-echo "All files："
-find . -name "*.[ch]" | xargs wc -l | grep total
-echo "And you have written valid codes："
-cd .. && git diff --diff-filter=d --name-only pa0 pa1 | xargs -I {} git diff pa0 pa1 -- {} | grep -v '^ *$' | grep '^[+-]' | wc -l && cd nemu 
+# count:
+#   echo "All files："
+#   find . -name "*.[ch]" | xargs wc -l | grep total
+#   echo "And you have written valid codes："
+#   cd .. && git diff --diff-filter=d --name-only pa0 pa1 | xargs -I {} git diff pa0 pa1 -- {} | grep -v '^ *$' | grep '^[+-]' | wc -l && cd nemu 
