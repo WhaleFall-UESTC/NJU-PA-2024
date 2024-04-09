@@ -17,10 +17,10 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+#include <memory/paddr.h>
 
 #define R(i) gpr(i)
-#define Mr vaddr_read
-word_t vaddr_read(vaddr_t addr, int len);
+#define Mr paddr_read
 #define Mw vaddr_write
 
 enum {
