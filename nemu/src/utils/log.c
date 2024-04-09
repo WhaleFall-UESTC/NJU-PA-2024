@@ -53,14 +53,14 @@ void mtrace_end() {fclose(mtrace);}
 
 
 #ifdef CONFIG_FTRACE
-FILE *ftrace_log = NULL;
-FILE *ftrace_symbols = NULL;
-const char symbols_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/symbols";
-const char ftrace_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/ftrace.txt";
+static FILE *ftrace_log = NULL;
+static FILE *ftrace_symbols = NULL;
+static const char symbols_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/symbols";
+static const char ftrace_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/ftrace.txt";
 
 typedef struct{ vaddr_t addr; char name[32]; } symbol_t;
-symbol_t symbols[64];
-int sptr = 0;
+static symbol_t symbols[64];
+static int sptr = 0;
 
 #define LOGSYM(s) fprintf(ftrace_log, "addr: %#08x\tname: %s\n", s.addr, s.name)
 
@@ -93,5 +93,8 @@ void ftrace_init(const char *ftrace_elf) {
       }
     }
   }
+  fprintf(ftrace_log, "\n");
 }
+
+
 #endif
