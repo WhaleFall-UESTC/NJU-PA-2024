@@ -130,7 +130,7 @@ void cpu_exec(uint64_t n) {
       for (word_t pc = bottom; pc <= top; pc += 4) {
         inst_b = vaddr_ifetch(pc, 4);
         disassemble(inst_s, 32, pc, (uint8_t *)&inst_b, 4);
-        printf("%s: %s\t\t%x\n", (pc == cpu.pc ? "-->" : "\t"), inst_s, inst_b);
+        printf("%s%x: %s\t\t%x\n", (pc == cpu.pc ? "-->" : "   "), pc, inst_s, inst_b);
       }
     }
     case NEMU_END: 
