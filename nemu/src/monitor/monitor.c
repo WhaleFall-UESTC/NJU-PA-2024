@@ -24,6 +24,8 @@ void init_device();
 void init_sdb();
 void init_disasm(const char *triple);
 
+void mtrace_init();
+
 static void welcome() {
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
   IFDEF(CONFIG_TRACE, Log("If trace is enabled, a log file will be generated "
@@ -142,7 +144,7 @@ void init_monitor(int argc, char *argv[]) {
   /* Display welcome message. */
   welcome();
 
-  IFDEF(CONFIG_MTRACE, MTRACE_INIT());
+  IFDEF(CONFIG_MTRACE, mtrace_init());
 }
 #else // CONFIG_TARGET_AM
 static long load_img() {

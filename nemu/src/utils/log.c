@@ -38,8 +38,8 @@ bool log_enable() {
 
 #ifdef CONFIG_MTRACE
 FILE *mtrace = NULL;
-#define MTRACE_INIT()     do {fopen("nemu/mylog/mtrace.txt")} while(0)
-#define MTRACE_READ(addr, len) do {fprintf(mtrace, "read addr: %#08x, len = %d", addr, len);} while(0)
-#define MTRACE_WRITE(addr, data, len) do {fprintf(mtrace, "write %.*x to addr: %#08x", len, data, addr);} while(0)
-#define MTRACE_END()      do {fclose(mtrace);} while(0)
+void mtrace_init() {mtrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/mtrace.txt", "w");}
+void mtrace_read(vaddr_t addr, int len) {fprintf(mtrace, "read addr: %#08x, len = %d", addr, len);}
+void mtrace_write(vaddr_t addr, word_t data, int len) {fprintf(mtrace, "write %.*x to addr: %#08x", len, data, addr);}
+void mtrace_end() {fclose(mtrace);} 
 #endif
