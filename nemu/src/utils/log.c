@@ -77,6 +77,7 @@ void ftrace_init(const char *ftrace_elf) {
     if (ch == ':') {
       fseek(ftrace_symbols, 1, SEEK_CUR);
       FILE *fp_addr = ftrace_symbols;
+      printf("%c\t", fgetc(fp_addr));
       fseek(ftrace_symbols, 15, SEEK_CUR);
       
       if (strcmp(fgets(tmp, 5, ftrace_symbols), "FUNC") == 0) {
