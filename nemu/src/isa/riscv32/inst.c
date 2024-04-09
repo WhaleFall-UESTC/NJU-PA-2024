@@ -49,10 +49,10 @@ vaddr_t fret(Decode *s) {
   if (inst == 0x8067) {
     printf("Detect ret\n");
     word_t i = vaddr_ifetch(dnpc - 4, 4);
-    word_t imm = SEXT(BITS(i, 31, 20), 12);
-    word_t src1 = R(BITS(i, 19, 15));
-    printf("%08x, %08x\n", dnpc, (src1 + imm) & 0xfffffffe);
-    dnpc = (src1 + imm) & 0xfffffffe;
+    word_t imm_ = SEXT(BITS(i, 31, 20), 12);
+    word_t src1_ = R(BITS(i, 19, 15));
+    printf("%08x, %08x\n", dnpc, (src1_ + imm_) & 0xfffffffe);
+    dnpc = (src1_ + imm_) & 0xfffffffe;
   }
 
   return dnpc;
