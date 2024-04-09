@@ -80,12 +80,12 @@ void ftrace_init(const char *ftrace_elf) {
       fseek(ftrace_symbols, 7, SEEK_CUR);
       
       if (strcmp(fgets(tmp_type, 5, ftrace_symbols), "FUNC") == 0) {
-        fseek(ftrace_symbols, 23, SEEK_CUR);
-        // while((ch = fgetc(ftrace_symbols)) != '\n') {
-        //   symbols[sptr].name[i++] = ch;
-        // }
-        if (NULL != fgets(symbols[sptr].name, 5, ftrace_symbols))
-          printf("%s\n", symbols[sptr].name);
+        fseek(ftrace_symbols, 24, SEEK_CUR);
+        int i = 0;
+        while((ch = fgetc(ftrace_symbols)) != '\n' && i < 64) {
+          symbols[sptr].name[i++] = ch;
+        }
+        printf("%s\n", symbols[sptr].name);
       }
         // fseek(ftrace_symbols, 23, SEEK_CUR);
         // printf("%s\n", fgets(tmp ,4, ftrace_symbols));
