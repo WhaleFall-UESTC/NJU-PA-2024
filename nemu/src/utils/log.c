@@ -75,21 +75,19 @@ void ftrace_init(const char *ftrace_elf) {
   char tmp[8] = {};
   while((ch = fgetc(ftrace_symbols)) != EOF) {
     if (ch == ':') {
-      fseek(ftrace_symbols, 16L, SEEK_CUR);
-      // while((ch = fgetc(ftrace_symbols)) != ' ') {
-      //   printf("%c", ch);
-      // }
-      // printf("\n");
-      for (int i = 0; i < 4; i++) 
-        tmp[i] = fgetc(ftrace_symbols);
-      if (strncmp(tmp, "FUNC", 4) != 0)
-        continue;
+      fseek(ftrace_symbols, 1, SEEK_CUR);
+      //FILE *fp_addr = ftrace_symbols;
+      fseek(ftrace_symbols, 15, SEEK_CUR);
+      
+      if (NULL == fgets(tmp, 4, ftrace_symbols)) assert(0);
+      printf("%s %c\n", tmp, fgetc(ftrace_symbols));
+      // for (int i = 0; i < 4; i++) 
+      //   tmp[i] = fgetc(ftrace_symbols);
+      // if (strncmp(tmp, "FUNC", 4) != 0)
+      //   continue;
 
-      fseek(ftrace_symbols, -20L, SEEK_SET);
-      for(int i = 0; i < 8; i++)
-        tmp[i] = fgetc(ftrace_symbols);
-      sscanf(tmp, "%x", &symbols[sptr].addr);
-      printf("%s %#08x\n", tmp, symbols[sptr].addr);
+      // sscanf(tmp, "%x", &symbols[sptr].addr);
+      // printf("%s %#08x\n", tmp, symbols[sptr].addr);
       // for(int i = 0; i < 8; i++) {
       //   addr_tmp[i] = fgetc(ftrace_symbols);
       // }
