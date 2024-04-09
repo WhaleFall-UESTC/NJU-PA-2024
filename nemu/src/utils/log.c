@@ -52,7 +52,9 @@ void mtrace_end() {fclose(mtrace);}
 #endif
 
 #ifdef CONFIG_FTRACE
-void ftrace_init() {
-  
+FILE *ftrace = NULL;
+void ftrace_init(const char *ftrace_log) {
+  ftrace = fopen(ftrace_log, "w");
+  fprintf(ftrace, "start ftrace\n");
 }
 #endif
