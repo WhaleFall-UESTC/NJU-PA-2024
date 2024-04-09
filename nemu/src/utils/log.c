@@ -77,9 +77,9 @@ void ftrace_init(const char *ftrace_elf) {
       if (fgetc(ftrace_symbols) == 'U') {
         fseek(ftrace_symbols, -18, SEEK_CUR);
         ch = fgetc(ftrace_symbols);
-        printf("%c", ch);
         if ( ch == ':') {
-
+          fseek(ftrace_symbols, -3, SEEK_CUR);
+          printf("%c%c\n", fgetc(ftrace_symbols), fgetc(ftrace_symbols));
         } else continue;
       } else continue;
     }
