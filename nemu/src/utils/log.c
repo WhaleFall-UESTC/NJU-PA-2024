@@ -14,7 +14,7 @@
  ***************************************************************************************/
 
 #include <common.h>
-#include <string.h>
+#include <cpu/decode.h>
 
 extern uint64_t g_nr_guest_inst;
 
@@ -107,26 +107,27 @@ void ftrace_init(const char *ftrace_elf)
 }
 
 static int layer = 0;
-#define RET 0
-#define JAR 1
 #define P_LAYERS(l) for(int i = 0; i < l; i++){ fprintf(ftrace_log, "\t"); }
-#define P_CALL(s) fprintf(ftrace_log, "call [%s @%#08x]", s.name, s.addr)
-#define P_RET(name)  fprintf(ftrace_log, "ret [%s]", name);
 
-void ftrace_call(vaddr_t dnpc) {
+void ftrace_call(symbol_t s) {
+  P_LAYERS(layer);
+  layer++;
+  fprintf(ftrace_log, "call [%s @%#08x]", s.name, s.addr);
+}
+
+void ftrace_ret(char *name) {
+  layer--;
+  P_LAYERS(layer);
+  fprintf(ftrace_log, "ret [%s]", name);
+}
+
+void ftrace(Decode *s, vaddr_t dnpc) {
   int idx;
   for (idx = 0; idx < sptr; idx++)
     if (symbols[idx].addr == dnpc) break;
   if (idx == sptr) return;
 
-  P_LAYERS(layer);
-  layer++;
-  P_CALL(symbols[idx]);
+  fprintf(ftrace_log, "%#08x: ", s->pc);
+  ((s->isa.inst.val == 0x8067) ? ftrace_ret(symbols[idx].name) : ftrace_call(symbols[idx]));
 }
-
-void ftrace_ret(vaddr_t dnpc) {
-  
-}
-
-
 #endif
