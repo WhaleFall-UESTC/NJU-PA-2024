@@ -132,7 +132,7 @@ void cpu_exec(uint64_t n) {
         disassemble(inst_s, 28, pc, (uint8_t *)&inst_b, 4);
         for (int i = strlen(inst_s); i < 27; i++) inst_s[i] = ' ';
         inst_s[27] = '\0';
-        printf("%s%x: %s\t%x\n", (pc == cpu.pc ? "--> " : "    "), pc, inst_s, inst_b);
+        printf("%s%x: %s\t%08x\n", (pc == cpu.pc ? "--> " : "    "), pc, inst_s, inst_b);
       }
     }
     case NEMU_END: 
