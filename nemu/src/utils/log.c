@@ -51,10 +51,25 @@ void mtrace_write(vaddr_t addr, word_t data, int len) {fprintf(mtrace, "write %.
 void mtrace_end() {fclose(mtrace);} 
 #endif
 
+
 #ifdef CONFIG_FTRACE
-FILE *ftrace = NULL;
+FILE *ftrace_log = NULL;
+FILE *ftrace_symbols = NULL;
+const char symbols_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/symbols";
+const char ftrace_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/ftrace.txt";
+
+typedef struct{ vaddr_t addr; char name[32]; } symbol_t;
+symbol_t symbols[64];
+int sptr = 0;
+
 void ftrace_init(const char *ftrace_elf) {
-  ftrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/ftrace.txt", "w");
-  fprintf(ftrace, "start ftrace at:\n%s\n", ftrace_elf);
+  ftrace_log = fopen(ftrace_path, "w");
+  fprintf(ftrace_log, "start ftrace at:\n%s\n\n", ftrace_elf);
+
+  char cmd[256];
+  sprintf(cmd, "riscv64-linux-gnu-readelf -a %s > %s", ftrace_elf, symbols_path);
+  if (-1 == system(cmd)) fprintf(ftrace_log, "Error run %s\n", cmd);
+  ftrace_symbols = fopen(symbols_path, "r");
+
 }
 #endif
