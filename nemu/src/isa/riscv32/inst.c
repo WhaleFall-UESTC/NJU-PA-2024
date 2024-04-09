@@ -54,6 +54,7 @@ vaddr_t fret(Decode *s) {
     // printf("%08x, %08x\n", dnpc, (src1_ + imm_) & 0xfffffffe);
     dnpc = ((i & 0x7f) == 0x67) ? ((src1_ + imm_) & 0xfffffffe) : dnpc;
     dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + imm_) : dnpc;
+    printf("%08x\n", dnpc);
   }
 
   return dnpc;
