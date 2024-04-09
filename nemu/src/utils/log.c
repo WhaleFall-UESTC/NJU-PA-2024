@@ -74,9 +74,10 @@ void ftrace_init(const char *ftrace_elf) {
   char ch;
   while((ch = fgetc(ftrace_symbols)) != EOF) {
     if (ch == ':') {
-      fseek(ftrace_symbols, -2, SEEK_CUR);
+      fseek(ftrace_symbols, -3, SEEK_CUR);
       printf("%c%c\n", fgetc(ftrace_symbols), fgetc(ftrace_symbols));
     }
   }
+  printf("end\n");
 }
 #endif
