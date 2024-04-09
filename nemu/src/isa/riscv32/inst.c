@@ -30,8 +30,8 @@ enum {
 
 #define SEXT_20(x) (x ? 0xfff00000 : 0)
 #define SEXT_12(x) (x ? 0xfffff000 : 0)
-#define SEXT_B(x)  ((x >> 7)  & 1 ? (x & 0xffffff00) : x)
-#define SEXT_H(x)  ((x >> 15) & 1 ? (x & 0xffff0000) : x)
+#define SEXT_B(x)  ((x >> 7)  ? (x | 0xffffff00) : x)
+#define SEXT_H(x)  ((x >> 15) ? (x | 0xffff0000) : x)
 
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
