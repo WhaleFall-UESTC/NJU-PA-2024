@@ -72,17 +72,21 @@ void ftrace_init(const char *ftrace_elf) {
   ftrace_symbols = fopen(symbols_path, "r");
   
   char ch;
-  char tmp[9] = {};
+  char tmp_addr[9] = {}, tmp_type[5] = {};
   while((ch = fgetc(ftrace_symbols)) != EOF) {
     if (ch == ':') {
       fseek(ftrace_symbols, 1, SEEK_CUR);
-      if (NULL == fgets(tmp, 9, ftrace_symbols)) continue;
+      if (NULL == fgets(tmp_addr, 9, ftrace_symbols)) continue;
       fseek(ftrace_symbols, 7, SEEK_CUR);
       
-      if (NULL != fgets(tmp, 5, ftrace_symbols))
-        printf("%s\n", tmp);
-        
-
+      if (strcmp(fgets(tmp_type, 5, ftrace_symbols), "FUNC") == 0) {
+        fseek(ftrace_symbols, 23, SEEK_CUR);
+        // while((ch = fgetc(ftrace_symbols)) != '\n') {
+        //   symbols[sptr].name[i++] = ch;
+        // }
+        if (NULL != fgets(symbols[sptr].name, 5, ftrace_symbols))
+          printf("%s\n", symbols[sptr].name);
+      }
         // fseek(ftrace_symbols, 23, SEEK_CUR);
         // printf("%s\n", fgets(tmp ,4, ftrace_symbols));
         // int i = 0;
