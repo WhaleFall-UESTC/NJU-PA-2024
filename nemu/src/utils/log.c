@@ -76,11 +76,13 @@ void ftrace_init(const char *ftrace_elf) {
   while((ch = fgetc(ftrace_symbols)) != EOF) {
     if (ch == ':') {
       fseek(ftrace_symbols, 1, SEEK_CUR);
-      //FILE *fp_addr = ftrace_symbols;
+      // FILE *fp_addr = ftrace_symbols;
       fseek(ftrace_symbols, 15, SEEK_CUR);
       
-      if (NULL == fgets(tmp, 5, ftrace_symbols)) assert(0);
-      printf("%s %c\n", tmp, fgetc(ftrace_symbols));
+      if (strcmp(fgets(tmp, 5, ftrace_symbols), "FUNC") == 0) {
+        printf("Goal! %s\n", tmp);
+      }
+      
       // for (int i = 0; i < 4; i++) 
       //   tmp[i] = fgetc(ftrace_symbols);
       // if (strncmp(tmp, "FUNC", 4) != 0)
