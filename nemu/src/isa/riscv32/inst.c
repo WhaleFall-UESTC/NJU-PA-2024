@@ -33,10 +33,10 @@ enum {
 #define SEXT_B(x)  ((x >> 7)  ? (x | 0xffffff00) : x)
 #define SEXT_H(x)  ((x >> 15) ? (x | 0xffff0000) : x)
 
-static word_t mul_high(word_t x, word_t y) {
-  int64_t mul = ((int64_t) x) * ((int64_t) y);
-  return mul >> 32;
-}
+// static word_t mul_high(word_t x, word_t y) {
+//   int64_t mul = ((int64_t) x) * ((int64_t) y);
+//   return mul >> 32;
+// }
 
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
@@ -116,7 +116,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 ????? ????? 111 ????? 01100 11", and    , R, R(rd) = src1 & src2);
 
   INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul    , R, R(rd) = src1 * src2);
-  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = mul_high(src1, src2));
+  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = (((int64_t) src1) * ((int64_t) src2)) >> 32);
   INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div    , R, R(rd) = (int)src1 / (int)src2);
   INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu   , R, R(rd) = src1 / src2);
   INSTPAT("0000001 ????? ????? 110 ????? 01100 11", rem    , R, R(rd) = (int)src1 % (int)src2);
