@@ -47,6 +47,7 @@ vaddr_t fret(Decode *s) {
   word_t inst = s->isa.inst.val;
 
   if (inst == 0x8067) {
+    printf("Detect ret\n");
     word_t i = vaddr_ifetch(dnpc - 4, 4);
     word_t imm = SEXT(BITS(i, 31, 20), 12);
     word_t src1 = gpr(BITS(i, 19, 15));
