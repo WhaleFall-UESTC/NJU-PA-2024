@@ -85,7 +85,7 @@ void ftrace_init(const char *ftrace_elf) {
       if (strncmp(tmp, "FUNC", 4) != 0)
         continue;
 
-      fseek(ftrace_symbols, -19L, SEEK_SET);
+      fseek(ftrace_symbols, -20L, SEEK_SET);
       for(int i = 0; i < 8; i++)
         tmp[i] = fgetc(ftrace_symbols);
       sscanf(tmp, "%x", &symbols[sptr].addr);
