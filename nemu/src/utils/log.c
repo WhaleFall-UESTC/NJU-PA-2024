@@ -112,13 +112,13 @@ static int layer = 0;
 void ftrace_call(symbol_t s) {
   P_LAYERS(layer);
   layer++;
-  fprintf(ftrace_log, "call [%s @%#08x]", s.name, s.addr);
+  fprintf(ftrace_log, "call [%s @%#08x]\n", s.name, s.addr);
 }
 
 void ftrace_ret(char *name) {
   layer--;
   P_LAYERS(layer);
-  fprintf(ftrace_log, "ret [%s]", name);
+  fprintf(ftrace_log, "ret [%s]\n", name);
 }
 
 void ftrace(Decode *s, vaddr_t dnpc) {
