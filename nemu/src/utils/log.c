@@ -67,7 +67,7 @@ void ftrace_init(const char *ftrace_elf) {
   fprintf(ftrace_log, "start ftrace at:\n%s\n\n", ftrace_elf);
 
   char cmd[256];
-  sprintf(cmd, "riscv64-linux-gnu-readelf -a %s > %s", ftrace_elf, symbols_path);
+  sprintf(cmd, "riscv64-linux-gnu-readelf -s %s > %s", ftrace_elf, symbols_path);
   if (-1 == system(cmd)) fprintf(ftrace_log, "Error run %s\n", cmd);
   ftrace_symbols = fopen(symbols_path, "r");
 
