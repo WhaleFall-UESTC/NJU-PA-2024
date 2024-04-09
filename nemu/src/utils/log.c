@@ -89,7 +89,7 @@ void ftrace_init(const char *ftrace_elf) {
       for(int i = 0; i < 8; i++)
         tmp[i] = fgetc(ftrace_symbols);
       sscanf(tmp, "%x", &symbols[sptr].addr);
-      printf("%#08x\n", symbols[sptr].addr);
+      printf("%s %#08x\n", tmp, symbols[sptr].addr);
       // for(int i = 0; i < 8; i++) {
       //   addr_tmp[i] = fgetc(ftrace_symbols);
       // }
