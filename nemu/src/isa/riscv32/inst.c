@@ -28,8 +28,8 @@ enum {
   TYPE_N
 };
 
-#define SEXT_20(x) (x ? x & 0xfff00000 : x)
-#define SEXT_12(x) (x ? x & 0xfffff000 : x)
+#define SEXT_20(x) (x ? 0xfff00000 : 0)
+#define SEXT_12(x) (x ? 0xfffff000 : 0)
 
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
