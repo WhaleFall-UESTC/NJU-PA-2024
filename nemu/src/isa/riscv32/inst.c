@@ -51,8 +51,9 @@ vaddr_t fret(Decode *s) {
     word_t i = vaddr_ifetch(dnpc - 4, 4);
     word_t imm_ = SEXT(BITS(i, 31, 20), 12);
     word_t src1_ = R(BITS(i, 19, 15));
-    printf("%08x, %08x\n", dnpc, (src1_ + imm_) & 0xfffffffe);
-    dnpc = (src1_ + imm_) & 0xfffffffe;
+    // printf("%08x, %08x\n", dnpc, (src1_ + imm_) & 0xfffffffe);
+    dnpc = ((i & 0x7f) == 0x67) ? ((src1_ + imm_) & 0xfffffffe) : dnpc;
+    dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + imm_) : dnpc;
   }
 
   return dnpc;
