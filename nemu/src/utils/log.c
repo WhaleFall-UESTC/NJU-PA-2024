@@ -22,7 +22,6 @@ extern uint64_t g_nr_guest_inst;
 FILE *log_fp = NULL;
 
 void init_log(const char *log_file) {
-  printf("log_file: %s\n", log_file);
   log_fp = stdout;
   if (log_file != NULL) {
     FILE *fp = fopen(log_file, "w");
@@ -54,8 +53,8 @@ void mtrace_end() {fclose(mtrace);}
 
 #ifdef CONFIG_FTRACE
 FILE *ftrace = NULL;
-void ftrace_init(const char *ftrace_log) {
-  ftrace = fopen(ftrace_log, "w");
-  fprintf(ftrace, "start ftrace\n");
+void ftrace_init(const char *ftrace_elf) {
+  ftrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/ftrace.txt", "w");
+  fprintf(ftrace, "start ftrace at:\n%s\n", ftrace_elf);
 }
 #endif

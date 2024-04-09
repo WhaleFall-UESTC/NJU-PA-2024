@@ -177,10 +177,10 @@ config MTRACE
 
 config FTRACE
   depends on TARGET_NATIVE_ELF
-  bool "Enable function call trace"
-  defalut n
+  bool "Enable functions call trace"
+  default n
   help
-    Enable function call trace with a reference design
+    Enable memory trace with a reference design
 
 choice
   prompt "Reference design"
