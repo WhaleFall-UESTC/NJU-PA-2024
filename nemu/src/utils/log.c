@@ -71,11 +71,15 @@ void ftrace_init(const char *ftrace_elf) {
   if (-1 == system(cmd)) fprintf(ftrace_log, "Error run %s\n", cmd);
   ftrace_symbols = fopen(symbols_path, "r");
   
-  char ch;
+  char ch, addr_tmp[8];
   while((ch = fgetc(ftrace_symbols)) != EOF) {
     if (ch == ':') {
-      fseek(ftrace_symbols, -3, SEEK_CUR);
-      printf("%c%c\n", fgetc(ftrace_symbols), fgetc(ftrace_symbols));
+      fseek(ftrace_symbols, 1, SEEK_CUR);
+      for(int i = 0; i < 8; i++) {
+        addr_tmp[i] = fgetc(ftrace_symbols);
+      }
+      sscanf(addr_tmp, "%x", &symbols[sptr].addr);
+      printf("%#08x", symbols[sptr].addr);
     }
   }
   printf("end\n");
