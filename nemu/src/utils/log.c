@@ -85,7 +85,7 @@ void ftrace_init(const char *ftrace_elf) {
         while((ch = fgetc(ftrace_symbols)) != '\n' && i < 64) {
           symbols[sptr].name[i++] = ch;
         }
-        printf("%s\n", symbols[sptr].name);
+        printf("%s\n", symbols[sptr++].name);
       }
         // fseek(ftrace_symbols, 23, SEEK_CUR);
         // printf("%s\n", fgets(tmp ,4, ftrace_symbols));
