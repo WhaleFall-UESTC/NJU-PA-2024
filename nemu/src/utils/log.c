@@ -70,6 +70,19 @@ void ftrace_init(const char *ftrace_elf) {
   sprintf(cmd, "riscv64-linux-gnu-readelf -s %s > %s", ftrace_elf, symbols_path);
   if (-1 == system(cmd)) fprintf(ftrace_log, "Error run %s\n", cmd);
   ftrace_symbols = fopen(symbols_path, "r");
+  
+  char ch;
+  while((ch = fgetc(ftrace_symbols)) != EOF) {
+    if (ch == 'F') {
+      if (fgetc(ftrace_symbols) == 'U') {
+        fseek(ftrace_symbols, -18, SEEK_CUR);
+        ch = fgetc(ftrace_symbols);
+        printf("%c", ch);
+        if ( ch == ':') {
 
+        } else continue;
+      } else continue;
+    }
+  }
 }
 #endif
