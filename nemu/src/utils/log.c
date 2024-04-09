@@ -80,16 +80,19 @@ void ftrace_init(const char *ftrace_elf) {
       fseek(ftrace_symbols, 15, SEEK_CUR);
       
       if (strcmp(fgets(tmp, 5, ftrace_symbols), "FUNC") == 0) {
-        if (NULL != fgets(tmp, 9, fp_addr))
+        if (NULL != fgets(tmp, 9, fp_addr)) {
           sscanf(tmp, "%x", &symbols[sptr].addr);
+          printf("tmp: %s\taddr: %08x\t", tmp, symbols[sptr].addr);
+        }
 
         fseek(ftrace_symbols, 23, SEEK_CUR);
-        int i = 0;
-        while((ch = fgetc(ftrace_symbols)) != '\n') {
-          symbols[sptr].name[i++] = ch;
-        }
-        printf("%s: %#08x\n\n", symbols[sptr].name, symbols[sptr].addr);
-        sptr++;
+        printf("%s\n", fgets(tmp ,4, ftrace_symbols));
+        // int i = 0;
+        // while((ch = fgetc(ftrace_symbols)) != '\n') {
+        //   symbols[sptr].name[i++] = ch;
+        // }
+        // printf("%s: %#08x\n\n", symbols[sptr].name, symbols[sptr].addr);
+        // sptr++;
       }
       
       // for (int i = 0; i < 4; i++) 
