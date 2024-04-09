@@ -25,7 +25,6 @@ void mtrace_vread(vaddr_t, int, word_t);
 word_t vaddr_read(vaddr_t addr, int len) {
   word_t res = paddr_read(addr, len);
   IFDEF(CONFIG_MTRACE, mtrace_vread(addr, len, res));
-  printf("res: %04x\n", res);
   return res;
 }
 
