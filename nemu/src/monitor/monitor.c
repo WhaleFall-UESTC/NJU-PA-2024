@@ -48,7 +48,7 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
 
-static char *ftrace_log = NULL;
+static char *ftrace = NULL;
 
 static long load_img() {
   if (img_file == NULL) {
@@ -89,7 +89,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
-      case 'f': ftrace_log = optarg; break;
+      case 'f': ftrace = optarg; break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
