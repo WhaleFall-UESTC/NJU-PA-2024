@@ -125,12 +125,14 @@ void cpu_exec(uint64_t n) {
     case NEMU_ABORT: {
       word_t top = cpu.pc + IRBUFSIZE;
       word_t bottom = (cpu.pc - IRBUFSIZE > 0x80000000) ? cpu.pc - IRBUFSIZE : 0x80000000;
-      char inst_s[27];
+      char inst_s[32];
       word_t inst_b;
       for (word_t pc = bottom; pc <= top; pc += 4) {
         inst_b = vaddr_ifetch(pc, 4);
         disassemble(inst_s, 32, pc, (uint8_t *)&inst_b, 4);
-        printf("%s%x: %.*s\t\t%x\n", (pc == cpu.pc ? "--> " : "    "), pc, 27, inst_s, inst_b);
+        for (int i = strlen(inst_s); i < 32; i++) inst_s[i] = ' ';
+        inst_s[32] = '\0';
+        printf("%s%x: %-s%x\n", (pc == cpu.pc ? "--> " : "    "), pc, inst_s, inst_b);
       }
     }
     case NEMU_END: 
