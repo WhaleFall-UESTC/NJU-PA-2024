@@ -131,7 +131,7 @@ void cpu_exec(uint64_t n) {
         inst_b = vaddr_ifetch(pc, 4);
         disassemble(inst_s, 32, pc, (uint8_t *)&inst_b, 4);
         for (int i = strlen(inst_s); i < 32; i++) inst_s[i] = ' ';
-        inst_s[32] = '\0';
+        inst_s[31] = '\0';
         printf("%s%x: %-s%x\n", (pc == cpu.pc ? "--> " : "    "), pc, inst_s, inst_b);
       }
     }
