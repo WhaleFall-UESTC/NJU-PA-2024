@@ -79,7 +79,7 @@ void ftrace_init(const char *ftrace_elf) {
       //FILE *fp_addr = ftrace_symbols;
       fseek(ftrace_symbols, 15, SEEK_CUR);
       
-      if (NULL == fgets(tmp, 4, ftrace_symbols)) assert(0);
+      if (NULL == fgets(tmp, 5, ftrace_symbols)) assert(0);
       printf("%s %c\n", tmp, fgetc(ftrace_symbols));
       // for (int i = 0; i < 4; i++) 
       //   tmp[i] = fgetc(ftrace_symbols);
