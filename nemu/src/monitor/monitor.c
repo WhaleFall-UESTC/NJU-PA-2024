@@ -141,6 +141,8 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Display welcome message. */
   welcome();
+
+  IFDEF(CONFIG_MTRACE, MTRACE_INIT());
 }
 #else // CONFIG_TARGET_AM
 static long load_img() {

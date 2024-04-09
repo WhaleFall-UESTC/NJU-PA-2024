@@ -35,3 +35,11 @@ bool log_enable() {
          (g_nr_guest_inst <= CONFIG_TRACE_END), false);
 }
 #endif
+
+#ifdef CONFIG_MTRACE
+FILE *mtrace = NULL;
+#define MTRACE_INIT()     do {fopen("nemu/mylog/mtrace.txt")} while(0)
+#define MTRACE_READ(addr, len) do {fprintf(mtrace, "read addr: %#08x, len = %d", addr, len);} while(0)
+#define MTRACE_WRITE(addr, data, len) do {fprintf(mtrace, "write %.*x to addr: %#08x", len, data, addr);} while(0)
+#define MTRACE_END()      do {fclose(mtrace);} while(0)
+#endif
