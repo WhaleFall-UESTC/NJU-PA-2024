@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <common.h>
+#include <string.h>
 
 extern uint64_t g_nr_guest_inst;
 
@@ -28,6 +29,8 @@ void init_log(const char *log_file) {
     log_fp = fp;
   }
   Log("Log is written to %s", log_file ? log_file : "stdout");
+
+
 }
 
 bool log_enable() {
@@ -38,9 +41,18 @@ bool log_enable() {
 
 #ifdef CONFIG_MTRACE
 FILE *mtrace = NULL;
-void mtrace_init() {mtrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/mtrace.txt", "w"); fprintf(mtrace, "start mtrace\n");}
+void mtrace_init() {
+  mtrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/mtrace.txt", "w"); 
+  fprintf(mtrace, "start mtrace\n");
+}
 void mtrace_vread(vaddr_t addr, int len, word_t data) {fprintf(mtrace, "vread addr: %#08x, len = %d, the result is %08x\n", addr, len, data);}
 void mtrace_read(vaddr_t addr, int len) {fprintf(mtrace, "read addr: %#08x, len = %d\n", addr, len);}
 void mtrace_write(vaddr_t addr, word_t data, int len) {fprintf(mtrace, "write %.*x to addr: %#08x\n", len, data, addr);}
 void mtrace_end() {fclose(mtrace);} 
+#endif
+
+#ifdef CONFIG_FTRACE
+void ftrace_init() {
+  
+}
 #endif
