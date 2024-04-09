@@ -62,6 +62,8 @@ typedef struct{ vaddr_t addr; char name[32]; } symbol_t;
 symbol_t symbols[64];
 int sptr = 0;
 
+#define LOGSYM(s) fprintf(ftrace_log, "addr: %#08x\tname: %s\n", s.addr, s.name)
+
 void ftrace_init(const char *ftrace_elf) {
   ftrace_log = fopen(ftrace_path, "w");
   fprintf(ftrace_log, "start ftrace at:\n%s\n\n", ftrace_elf);
@@ -82,36 +84,14 @@ void ftrace_init(const char *ftrace_elf) {
       if (strcmp(fgets(tmp_type, 5, ftrace_symbols), "FUNC") == 0) {
         fseek(ftrace_symbols, 24, SEEK_CUR);
         int i = 0;
-        while((ch = fgetc(ftrace_symbols)) != '\n' && i < 64) {
+        while((ch = fgetc(ftrace_symbols)) != '\n' && i < 64)
           symbols[sptr].name[i++] = ch;
-        }
-        printf("%s\n", symbols[sptr++].name);
+        sscanf(tmp_addr, "%x", &symbols[sptr].addr);
+        
+        LOGSYM(symbols[sptr]);
+        sptr++;
       }
-        // fseek(ftrace_symbols, 23, SEEK_CUR);
-        // printf("%s\n", fgets(tmp ,4, ftrace_symbols));
-        // int i = 0;
-        // while((ch = fgetc(ftrace_symbols)) != '\n') {
-        //   symbols[sptr].name[i++] = ch;
-        // }
-        // printf("%s: %#08x\n\n", symbols[sptr].name, symbols[sptr].addr);
-        // sptr++;
-      // }
-      
-      // for (int i = 0; i < 4; i++) 
-      //   tmp[i] = fgetc(ftrace_symbols);
-      // if (strncmp(tmp, "FUNC", 4) != 0)
-      //   continue;
-
-      // sscanf(tmp, "%x", &symbols[sptr].addr);
-      // printf("%s %#08x\n", tmp, symbols[sptr].addr);
-      // for(int i = 0; i < 8; i++) {
-      //   addr_tmp[i] = fgetc(ftrace_symbols);
-      // }
-      
-      // fseek(ftrace_symbols, 7, SEEK_CUR);
-
     }
   }
-  printf("end\n");
 }
 #endif
