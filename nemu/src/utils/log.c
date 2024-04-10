@@ -121,12 +121,15 @@ void ftrace_ret(char *name) {
   fprintf(ftrace_log, "ret [%s]\n", name);
 }
 
-static symbol_t call_list[512] = {};
+static symbol_t call_list[64] = {};
 static int cptr = 0;
 
 void ftrace(Decode *s, int type) {
   int idx = 0;
   if (type) {
+    for (int i = 0; i < cptr; i ++) 
+      if (call_list[i].addr == s->pc) return;
+
     call_list[cptr].addr = s->pc;
     for (idx = 0; idx < sptr; idx++)
       if (symbols[idx].addr == s->dnpc) {
