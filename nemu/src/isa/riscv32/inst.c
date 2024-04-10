@@ -42,7 +42,7 @@ enum {
 
 void ftrace(Decode *s, int type);
 void ft(Decode *s) {
-  IFDEF(CONFIG_FTRACE, ftrace(s, (s->isa.inst.val == 0x8067)));
+  IFDEF(CONFIG_FTRACE, ftrace(s, (s->isa.inst.val != 0x8067)));
 }
 // vaddr_t fret(Decode *s) {
 //   vaddr_t dnpc = s->dnpc;
