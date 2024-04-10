@@ -58,8 +58,7 @@ void *memset(void *s, int c, size_t n) {
   char _c = (char) c;
   for (int i = 0; i < n; i++)
     ((char *)s)[i] = _c;
-  
-  ((char *)s)[n] = '\0';
+
   return s;
 }
 
@@ -69,7 +68,7 @@ void *memmove(void *dst, const void *src, size_t n) {
 
   for (int i = 0; i < n; i++) tmp[i] = _src[i];
   for (int i = 0; i < n; i++) _dst[i] = tmp[i];
-  _dst[n] = '\0';
+  // _dst[n] = '\0';
 
   free(tmp);
   return dst;
