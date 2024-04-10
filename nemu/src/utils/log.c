@@ -125,18 +125,22 @@ static symbol_t call_list[64] = {};
 static int cptr = 0;
 
 void ftrace(Decode *s, int type) {
-  int idx = 0;
+  int idx = 0, flag = 1;
   if (type) {
     for (int i = 0; i < cptr; i ++) 
-      if (call_list[i].addr == s->pc) return;
-
-    call_list[cptr].addr = s->pc;
-    for (idx = 0; idx < sptr; idx++)
-      if (symbols[idx].addr == s->dnpc) {
-        strcpy(call_list[cptr++].name, symbols[idx].name);
+      if (call_list[i].addr == s->pc) {
+        flag = 0;
         break;
       }
-    if (idx == sptr) return;
+    if (flag) {
+      call_list[cptr].addr = s->pc;
+      for (idx = 0; idx < sptr; idx++)
+        if (symbols[idx].addr == s->dnpc) {
+          strcpy(call_list[cptr++].name, symbols[idx].name);
+          break;
+        }
+      if (idx == sptr) return;
+    }
   } 
   else {
     for (idx = 0; idx < cptr; idx++) 
