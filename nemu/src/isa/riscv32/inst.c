@@ -32,6 +32,8 @@ enum {
 #define SEXT_12(x) (x ? 0xfffff000 : 0)
 #define SEXT_B(x)  ((x >> 7)  ? (x | 0xffffff00) : x)
 #define SEXT_H(x)  ((x >> 15) ? (x | 0xffff0000) : x)
+#define GetImmJ(i) (SEXT_20(BITS(i, 31, 31)) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1))
+#define GetImmI(i) (SEXT(BITS(i, 31, 20), 12))
 
 // static word_t mul_high(word_t x, word_t y) {
 //   int64_t mul = ((int64_t) x) * ((int64_t) y);
@@ -49,11 +51,8 @@ vaddr_t fret(Decode *s) {
   if (inst == 0x8067) {
     printf("Detect ret\n");
     word_t i = vaddr_ifetch(dnpc - 4, 4);
-    word_t imm_ = SEXT(BITS(i, 31, 20), 12);
-    word_t src1_ = R(BITS(i, 19, 15));
-    // printf("%08x, %08x\n", dnpc, (src1_ + imm_) & 0xfffffffe);
-    dnpc = ((i & 0x7f) == 0x67) ? ((src1_ + imm_) & 0xfffffffe) : dnpc;
-    dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + imm_) : dnpc;
+    dnpc = ((i & 0x7f) == 0x67) ? ((R(BITS(i, 19, 15)) + GetImmI(i)) & 0xfffffffe) : dnpc;
+    dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + GetImmJ(i)) : dnpc;
     printf("%08x\n", dnpc);
   }
 
@@ -62,11 +61,11 @@ vaddr_t fret(Decode *s) {
 
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
-#define immI() do { *imm = SEXT(BITS(i, 31, 20), 12);} while(0)
+#define immI() do { *imm = GetImmI(i);} while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 #define immB() do { *imm = SEXT_12(BITS(i, 31, 31)) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5 ) | (BITS(i, 11, 8) << 1 ); } while(0);
-#define immJ() do { *imm = (SEXT_20(BITS(i, 31, 31)) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1)); } while(0);
+#define immJ() do { *imm = GetImmJ(i); } while(0);
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
