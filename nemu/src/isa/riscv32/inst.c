@@ -40,22 +40,22 @@ enum {
 //   return mul >> 32;
 // }
 
-void ftrace(Decode *s, vaddr_t dnpc);
-void ft(Decode *s, vaddr_t dnpc) {
-  IFDEF(CONFIG_FTRACE, ftrace(s, dnpc));
+void ftrace(Decode *s, int type);
+void ft(Decode *s) {
+  IFDEF(CONFIG_FTRACE, ftrace(s, (s->isa.inst.val == 0x80067)));
 }
-vaddr_t fret(Decode *s) {
-  vaddr_t dnpc = s->dnpc;
-  word_t inst = s->isa.inst.val;
+// vaddr_t fret(Decode *s) {
+//   vaddr_t dnpc = s->dnpc;
+//   word_t inst = s->isa.inst.val;
 
-  if (inst == 0x8067) {
-    word_t i = vaddr_ifetch(dnpc - 4, 4);
-    dnpc = ((i & 0x7f) == 0x67) ? ((R(BITS(i, 19, 15)) + GetImmI(i)) & 0xfffffffe) : dnpc;
-    dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + GetImmJ(i)) : dnpc;
-  }
+//   if (inst == 0x8067) {
+//     // word_t i = vaddr_ifetch(dnpc - 4, 4);
+//     // dnpc = ((i & 0x7f) == 0x67) ? ((R(BITS(i, 19, 15)) + GetImmI(i)) & 0xfffffffe) : dnpc;
+//     // dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + GetImmJ(i)) : dnpc;
+//   }
 
-  return dnpc;
-}
+//   return dnpc;
+// }
 
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
@@ -99,8 +99,8 @@ static int decode_exec(Decode *s) {
 
   // From RISC-V-READER Page27
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(rd) = imm);
-  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd) = s->snpc, s->dnpc = s->pc + imm, ft(s, fret(s))); 
-  INSTPAT("??????? ????? ????? ??? ????? 11001 11", jalr   , I, R(rd) = s->snpc, s->dnpc = (src1 + imm) & 0xfffffffe, ft(s, fret(s)));
+  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd) = s->snpc, s->dnpc = s->pc + imm, ft(s)); 
+  INSTPAT("??????? ????? ????? ??? ????? 11001 11", jalr   , I, R(rd) = s->snpc, s->dnpc = (src1 + imm) & 0xfffffffe, ft(s));
   INSTPAT("??????? ????? ????? 000 ????? 11000 11", beq    , B, s->dnpc = (src1 == src2) ? s->pc + imm : s->dnpc);
   INSTPAT("??????? ????? ????? 001 ????? 11000 11", bne    , B, s->dnpc = (src1 != src2) ? s->pc + imm : s->dnpc);
   INSTPAT("??????? ????? ????? 100 ????? 11000 11", blt    , B, s->dnpc = ((int)src1 < (int)src2) ? s->pc + imm : s->dnpc);

@@ -121,13 +121,28 @@ void ftrace_ret(char *name) {
   fprintf(ftrace_log, "ret [%s]\n", name);
 }
 
-void ftrace(Decode *s, vaddr_t dnpc) {
-  int idx;
-  for (idx = 0; idx < sptr; idx++)
-    if (symbols[idx].addr == dnpc) break;
-  if (idx == sptr) return;
+static symbol_t call_list[64] = {};
+static int cptr = 0;
+
+void ftrace(Decode *s, int type) {
+  int idx = 0;
+  if (type) {
+    call_list[cptr].addr = s->pc;
+    for (idx = 0; idx < sptr; idx++)
+      if (symbols[idx].addr == s->pc) {
+        strcpy(call_list[cptr++].name, symbols[idx].name);
+        break;
+      }
+    if (idx == sptr) return;
+  } 
+  else {
+    for (idx = 0; idx < cptr; idx++) 
+      if (call_list[idx].addr == s->dnpc - 4) 
+        break;
+    if (idx == cptr) return;
+  }
 
   fprintf(ftrace_log, "%#08x: ", s->pc);
-  ((s->isa.inst.val == 0x8067) ? ftrace_ret(symbols[idx].name) : ftrace_call(symbols[idx]));
+  (type ? ftrace_call(symbols[idx]) : ftrace_ret(call_list[idx].name));
 }
 #endif
