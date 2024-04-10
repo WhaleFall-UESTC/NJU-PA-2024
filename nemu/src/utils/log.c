@@ -132,15 +132,13 @@ void ftrace(Decode *s, int type) {
         flag = 0;
         break;
       }
-    if (flag) {
-      call_list[cptr].addr = s->pc;
-      for (idx = 0; idx < sptr; idx++)
-        if (symbols[idx].addr == s->dnpc) {
-          strcpy(call_list[cptr++].name, symbols[idx].name);
-          break;
-        }
-      if (idx == sptr) return;
-    }
+    if (flag) call_list[cptr].addr = s->pc;
+    for (idx = 0; idx < sptr; idx++)
+      if (symbols[idx].addr == s->dnpc) {
+        if (flag) strcpy(call_list[cptr++].name, symbols[idx].name);
+        break;
+      }
+    if (idx == sptr) return;
   } 
   else {
     for (idx = 0; idx < cptr; idx++) 
