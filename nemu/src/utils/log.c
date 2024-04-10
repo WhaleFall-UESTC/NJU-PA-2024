@@ -129,7 +129,7 @@ void ftrace(Decode *s, int type) {
   if (type) {
     call_list[cptr].addr = s->pc;
     for (idx = 0; idx < sptr; idx++)
-      if (symbols[idx].addr == s->pc) {
+      if (symbols[idx].addr == s->dnpc) {
         strcpy(call_list[cptr++].name, symbols[idx].name);
         break;
       }
