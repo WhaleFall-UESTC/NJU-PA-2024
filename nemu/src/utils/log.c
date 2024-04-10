@@ -121,7 +121,7 @@ void ftrace_ret(char *name) {
   fprintf(ftrace_log, "ret [%s]\n", name);
 }
 
-static symbol_t call_list[64] = {};
+static symbol_t call_list[512] = {};
 static int cptr = 0;
 
 void ftrace(Decode *s, int type) {
