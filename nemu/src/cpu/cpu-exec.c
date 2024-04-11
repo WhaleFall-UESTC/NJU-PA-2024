@@ -33,7 +33,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 void device_update();
-void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+IFDEF(CONFIG_FTRACE, void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte));
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_WATCHPOINT
@@ -129,11 +129,12 @@ void cpu_exec(uint64_t n) {
       word_t inst_b;
       for (word_t pc = bottom; pc <= top; pc += 4) {
         inst_b = vaddr_ifetch(pc, 4);
-        disassemble(inst_s, 28, pc, (uint8_t *)&inst_b, 4);
+        IFDEF(CONFIG_FTRACE, disassemble(inst_s, 28, pc, (uint8_t *)&inst_b, 4));
         for (int i = strlen(inst_s); i < 27; i++) inst_s[i] = ' ';
         inst_s[27] = '\0';
         printf("%s%x: %s\t%08x\n", (pc == cpu.pc ? "--> " : "    "), pc, inst_s, inst_b);
       }
+      
     }
     case NEMU_END: 
       Log("nemu: %s at pc = " FMT_WORD,
