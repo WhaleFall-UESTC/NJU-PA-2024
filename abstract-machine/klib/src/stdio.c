@@ -82,18 +82,14 @@ void write(char *buf, size_t n) {
     putch(buf[i]);
 }
 
-static char buffer[BUFMAX];
-
 int printf(const char *fmt, ...) {
   int i;
-  // char buf[BUFMAX];
+  char buf[BUFMAX];
   va_list args;
 
   va_start(args, fmt);
-  write(buffer, i = vsnprintf(buffer, BUFMAX, fmt, args));
+  write(buf, i = vsnprintf(buf, BUFMAX, fmt, args));
   va_end(args);
-
-  memset(buffer, 0, BUFMAX);
   return i;
 }
 
