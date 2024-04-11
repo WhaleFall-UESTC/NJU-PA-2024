@@ -7,7 +7,7 @@ uint64_t read_time() {
   uint32_t lo = *(volatile uint32_t *)(RTC_ADDR);
   uint32_t hi = *(volatile uint32_t *)(RTC_ADDR + 4);
   uint64_t cur_time = ((uint64_t)hi << 32) | lo;
-  return cur_time / 10;
+  return cur_time;
 }
 
 void __am_timer_init() {
