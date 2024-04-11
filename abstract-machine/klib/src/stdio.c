@@ -2,7 +2,6 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdarg.h>
-#include <unistd.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
@@ -78,6 +77,10 @@ static int skip_atoi(const char **s) {
   return i;
 }
 
+void write(char *buf, size_t n) {
+  for (int i = 0; i < n; i++)
+    putch(buf[i]);
+}
 
 int printf(const char *fmt, ...) {
   int i;
@@ -85,7 +88,7 @@ int printf(const char *fmt, ...) {
   va_list args;
 
   va_start(args, fmt);
-  write(1, buf, i = vsnprintf(buf, BUFMAX, fmt, args));
+  write(buf, i = vsnprintf(buf, BUFMAX, fmt, args));
   va_end(args);
   return i;
 }
