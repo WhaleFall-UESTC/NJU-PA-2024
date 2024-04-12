@@ -32,13 +32,13 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
     int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
-    uint32_t *start = (uint32_t *)(uintptr_t)FB_ADDR + (x * width + y) * sizeof(uint32_t);
-    uint32_t *store = (uint32_t *)ctl->pixels;
+    uint32_t *start = (uint32_t *)(uintptr_t)(FB_ADDR + (x * width + y) * sizeof(uint32_t));
+    uint32_t store = *((uint32_t *)ctl->pixels);
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        start[j] = *store;
+        start[j] = store;
       }
-      start += width * sizeof(uint32_t);
+      start += width;
     }
   }
 }
