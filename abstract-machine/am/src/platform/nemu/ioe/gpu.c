@@ -53,7 +53,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   uint32_t width = inl(VGACTL_ADDR) >> 16;
 
-  int base = (x * width + y);
+  int base = (y * width + x);
   int base_p = 0;
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
