@@ -30,16 +30,13 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   uint32_t sbuf_count;
-  // uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
+  uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
   uint32_t start = (uint32_t)ctl->buf.start; 
   uint32_t end = (uint32_t)ctl->buf.end;
   uint32_t len = end - start;
-  printf("len: %u\n", len);
-  panic_on(len != 4096, "len error");
-  //do {
-    sbuf_count = inl(AUDIO_COUNT_ADDR);
-    
-  //}while (sbuf_count + len > sbuf_size);
+  do {
+    sbuf_count = inl(AUDIO_COUNT_ADDR);  
+  }while (sbuf_count + len > sbuf_size);
   memcpy((void *) AUDIO_SBUF_ADDR + sbuf_count, (void *) start, len);
   sbuf_count += len;
   outl(AUDIO_COUNT_ADDR, sbuf_count);

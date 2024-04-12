@@ -30,43 +30,43 @@ enum {
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 
-void audio_callback(void *userdata, uint8_t *stream, int len) {
-  SDL_LockAudio();
-  stream = sbuf;
-  SDL_UnlockAudio();
-}
+// void audio_callback(void *userdata, uint8_t *stream, int len) {
+//   SDL_LockAudio();
+//   stream = sbuf;
+//   SDL_UnlockAudio();
+// }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  // assert(!is_write);
-  // assert(offset == 0);
+  // // assert(!is_write);
+  // // assert(offset == 0);
   
-  // initialize
-  if (SDL_Init(SDL_INIT_AUDIO) < 0) return;
+  // // initialize
+  // if (SDL_Init(SDL_INIT_AUDIO) < 0) return;
   
-  // Context
-  SDL_AudioSpec want, have;
-  want.freq     = audio_base[reg_freq];
-  want.format   = AUDIO_S16;
-  want.channels = audio_base[reg_channels];
-  want.samples  = audio_base[reg_samples];
-  want.size     = audio_base[reg_count];
-  want.callback = audio_callback;
-  want.userdata = &want;
+  // // Context
+  // SDL_AudioSpec want, have;
+  // want.freq     = audio_base[reg_freq];
+  // want.format   = AUDIO_S16;
+  // want.channels = audio_base[reg_channels];
+  // want.samples  = audio_base[reg_samples];
+  // want.size     = audio_base[reg_count];
+  // want.callback = audio_callback;
+  // want.userdata = &want;
   
-  // Open audio device
-  SDL_AudioDeviceID device_id = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
-  if (device_id == 0) {
-    SDL_Quit();
-    return;
-  }
+  // // Open audio device
+  // SDL_AudioDeviceID device_id = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
+  // if (device_id == 0) {
+  //   SDL_Quit();
+  //   return;
+  // }
 
-  // Start audio
-  SDL_PauseAudio(0); 
+  // // Start audio
+  // SDL_PauseAudio(0); 
 
-  // Close
-  audio_base[reg_count] = 0;
-  SDL_CloseAudio();
-  SDL_Quit();
+  // // Close
+  // audio_base[reg_count] = 0;
+  // SDL_CloseAudio();
+  // SDL_Quit();
 }
 
 void init_audio() {
