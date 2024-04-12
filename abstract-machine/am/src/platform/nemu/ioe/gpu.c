@@ -29,46 +29,21 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-  // if (ctl->sync) {
-  //   int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
-  //   if (w == 0 || h == 0) return;
-  //   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  //   uint32_t *pixels = (uint32_t *) ctl->pixels;
-  //   uint32_t width = inl(VGACTL_ADDR) >> 
+  if (ctl->sync) {
+    int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
+    if (w == 0 || h == 0) return;
+    uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+    uint32_t *pixels = (uint32_t *) ctl->pixels;
+    uint32_t width = inl(VGACTL_ADDR) >> 16;
     
-  //   fb += (x * width + y);
-  //   for (int i = 0; i < h; i++) {
-  //     for (int j = 0; j < w; j++) {
-  //       fb[j] = *pixels++;
-  //     }
-  //     fb += width;
-  //   }
-  //   outl(SYNC_ADDR, 1);
-  // }
-
-  int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
-  if (!ctl->sync && (w == 0 || h == 0))
-    return;
-  uint32_t *pixels = ctl->pixels;
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  uint32_t width = inl(VGACTL_ADDR) >> 16;
-
-  int base = (y * width + x);
-  int base_p = 0;
+    fb += (y * width + x);
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        fb[base + j] = pixels[base_p + j];
+        fb[j] = *pixels++;
       }
       fb += width;
-      base_p += w;
     }
-  // for (int i = y; i < y+h; i++) {
-  //   for (int j = x; j < x+w; j++) {
-  //     fb[screen_w*i+j] = pixels[w*(i-y)+(j-x)]; //缓冲区是一个像素块
-  //   }
-  // }
-  if (ctl->sync) {
-    outl(SYNC_ADDR, 1);    //将sync置1，nemu会进行屏幕更新
+    outl(SYNC_ADDR, 1);
   }
 }
 
