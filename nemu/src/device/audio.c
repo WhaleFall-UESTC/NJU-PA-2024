@@ -31,9 +31,9 @@ static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 
 void audio_callback(void *userdata, uint8_t *stream, int len) {
-  SDL_LockAudio();
+  // SDL_LockAudio();
   stream = sbuf;
-  SDL_UnlockAudio();
+  // SDL_UnlockAudio();
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
