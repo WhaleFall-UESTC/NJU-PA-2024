@@ -51,14 +51,16 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
     return;
   uint32_t *pixels = ctl->pixels;
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  uint32_t screen_w = inl(VGACTL_ADDR) >> 16;
+  uint32_t width = inl(VGACTL_ADDR) >> 16;
 
-  fb += (x * screen_w + y);
+  int base = (x * width + y);
+  int base_p = 0;
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        fb[j] = *pixels++;
+        fb[base + j] = pixels[base_p + j];
       }
-      fb += screen_w;
+      fb += width;
+      base_p += w;
     }
   // for (int i = y; i < y+h; i++) {
   //   for (int j = x; j < x+w; j++) {
