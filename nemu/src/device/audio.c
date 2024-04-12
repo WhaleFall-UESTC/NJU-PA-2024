@@ -37,6 +37,11 @@ static uint32_t *audio_base = NULL;
 // }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+  for (int i = 0; i < 6; i++) {
+    printf("audio_base[%d]: %u", i, audio_base[i]);
+  }
+  printf("\n");
+  memset(sbuf, 0, audio_base[reg_count]);
   audio_base[reg_count] = 0;
   // // assert(!is_write);
   // // assert(offset == 0);
