@@ -37,10 +37,9 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
     uint32_t *store = (uint32_t *)(ctl->pixels);
     for (int i = 0; i < ctl->h; i++) {
       for (int j = 0; j < ctl->w; j++) {
-        start[j] = store[j];
+        start[j] = *store;
       }
       start += width;
-      store += ctl->w;
     }
   }
 }
