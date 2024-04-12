@@ -30,15 +30,17 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
-  uint32_t *start = (uint32_t *)(uintptr_t)FB_ADDR;
-  uint32_t *store = (uint32_t *)ctl->pixels;
-  start += x * width + y;
+  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+  uint32_t *pixels = (uint32_t *)ctl->pixels;
+
+  int base_fb = x * width + y;
+  int base_pixels = 0;
   for (int i = 0; i < h; i++) {
     for (int j = 0; j < w; j++) {
-      start[j] = store[j];
+      fb[base_fb + j] = pixels[base_pixels + j];
     }
-    start += width;
-    store += w;
+    base_fb += width;
+    base_pixels += w;
   }
 
   if (ctl->sync) {
