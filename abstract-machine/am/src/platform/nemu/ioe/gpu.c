@@ -53,19 +53,17 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   uint32_t width = inl(VGACTL_ADDR) >> 16;
 
-  int base = (y * width + x);
-  // int base_p = 0;
+  fb += (y * width + x);
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        fb[base + j] = *pixels++;
+        fb[j] = *pixels++;
       }
       fb += width;
-      // base_p += w;
     }
 
-  // if (ctl->sync) {
+  if (ctl->sync) {
     outl(SYNC_ADDR, 1); 
-  
+  }
 }
 
 void __am_gpu_status(AM_GPU_STATUS_T *status) {
