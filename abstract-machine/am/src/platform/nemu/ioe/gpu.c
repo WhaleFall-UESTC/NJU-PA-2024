@@ -1,5 +1,6 @@
 #include <am.h>
 #include <nemu.h>
+#include <stdio.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 #define SIZE_MASK 0x0000ffff
@@ -28,6 +29,7 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
+  printf("called!\n");
   if (ctl->sync) {
     int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
     if (w == 0 || h == 0) return;
