@@ -62,14 +62,10 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
       fb += width;
       // base_p += w;
     }
-  // for (int i = y; i < y+h; i++) {
-  //   for (int j = x; j < x+w; j++) {
-  //     fb[screen_w*i+j] = pixels[w*(i-y)+(j-x)]; //缓冲区是一个像素块
-  //   }
-  // }
-  if (ctl->sync) {
-    outl(SYNC_ADDR, 1);    //将sync置1，nemu会进行屏幕更新
-  }
+
+  // if (ctl->sync) {
+    outl(SYNC_ADDR, 1); 
+  
 }
 
 void __am_gpu_status(AM_GPU_STATUS_T *status) {
