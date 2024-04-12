@@ -53,12 +53,12 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   uint32_t width = inl(VGACTL_ADDR) >> 16;
 
-  fb += (y * width + x);
+  int base = (y * width + x);
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        fb[j] = *pixels++;
+        fb[base + j] = *pixels++;
       }
-      fb += width;
+      base += width;
     }
 
   if (ctl->sync) {
