@@ -37,11 +37,7 @@ static uint32_t *audio_base = NULL;
 // }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  for (int i = 0; i < 6; i++) {
-    printf("[%d]: %u", i, audio_base[i]);
-  }
-  printf("\n");
-  memset(sbuf, 0, audio_base[reg_count]);
+  
   audio_base[reg_count] = 0; 
   // // assert(!is_write);
   // // assert(offset == 0);
@@ -86,5 +82,5 @@ void init_audio() {
 
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
-  audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
+  
 }
