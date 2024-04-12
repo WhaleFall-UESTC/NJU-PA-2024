@@ -37,7 +37,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   do {
     sbuf_count = inl(AUDIO_COUNT_ADDR);  
   }while (sbuf_count + len > sbuf_size);
-  memcpy((void *) AUDIO_SBUF_ADDR + sbuf_count, (void *) start, len);
+  //memcpy((void *) AUDIO_SBUF_ADDR + sbuf_count, (void *) start, len);
   sbuf_count += len;
   outl(AUDIO_COUNT_ADDR, sbuf_count);
 }
