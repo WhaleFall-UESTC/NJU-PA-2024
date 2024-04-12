@@ -52,11 +52,19 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   uint32_t *pixels = ctl->pixels;
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   uint32_t screen_w = inl(VGACTL_ADDR) >> 16;
-  for (int i = y; i < y+h; i++) {
-    for (int j = x; j < x+w; j++) {
-      fb[screen_w*i+j] = pixels[w*(i-y)+(j-x)]; //缓冲区是一个像素块
+
+  fb += (x * screen_w + y);
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        fb[j] = *pixels++;
+      }
+      fb += screen_w;
     }
-  }
+  // for (int i = y; i < y+h; i++) {
+  //   for (int j = x; j < x+w; j++) {
+  //     fb[screen_w*i+j] = pixels[w*(i-y)+(j-x)]; //缓冲区是一个像素块
+  //   }
+  // }
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);    //将sync置1，nemu会进行屏幕更新
   }
