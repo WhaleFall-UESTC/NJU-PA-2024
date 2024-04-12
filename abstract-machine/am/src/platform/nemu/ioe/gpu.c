@@ -12,7 +12,7 @@ void __am_gpu_init() {
   int h = wh & SIZE_MASK;
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   int s = w * h;
-  for (int i = 0; i < s; i++) fb[i] = i;
+  for (int i = 0; i < s; i++) fb[i] = 0x00ffffff;
   outl(SYNC_ADDR, 1);
 }
 
@@ -29,7 +29,6 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-  printf("called!\n");
   if (ctl->sync) {
     int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
     if (w == 0 || h == 0) return;
