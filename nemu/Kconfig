@@ -180,7 +180,14 @@ config FTRACE
   bool "Enable functions call trace"
   default n
   help
-    Enable memory trace with a reference design
+    Enable function call trace with a reference design
+
+config DTRACE
+  depends on TARGET_NATIVE_ELF
+  bool "Enable device trace"
+  default n
+  help
+    Enable device trace with a reference design
 
 choice
   prompt "Reference design"

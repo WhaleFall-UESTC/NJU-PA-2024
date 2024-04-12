@@ -15,6 +15,7 @@
 
 #include <common.h>
 #include <cpu/decode.h>
+#include <utils.h>
 
 extern uint64_t g_nr_guest_inst;
 
@@ -149,5 +150,28 @@ void ftrace(Decode *s, int type) {
 
   fprintf(ftrace_log, "%#08x: ", s->pc);
   (type ? ftrace_call(symbols[idx]) : ftrace_ret(call_list[idx].name));
+}
+#endif
+
+
+#ifdef CONFIG_DTRACE
+FILE *dtrace = NULL;
+void dtrace_init() {
+  dtrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/dtrace.txt", "w");
+  fprintf(dtrace, "start dtrace\n");
+}
+
+void dtrace_in(const char *device, paddr_t addr, word_t data, int len) {
+  fprintf(dtrace, "Read from Device: %s\n", device);
+  fprintf(dtrace, "Read %#08x and get data: %#0*x", addr, len, data);
+}
+
+void dtrace_out(const char *device, paddr_t addr, word_t data, int len) {
+  fprintf(dtrace, "Write to Device: %s\n", device);
+  fprintf(dtrace, "Write %#08x and data is: %#0*x", addr, len, data);
+}
+
+void dtrace_end() {
+  fclose(dtrace);
 }
 #endif

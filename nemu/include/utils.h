@@ -75,3 +75,11 @@ uint64_t get_time();
 
 
 #endif
+
+
+#ifdef CONFIG_DTRACE
+void dtrace_in(const char *device, paddr_t addr, word_t data, int len);
+void dtrace_out(const char *device, paddr_t addr, word_t data, int len);
+#define Dtrace_in(name, addr, data, len) dtrace_in(name, addr, data, len)
+#define Dtrace_out(name, addr, data, len) dtrace_out(name, addr, data, len)
+#endif

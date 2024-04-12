@@ -123,6 +123,7 @@ void cpu_exec(uint64_t n) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_ABORT: {
+      cpu.pc -= 4;
       word_t top = cpu.pc + IRBUFSIZE;
       word_t bottom = (cpu.pc - IRBUFSIZE > 0x80000000) ? cpu.pc - IRBUFSIZE : 0x80000000;
       char inst_s[28];
@@ -134,7 +135,6 @@ void cpu_exec(uint64_t n) {
         inst_s[27] = '\0';
         printf("%s%x: %s\t%08x\n", (pc == cpu.pc ? "--> " : "    "), pc, inst_s, inst_b);
       }
-      
     }
     case NEMU_END: 
       Log("nemu: %s at pc = " FMT_WORD,
