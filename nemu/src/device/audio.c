@@ -31,7 +31,9 @@ static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 
 void audio_callback(void *userdata, uint8_t *stream, int len) {
-  *stream = *sbuf;
+  SDL_LockAudio();
+  stream = sbuf;
+  SDL_UnlockAudio();
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
@@ -43,10 +45,11 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   
   // Context
   SDL_AudioSpec want, have;
-  want.freq = audio_base[reg_freq];
-  want.format = AUDIO_S16;
+  want.freq     = audio_base[reg_freq];
+  want.format   = AUDIO_S16;
   want.channels = audio_base[reg_channels];
-  want.samples = audio_base[reg_samples];
+  want.samples  = audio_base[reg_samples];
+  want.size     = audio_base[reg_count];
   want.callback = audio_callback;
   want.userdata = &want;
   
@@ -61,6 +64,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   SDL_PauseAudio(0); 
 
   // Close
+  audio_base[reg_count] = 0;
   SDL_CloseAudio();
   SDL_Quit();
 }
@@ -76,4 +80,5 @@ void init_audio() {
 
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
+  audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
 }
