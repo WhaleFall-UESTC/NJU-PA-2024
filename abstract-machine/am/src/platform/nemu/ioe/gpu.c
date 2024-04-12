@@ -7,18 +7,12 @@
 
 
 void __am_gpu_init() {
-  uint32_t wh = inl(VGACTL_ADDR);
-  int w = (wh >> 16) & SIZE_MASK;
-  int h = wh & SIZE_MASK;
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  int s = w * h;
-  for (int i = 0; i < s; i++) fb[i] = 0x00ffffff;
-  outl(SYNC_ADDR, 1);
+  
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   uint32_t wh = inl(VGACTL_ADDR);
-  uint32_t width = (wh >> 16) & SIZE_MASK;
+  uint32_t width = wh >> 16;
   uint32_t height = wh & SIZE_MASK;
   uint32_t size = width * height;
   *cfg = (AM_GPU_CONFIG_T) {
