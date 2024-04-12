@@ -35,8 +35,8 @@ void audio_callback(void *userdata, uint8_t *stream, int len) {
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  assert(!is_write);
-  assert(offset == 0);
+  // assert(!is_write);
+  // assert(offset == 0);
   
   // initialize
   if (SDL_Init(SDL_INIT_AUDIO) < 0) return;
