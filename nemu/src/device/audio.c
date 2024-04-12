@@ -37,6 +37,7 @@ static uint32_t *audio_base = NULL;
 // }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+  audio_base[reg_count] = 0;
   // // assert(!is_write);
   // // assert(offset == 0);
   
