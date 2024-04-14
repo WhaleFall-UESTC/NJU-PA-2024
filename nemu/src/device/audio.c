@@ -33,7 +33,17 @@ static uint32_t *audio_base = NULL;
 
 void audio_callback(void *userdata, uint8_t *stream, int len) {
   SDL_LockAudio();
-  stream = sbuf;
+  int count = audio_base[reg_count];
+  int nread = (count < len) ? count : len;
+  memcpy(stream, sbuf, nread);
+  if (count <= len)
+    memset(stream + count, 0, len - count);
+  else {
+    count -= nread;
+    memcpy(sbuf, sbuf + nread, count);
+    memset(sbuf + count, 0, nread);
+    audio_base[reg_count] = count;
+  }
   SDL_UnlockAudio();
 }
 
@@ -61,7 +71,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     SDL_PauseAudio(0);
   }
   else if (is_write && offset == 20) {
-
+    
   }
 }
 
