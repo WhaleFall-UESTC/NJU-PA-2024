@@ -35,8 +35,9 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   void *start = ctl->buf.start, *end = ctl->buf.end; 
   int len = end - start;
-  while (len + count > sbuf_size)
+  do {
     count = inl(AUDIO_COUNT_ADDR);
+  } while (len + count > sbuf_size);
   memcpy(sbuf + count, start, len);
   count += len;
   outl(AUDIO_COUNT_ADDR, count);
