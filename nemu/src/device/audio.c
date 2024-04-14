@@ -40,8 +40,8 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   if (!is_write || offset != 16 || audio_base[reg_init] != 1) return;
   printf("start audio\n");
   printf("frep:\t\t%u\n", audio_base[reg_freq]);
-  printf("channels:\t%u\n", audio_base[reg_channels]);
-  printf("samples:\t%u\n", audio_base[reg_samples]);
+  printf("channels:\t%4u\n", audio_base[reg_channels]);
+  printf("samples:\t%4u\n", audio_base[reg_samples]);
   printf("count:\t\t%u\n", audio_base[reg_count]);
   printf("And read from sbuf: %#x\n\n", sbuf[0]);
   sbuf[0] = 0;
