@@ -29,6 +29,7 @@ void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
 
 void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
   stat->count = inl(AUDIO_COUNT_ADDR);
+  outl(AUDIO_INIT_ADDR, 1);
 }
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
@@ -39,5 +40,4 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   memcpy(sbuf + count, start, len);
   count += len;
   outl(AUDIO_COUNT_ADDR, count);
-  outl(AUDIO_INIT_ADDR, 1);
 }
