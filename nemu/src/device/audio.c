@@ -40,7 +40,7 @@ void audio_callback(void *userdata, uint8_t *stream, int len) {
     memset(stream + count, 0, len - count);
   else {
     count -= nread;
-    memcpy(sbuf, sbuf + nread, count);
+    memmove(sbuf, sbuf + nread, count);
     memset(sbuf + count, 0, nread);
     audio_base[reg_count] = count;
   }
@@ -69,9 +69,6 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     SDL_InitSubSystem(SDL_INIT_AUDIO);
     SDL_OpenAudio(&want, NULL);
     SDL_PauseAudio(0);
-  }
-  else if (is_write && offset == 20) {
-    
   }
 }
 
