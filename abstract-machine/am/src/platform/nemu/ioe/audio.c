@@ -12,6 +12,8 @@
 #define AUDIO_COUNT_ADDR     (AUDIO_ADDR + 0x14)
 
 void __am_audio_init() {
+  printf("Software initialized\n");
+  printf("sbuf_size is %#x\n\n", inl(AUDIO_SBUF_SIZE_ADDR));
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
@@ -19,9 +21,9 @@ void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
 }
 
 void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
-  outl(AUDIO_FREQ_ADDR,     ctrl->freq);
-  outl(AUDIO_CHANNELS_ADDR, ctrl->channels);
-  outl(AUDIO_SAMPLES_ADDR,  ctrl->samples);
+  *((int *)AUDIO_FREQ_ADDR)     = ctrl->freq;
+  *((int *)AUDIO_CHANNELS_ADDR) = ctrl->channels;
+  *((int *)AUDIO_SAMPLES_ADDR)  = ctrl->samples;
 }
 
 void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
@@ -29,6 +31,7 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 }
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
+  printf("call audio_play\n");
   uint32_t sbuf_count;
   uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
   uint32_t start = (uint32_t)ctl->buf.start; 
@@ -37,7 +40,9 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   do {
     sbuf_count = inl(AUDIO_COUNT_ADDR);  
   }while (sbuf_count + len > sbuf_size);
-  //memcpy((void *) AUDIO_SBUF_ADDR + sbuf_count, (void *) start, len);
+  printf("sbuf_count = %u,/tlen = %u\n", sbuf_count, len);
+  memcpy((void *) AUDIO_SBUF_ADDR + sbuf_count, (void *) start, len);
   sbuf_count += len;
-  outl(AUDIO_COUNT_ADDR, sbuf_count);
+  *((int *)AUDIO_COUNT_ADDR) = sbuf_count;
+  printf("Finish, and sbuf_count turns to %u\n\n", sbuf_count);
 }
