@@ -25,11 +25,11 @@ void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
   *((int *)AUDIO_FREQ_ADDR)     = ctrl->freq;
   *((int *)AUDIO_CHANNELS_ADDR) = ctrl->channels;
   *((int *)AUDIO_SAMPLES_ADDR)  = ctrl->samples;
+  outl(AUDIO_INIT_ADDR, 1);
 }
 
 void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
   stat->count = inl(AUDIO_COUNT_ADDR);
-  outl(AUDIO_INIT_ADDR, 1);
 }
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
