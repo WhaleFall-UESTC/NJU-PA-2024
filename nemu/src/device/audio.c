@@ -38,6 +38,7 @@ static uint32_t *audio_base = NULL;
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   assert(!is_write);
+  if (offset != 16 || audio_base[reg_init] != 1) return;
   printf("start audio\n");
   printf("frep:\t%u\n", audio_base[reg_freq]);
   printf("channels:\t%u\n", audio_base[reg_channels]);

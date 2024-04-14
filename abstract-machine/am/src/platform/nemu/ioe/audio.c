@@ -12,7 +12,6 @@
 #define AUDIO_COUNT_ADDR     (AUDIO_ADDR + 0x14)
 
 void __am_audio_init() {
-
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
@@ -33,4 +32,5 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   outl(AUDIO_SBUF_ADDR, 0xffff);
   outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + 4);
+  outl(AUDIO_INIT_ADDR, 1);
 }
