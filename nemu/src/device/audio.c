@@ -37,6 +37,14 @@ static uint32_t *audio_base = NULL;
 // }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+  printf("start audio\n");
+  printf("frep:\t%u\n", audio_base[reg_freq]);
+  printf("channels:\t%u\n", audio_base[reg_channels]);
+  printf("samples:\t%u\n", audio_base[reg_samples]);
+  printf("count:\t%u\n", audio_base[reg_count]);
+  printf("And read from sbuf: %#x\n\n", sbuf[0]);
+  sbuf[0] = 0;
+  audio_base[reg_count] = 0;
   // printf("Hardware starts playing\n");
   // audio_base[reg_count] = 0; 
   // // assert(!is_write);
@@ -79,8 +87,10 @@ void init_audio() {
 #else
   add_mmio_map("audio", CONFIG_AUDIO_CTL_MMIO, audio_base, space_size, audio_io_handler);
 #endif
-
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
   
+  audio_base[reg_init]      = 0;
+  audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
+  audio_base[reg_count]     = 0;
 }
