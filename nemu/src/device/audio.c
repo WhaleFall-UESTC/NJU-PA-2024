@@ -42,33 +42,38 @@ void audio_callback(void *userdata, uint8_t *stream, int len) {
   else {
     memmove(sbuf, sbuf + nread, count);
     memset(sbuf + count, 0, nread);
-    audio_base[reg_count] = count;
   }
+  audio_base[reg_count] = count;
   SDL_UnlockAudio();
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   // if (!is_write || offset != 16 || audio_base[reg_init] != 1) return;
-  if (is_write && offset == 16 && audio_base[reg_init] == 1) {
-    printf("Initalize audio device\n");
-    printf("frep:\t\t%u\n", audio_base[reg_freq]);
-    printf("channels:\t%4u\n", audio_base[reg_channels]);
-    printf("samples:\t%u\n", audio_base[reg_samples]);
-    printf("count:\t\t%4u\n", audio_base[reg_count]);
-    
-    // Context
-    SDL_AudioSpec want;
-    want.freq     = audio_base[reg_freq];
-    want.format   = AUDIO_S16SYS;
-    want.channels = audio_base[reg_channels];
-    want.samples  = audio_base[reg_samples];
-    want.size     = audio_base[reg_count];
-    want.callback = audio_callback;
-    want.userdata = NULL;
-    
-    SDL_InitSubSystem(SDL_INIT_AUDIO);
-    SDL_OpenAudio(&want, NULL);
-    SDL_PauseAudio(0);
+  if (is_write && offset == 16) {
+    if (audio_base[reg_init] == 1) {
+      printf("Initalize audio device\n");
+      printf("frep:\t\t%u\n", audio_base[reg_freq]);
+      printf("channels:\t%4u\n", audio_base[reg_channels]);
+      printf("samples:\t%u\n", audio_base[reg_samples]);
+      printf("count:\t\t%4u\n", audio_base[reg_count]);
+      
+      // Context
+      SDL_AudioSpec want;
+      want.freq     = audio_base[reg_freq];
+      want.format   = AUDIO_S16SYS;
+      want.channels = audio_base[reg_channels];
+      want.samples  = audio_base[reg_samples];
+      want.size     = audio_base[reg_count];
+      want.callback = audio_callback;
+      want.userdata = NULL;
+      
+      SDL_InitSubSystem(SDL_INIT_AUDIO);
+      SDL_OpenAudio(&want, NULL);
+      SDL_PauseAudio(0);
+    }
+    else if (audio_base[reg_count] == 0) {
+
+    }
   }
 }
 
