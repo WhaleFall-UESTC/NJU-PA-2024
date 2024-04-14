@@ -44,11 +44,8 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   printf("samples:\t%u\n", audio_base[reg_samples]);
   printf("count:\t\t%4u\n", audio_base[reg_count]);
   
-  // initialize
-  if (SDL_Init(SDL_INIT_AUDIO) < 0) return;
-  
   // Context
-  SDL_AudioSpec want, have;
+  SDL_AudioSpec want;
   want.freq     = audio_base[reg_freq];
   want.format   = AUDIO_S16SYS;
   want.channels = audio_base[reg_channels];
@@ -57,18 +54,9 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   want.callback = audio_callback;
   want.userdata = NULL;
   
-  // Open audio device
-  SDL_OpenAudio(&want, &have);
-
-  // Start audio
-  SDL_PauseAudio(0); 
-
-  // Close
-  audio_base[reg_count] = 0;
-  SDL_CloseAudio();
-  SDL_Quit();
-
-  audio_base[reg_count] = 0;
+  SDL_InitSubSystem(SDL_INIT_AUDIO);
+  SDL_OpenAudio(&want, NULL);
+  SDL_PauseAudio(0);
 }
 
 void init_audio() {
