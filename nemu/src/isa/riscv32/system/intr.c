@@ -41,9 +41,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
-  // CSR[mepc] = epc;
-  // CSR[mcause] = NO;
-  // return CSR[mtvec];
+
   CSRs(mepc) = epc;
   CSRs(mcause) = NO;
   return CSRs(mtvec);
@@ -52,3 +50,6 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 word_t isa_query_intr() {
   return INTR_EMPTY;
 }
+
+void set_csr(word_t csr, word_t value) { CSRs(csr) = value; }
+word_t get_csr(word_t csr) { return CSRs(csr); }
