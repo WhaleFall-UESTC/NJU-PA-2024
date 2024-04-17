@@ -14,7 +14,27 @@
 ***************************************************************************************/
 
 #include <isa.h>
-#include "../local-include/reg.h"
+
+
+enum {
+  mstatus, misa, meedleg, mideleg, mie, mtvec, mcounteren, mstatush, 
+  mscratch, mepc, mcause, mtval, mip, mtinst, mtval12
+} Machine_Trap;
+
+word_t trap_csr[15] = {};
+
+#define CSRs(csr) trap_csr[csr < 15 ? csr : addr2csr(csr)]
+
+int addr2csr(word_t addr) {
+  if (addr >= 0x300 && addr <= 0x306) return addr - 0x300;
+  if (addr >= 0x340 && addr <= 0x344) return addr - 0x340 + 8;
+  switch (addr) {
+    case 0x310: return 7;
+    case 0x34a: return 13;
+    case 0x34b: return 14;
+    default: return -1;
+  }
+}
 
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
@@ -24,7 +44,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // CSR[mepc] = epc;
   // CSR[mcause] = NO;
   // return CSR[mtvec];
-  return 0;
+  CSRs(mepc) = epc;
+  CSRs(mcause) = NO;
+  return CSRs(mtvec);
 }
 
 word_t isa_query_intr() {

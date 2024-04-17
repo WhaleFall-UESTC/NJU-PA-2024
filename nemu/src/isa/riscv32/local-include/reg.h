@@ -31,5 +31,4 @@ static inline const char* reg_name(int idx) {
 }
 
 
-
 #endif
