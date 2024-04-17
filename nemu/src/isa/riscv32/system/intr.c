@@ -51,5 +51,5 @@ word_t isa_query_intr() {
   return INTR_EMPTY;
 }
 
-void set_csr(word_t csr, word_t value) { CSRs(csr) = value; }
 word_t get_csr(word_t csr) { return CSRs(csr); }
+void set_csr(word_t csr, word_t value) { CSRs(csr) = value; printf("%4x: %08x", csr, CSRs(csr)); }
