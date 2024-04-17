@@ -16,40 +16,53 @@
 #include <isa.h>
 
 
-enum {
-  mstatus, misa, meedleg, mideleg, mie, mtvec, mcounteren, mstatush, 
-  mscratch, mepc, mcause, mtval, mip, mtinst, mtval12
-} Machine_Trap;
+// enum {
+//   mstatus, misa, meedleg, mideleg, mie, mtvec, mcounteren, mstatush, 
+//   mscratch, mepc, mcause, mtval, mip, mtinst, mtval12
+// } Machine_Trap;
 
-word_t trap_csr[15] = {};
+// word_t trap_csr[15] = {};
 
-#define CSRs(csr) trap_csr[csr < 15 ? csr : addr2csr(csr)]
+// #define CSRs(csr) trap_csr[csr < 15 ? csr : addr2csr(csr)]
 
-int addr2csr(word_t addr) {
-  if (addr >= 0x300 && addr <= 0x306) return addr - 0x300;
-  if (addr >= 0x340 && addr <= 0x344) return addr - 0x340 + 8;
-  switch (addr) {
-    case 0x310: return 7;
-    case 0x34a: return 13;
-    case 0x34b: return 14;
-    default: return -1;
+// int addr2csr(word_t addr) {
+//   if (addr >= 0x300 && addr <= 0x306) return addr - 0x300;
+//   if (addr >= 0x340 && addr <= 0x344) return addr - 0x340 + 8;
+//   switch (addr) {
+//     case 0x310: return 7;
+//     case 0x34a: return 13;
+//     case 0x34b: return 14;
+//     default: return -1;
+//   }
+// }
+
+enum { mepc, mcause, mstatus, mtvec };
+word_t trap_csr[4] = {};
+
+void set_trap_csr(int i, word_t value) { trap_csr[i] = value; }
+word_t get_trap_csr(int i) { return trap_csr[i]; }
+
+
+int csr_register(word_t imm) {
+  switch (imm) {
+    case 0x341: return mepc; //&(cpu.csr.mepc);
+    case 0x342: return mcause; //&(cpu.csr.mcause);
+    case 0x300: return mstatus; //&(cpu.csr.mstatus);
+    case 0x305: return mtvec; //&(cpu.csr.mtvec);
+    default: panic("unknown csr");
   }
 }
-
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
 
-  CSRs(mepc) = epc;
-  CSRs(mcause) = NO;
-  return CSRs(mtvec);
+  trap_csr[mcause] = NO;
+  trap_csr[mepc] = epc;
+  return trap_csr[mtvec];
 }
 
 word_t isa_query_intr() {
   return INTR_EMPTY;
 }
-
-word_t get_csr(word_t csr) { return CSRs(csr); }
-void set_csr(word_t csr, word_t value) { CSRs(csr) = value; printf("%4x: %08x", csr, CSRs(csr)); }
