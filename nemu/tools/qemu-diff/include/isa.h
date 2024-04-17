@@ -58,5 +58,5 @@ union isa_gdb_regs {
 
 #endif
 
-void set_csr(word_t csr, word_t value);
-word_t get_csr(word_t csr);
+// void set_csr(word_t csr, word_t value);
+// word_t get_csr(word_t csr);
