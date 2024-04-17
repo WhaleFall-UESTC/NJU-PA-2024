@@ -35,27 +35,11 @@ enum {
 #define GetImmJ(i) (SEXT_20(BITS(i, 31, 31)) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1))
 #define GetImmI(i) (SEXT(BITS(i, 31, 20), 12))
 
-// static word_t mul_high(word_t x, word_t y) {
-//   int64_t mul = ((int64_t) x) * ((int64_t) y);
-//   return mul >> 32;
-// }
 
 void ftrace(Decode *s, int type);
 void ft(Decode *s) {
   IFDEF(CONFIG_FTRACE, ftrace(s, (s->isa.inst.val != 0x8067)));
 }
-// vaddr_t fret(Decode *s) {
-//   vaddr_t dnpc = s->dnpc;
-//   word_t inst = s->isa.inst.val;
-
-//   if (inst == 0x8067) {
-//     // word_t i = vaddr_ifetch(dnpc - 4, 4);
-//     // dnpc = ((i & 0x7f) == 0x67) ? ((R(BITS(i, 19, 15)) + GetImmI(i)) & 0xfffffffe) : dnpc;
-//     // dnpc = ((i & 0x7f) == 0x6f) ? (dnpc - 4 + GetImmJ(i)) : dnpc;
-//   }
-
-//   return dnpc;
-// }
 
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
@@ -96,6 +80,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 100 ????? 00000 11", lbu    , I, R(rd) = Mr(src1 + imm, 1));
   INSTPAT("??????? ????? ????? 000 ????? 01000 11", sb     , S, Mw(src1 + imm, 1, src2));
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, NEMUTRAP(s->pc, R(10))); 
 
   // From RISC-V-READER Page27
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(rd) = imm);

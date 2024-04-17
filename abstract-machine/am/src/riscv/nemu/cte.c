@@ -23,6 +23,7 @@ extern void __am_asm_trap(void);
 bool cte_init(Context*(*handler)(Event, Context*)) {
   // initialize exception entry
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
+  // 将 __am_asm_trap 函数的地址写入 mtvec
 
   // register event handler
   user_handler = handler;
