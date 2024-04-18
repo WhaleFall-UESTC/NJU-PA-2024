@@ -11,6 +11,12 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
+    uint32_t *gpr = c->gpr;
+    for (int i = 0; i < 16; i++) {
+      printf("%d: %#8x\t\t%d: %#8x\n", i, gpr[i], i + 16, gpr[i + 16]);
+    }
+    printf("mcause:%#8x\tmstatus:%#8x\tmepc:%#8x\n", c->mcause, c->mstatus, c->mepc);
+
     c = user_handler(ev, c);
     assert(c != NULL);
   }
