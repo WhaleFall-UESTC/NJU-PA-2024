@@ -62,7 +62,7 @@ static const char ftrace_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/m
 typedef struct
 {
   vaddr_t addr;
-  char name[32];
+  char name[64];
 } symbol_t;
 static symbol_t symbols[64];
 static int sptr = 0;
