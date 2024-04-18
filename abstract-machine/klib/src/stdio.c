@@ -5,7 +5,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-#define BUFMAX 128
+#define BUFMAX 12048
 #define _unused
 
 #define ZEROPAD 1
@@ -77,7 +77,7 @@ static int skip_atoi(const char **s) {
   return i;
 }
 
-void write(char *buf, size_t n) {
+void inline write(char *buf, size_t n) {
   for (int i = 0; i < n; i++)
     putch(buf[i]);
 }
