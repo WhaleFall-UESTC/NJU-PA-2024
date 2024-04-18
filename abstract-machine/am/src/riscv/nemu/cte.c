@@ -13,7 +13,7 @@ Context* __am_irq_handle(Context *c) {
 
     uint32_t *gpr = c->gpr;
     for (int i = 0; i < 16; i++) {
-      printf("%d: %u\t\t%d: %u\n", i, gpr[i], i + 16, gpr[i + 16]);
+      printf("%d: %d\t\t%d: %d\n", i, gpr[i], i + 16, gpr[i + 16]);
     }
     printf("mcause:%u\tmstatus:%u\tmepc:%u\n", c->mcause, c->mstatus, c->mepc);
 
