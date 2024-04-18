@@ -192,7 +192,7 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
           field_width = 8;
           flags |= ZEROPAD;
         }
-        str = number(str, (unsigned long) va_arg(ap, void *), 16, 
+        str = number(str, va_arg(ap, unsigned long), 16, 
          field_width, precision, flags);
         break;
       
