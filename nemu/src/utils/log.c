@@ -159,16 +159,19 @@ FILE *dtrace = NULL;
 void dtrace_init() {
   dtrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/dtrace.txt", "w");
   fprintf(dtrace, "start dtrace\n");
+  fflush(dtrace);
 }
 
 void dtrace_in(const char *device, paddr_t addr, word_t data, int len) {
   fprintf(dtrace, "Read from Device: %s\n", device);
   fprintf(dtrace, "Read %#08x and get data: %#0*x\n", addr, len, data);
+  fflush(dtrace);
 }
 
 void dtrace_out(const char *device, paddr_t addr, word_t data, int len) {
   fprintf(dtrace, "Write to Device: %s\n", device);
   fprintf(dtrace, "Write %#08x and data is: %#0*x\n", addr, len, data);
+  fflush(dtrace);
 }
 
 void dtrace_end() {
