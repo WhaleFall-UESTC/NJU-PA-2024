@@ -15,7 +15,7 @@ Context* __am_irq_handle(Context *c) {
     for (int i = 0; i < 16; i++) {
       printf("%d: %d\t\t%d: %d\n", i, gpr[i], i + 16, gpr[i + 16]);
     }
-    printf("mcause:%u\tmstatus:%u\tmepc:%u\n", c->mcause, c->mstatus, c->mepc);
+    printf("mcause:%d\tmstatus:%d\tmepc:%d\n", c->mcause, c->mstatus, c->mepc);
 
     c = user_handler(ev, c);
     assert(c != NULL);
