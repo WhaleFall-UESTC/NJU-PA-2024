@@ -64,7 +64,7 @@ typedef struct
   vaddr_t addr;
   char name[128];
 } symbol_t;
-static symbol_t symbols[128];
+static symbol_t symbols[256];
 static int sptr = 0;
 
 #define LOGSYM(s) fprintf(ftrace_log, "addr: %#08x\tname: %s\n", s.addr, s.name)
