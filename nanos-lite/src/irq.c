@@ -8,7 +8,7 @@
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
-    // case EVENT_YIELD: printf("Detected event YIELD\n"); break;
+    case EVENT_YIELD: printf("Detected event YIELD\n"); break;
     default: panic("Unhandled event ID = %d", e.event);
   }
 
