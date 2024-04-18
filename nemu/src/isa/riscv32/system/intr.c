@@ -53,6 +53,13 @@ int csr_register(word_t imm) {
   }
 }
 
+word_t ecall(word_t sys_call, vaddr_t epc) {
+  switch(sys_call) {
+    case -1: return isa_raise_intr(1, epc); // EVENT_YIELD
+    default: return isa_raise_intr(sys_call, epc);
+  }
+}
+
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
