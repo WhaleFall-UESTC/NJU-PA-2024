@@ -5,7 +5,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-#define BUFMAX 512
+#define BUFMAX 128
 #define _unused
 
 #define ZEROPAD 1
