@@ -180,8 +180,10 @@ FILE *etrace = NULL;
 void etrace_init() {
   etrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/etrace.txt", "w");
   fprintf(etrace, "start etrace\n");
+  fflush(etrace);
 }
 
 void etrace_log(int NO, word_t epc) {
   fprintf(etrace, "%#08x raised %d\n", epc, NO);
+  fflush(etrace);
 }
