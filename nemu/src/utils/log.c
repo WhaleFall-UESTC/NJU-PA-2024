@@ -47,9 +47,9 @@ void mtrace_init()
   mtrace = fopen("/home/whalefall/Courses/NJU-PA/ics2023/nemu/mylog/mtrace.txt", "w");
   fprintf(mtrace, "start mtrace\n");
 }
-void mtrace_vread(vaddr_t addr, int len, word_t data) { fprintf(mtrace, "vread addr: %#08x, len = %d, the result is %08x\n", addr, len, data); }
-void mtrace_read(vaddr_t addr, int len) { fprintf(mtrace, "read addr: %#08x, len = %d\n", addr, len); }
-void mtrace_write(vaddr_t addr, word_t data, int len) { fprintf(mtrace, "write %.*x to addr: %#08x\n", len, data, addr); }
+void mtrace_vread(vaddr_t addr, int len, word_t data) { fprintf(mtrace, "PC %#08x  vread addr: %#08x, len = %d, the result is %08x\n", cpu.pc, addr, len, data); }
+void mtrace_read(vaddr_t addr, int len) { fprintf(mtrace, "PC %#08x  read addr: %#08x, len = %d\n", cpu.pc, addr, len); }
+void mtrace_write(vaddr_t addr, word_t data, int len) { fprintf(mtrace, "PC %#08x  write %.*x to addr: %#08x\n", cpu.pc, len, data, addr); }
 void mtrace_end() { fclose(mtrace); }
 #endif
 
