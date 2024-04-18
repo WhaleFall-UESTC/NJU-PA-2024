@@ -11,9 +11,8 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
-    uint32_t *gpr = c->gpr;
     for (int i = 0; i < 16; i++) {
-      printf("%d: %x\t\t%d: %x\n", i, gpr[i], i + 16, gpr[i + 16]);
+      printf("%d: %x\t\t%d: %x\n", i, c->gpr[i], i + 16, c->gpr[i + 16]);
     }
     printf("mcause:%d\tmstatus:%d\tmepc:%d\n", c->mcause, c->mstatus, c->mepc);
 
