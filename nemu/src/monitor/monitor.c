@@ -27,6 +27,7 @@ void init_disasm(const char *triple);
 void mtrace_init();
 void ftrace_init(const char *);
 void dtrace_init();
+void etrace_init();
 
 static void welcome() {
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
@@ -154,6 +155,7 @@ void init_monitor(int argc, char *argv[]) {
   IFDEF(CONFIG_MTRACE, mtrace_init());
   IFDEF(CONFIG_FTRACE, ftrace_init(ftrace_elf));
   IFDEF(CONFIG_DTRACE, dtrace_init());
+  etrace_init();
 }
 #else // CONFIG_TARGET_AM
 static long load_img() {

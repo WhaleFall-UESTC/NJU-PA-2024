@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
+#include <utils.h>
 
 
 // enum {
@@ -60,11 +61,13 @@ word_t ecall(word_t sys_call, vaddr_t epc) {
   }
 }
 
+void etrace_log(int, word_t);
+
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
-
+  etrace_log(NO, epc);
   trap_csr[mcause] = NO;
   trap_csr[mepc] = epc;
   return trap_csr[mtvec];
