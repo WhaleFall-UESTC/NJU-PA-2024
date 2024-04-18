@@ -23,7 +23,7 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 
-#define ECALL(dnpc) do { dnpc = (isa_raise_intr(isa_reg_str2val("a7", NULL), s->pc)); } while(0)
+#define ECALL(dnpc) do { dnpc = (isa_raise_intr(R(isa_reg_str2val("a7", NULL)), s->pc)); } while(0)
 word_t get_trap_csr(int i);
 void set_trap_csr(int i, word_t value);
 int csr_register(word_t imm);
