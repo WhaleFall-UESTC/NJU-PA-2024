@@ -62,9 +62,9 @@ static const char ftrace_path[] = "/home/whalefall/Courses/NJU-PA/ics2023/nemu/m
 typedef struct
 {
   vaddr_t addr;
-  char name[64];
+  char name[128];
 } symbol_t;
-static symbol_t symbols[64];
+static symbol_t symbols[128];
 static int sptr = 0;
 
 #define LOGSYM(s) fprintf(ftrace_log, "addr: %#08x\tname: %s\n", s.addr, s.name)
