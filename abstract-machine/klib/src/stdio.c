@@ -31,7 +31,7 @@ static char *number(char *str, int num, int base, int size, int precision, int t
   if ((type & SIGN) && num < 0) sign = '-', num = -num;
   else sign = (type & PLUS) ? '+' : ((type & SPACE) ? ' ' : 0);
 
-  size -= sign ? 1 : 0;               // 有符号占一位
+  if (sign) size--;           // 有符号占一位
   if (type & SPECIAL) {                  
     if (base == 16) size -= 2;        // 0x占2位
     else if (base == 8) size -= 1;    // 0占1位
@@ -43,7 +43,7 @@ static char *number(char *str, int num, int base, int size, int precision, int t
     num /= base;
   } while (num != 0);
 
-  precision = (i >precision) ? 1 : precision;
+  precision = (i > precision) ? i : precision;
   size -= precision;
 
   if (!(type & (ZEROPAD | LEFT))) 
