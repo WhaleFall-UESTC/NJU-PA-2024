@@ -68,18 +68,18 @@ void naive_uload(PCB *pcb, const char *filename)
 
 
 static void printEhdr(Elf_Ehdr ehdr) {
-  printf("magic = %x\n", *((uint32_t *)(&ehdr.e_ident)));
-  printf("e_type = %x\n", ehdr.e_type);
-  printf("e_machine = %x\n", ehdr.e_machine);
-  printf("e_version = %x\n", ehdr.e_version);
-  printf("e_entry = %x\n", ehdr.e_entry);
-  printf("e_phoff = %x\n", ehdr.e_phoff);
-  printf("e_shoff = %x\n", ehdr.e_shoff);
-  printf("e_flags = %x\n", ehdr.e_flags);
-  printf("e_ehsize = %x\n", ehdr.e_ehsize);
-  printf("e_phentsize = %x\n", ehdr.e_phentsize);
-  printf("e_phnum = %x\n", ehdr.e_phnum);
-  printf("e_shentsize = %x\n", ehdr.e_shentsize);
-  printf("e_shnum = %x\n", ehdr.e_shnum);
-  printf("e_shstrndx = %x\n", ehdr.e_shstrndx);
+  printf("magic = %#08x\n", *((uint32_t *)(&ehdr.e_ident)));
+  printf("e_type = %#08x\n", ehdr.e_type);
+  printf("e_machine = %#08x\n", ehdr.e_machine);
+  printf("e_version = %#08x\n", ehdr.e_version);
+  printf("e_entry = %#08x\n", ehdr.e_entry);
+  printf("e_phoff = %#08x\n", ehdr.e_phoff);
+  printf("e_shoff = %#08x\n", ehdr.e_shoff);
+  printf("e_flags = %#08x\n", ehdr.e_flags);
+  printf("e_ehsize = %#08x\n", ehdr.e_ehsize);
+  printf("e_phentsize = %#08x\n", ehdr.e_phentsize);
+  printf("e_phnum = %#08x\n", ehdr.e_phnum);
+  printf("e_shentsize = %#08x\n", ehdr.e_shentsize);
+  printf("e_shnum = %#08x\n", ehdr.e_shnum);
+  printf("e_shstrndx = %#08x\n", ehdr.e_shstrndx);
 }
