@@ -38,10 +38,13 @@ static char *number(char *str, int num, int base, int size, int precision, int t
   // }
 
   if (num == 0) tmp[i++] = '0';
-  else do {
-    tmp[i++] = digits[num % base];
-    num /= base;
-  } while (num != 0);
+  else {
+    unsigned unum = num,ubase = base;
+    do {
+      tmp[i++] = digits[unum % ubase];
+      unum /= ubase;
+    } while (unum != 0);
+  }
 
   if (i > precision) precision = i;
   size -= precision;
