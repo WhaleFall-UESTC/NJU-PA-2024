@@ -31,11 +31,11 @@ static char *number(char *str, int num, int base, int size, int precision, int t
   if ((type & SIGN) && num < 0) sign = '-', num = -num;
   else sign = (type & PLUS) ? '+' : ((type & SPACE) ? ' ' : 0);
 
-  if (sign) size--;           // 有符号占一位
-  if (type & SPECIAL) {                  
-    if (base == 16) size -= 2;        // 0x占2位
-    else if (base == 8) size -= 1;    // 0占1位
-  }
+  // if (sign) size--;           // 有符号占一位
+  // if (type & SPECIAL) {                  
+  //   if (base == 16) size -= 2;        // 0x占2位
+  //   else if (base == 8) size -= 1;    // 0占1位
+  // }
 
   if (num == 0) tmp[i++] = '0';
   else do {
@@ -43,7 +43,7 @@ static char *number(char *str, int num, int base, int size, int precision, int t
     num /= base;
   } while (num != 0);
 
-  precision = (i > precision) ? i : precision;
+  if (i > precision) precision = i;
   size -= precision;
 
   if (!(type & (ZEROPAD | LEFT))) 
