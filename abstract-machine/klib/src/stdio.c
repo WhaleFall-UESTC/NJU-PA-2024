@@ -48,7 +48,7 @@ static char *number(char *str, int num, int base, int size, int precision, int t
   size -= precision;
 
   if (!(type & (ZEROPAD | LEFT))) 
-    while (size --> 0) 
+    while (size--) 
       *str++ = ' ';
 
   if (sign) *str++ = sign;
@@ -59,11 +59,11 @@ static char *number(char *str, int num, int base, int size, int precision, int t
   }
 
   if (!(type & LEFT))
-    while (size --> 0) *str++ = c;
+    while (size--) *str++ = c;
 
   while (i < precision--) *str++ = '0';
-  while (i-- > 0) *str++ = tmp[i];
-  while (size --> 0) *str++ = ' ';
+  while (i--) *str++ = tmp[i];
+  while (size--) *str++ = ' ';
 
   return str;
 }
@@ -167,9 +167,9 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
     switch (*fmt) {
       case 'c':
         if (!(flags & LEFT))
-          while (field_width --> 0) *str++ = ' ';
+          while (field_width--) *str++ = ' ';
         *str++ = (unsigned char) va_arg(ap, int);
-        while (field_width --> 0) *str++ =' ';
+        while (field_width--) *str++ =' ';
         break;
 
       case 's':
@@ -177,7 +177,7 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
         if (!s) s = "(null)";
         len = strlen(s);
         if (!(flags & LEFT))
-          while (field_width --> 0) *str++ = ' ';
+          while (field_width--) *str++ = ' ';
         for (i = 0; i < len; i++) *str++ = *s++;
         while (len < field_width--) *str++ = ' ';
         break;
