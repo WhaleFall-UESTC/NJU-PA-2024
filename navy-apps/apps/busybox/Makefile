@@ -1,4 +1,5 @@
 REPO_PATH = repo
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
 CONFIG_FILE = config/nanos-lite.config
 PATCH_FILE = $(abspath patch/diff.patch)
 ifeq ($(wildcard repo/include/busybox.h),)

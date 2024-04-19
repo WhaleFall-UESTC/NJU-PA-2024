@@ -7,6 +7,8 @@ html:
 
 ## 1. Basic Setup and Checks
 
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
+
 ### Default to build an application
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS  = app

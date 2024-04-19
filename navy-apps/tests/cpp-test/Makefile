@@ -1,3 +1,4 @@
 NAME = cpp-test
 SRCS = main.cpp
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
 include $(NAVY_HOME)/Makefile

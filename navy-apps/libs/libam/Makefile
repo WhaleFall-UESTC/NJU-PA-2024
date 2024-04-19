@@ -10,6 +10,7 @@ else
 endif
 endif
 
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
 NAME = libam
 SRCS = $(shell find ./src -name "*.c" -o -name "*.cpp")
 LIB_DEP = libndl

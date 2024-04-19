@@ -3,6 +3,8 @@ ifeq ($(wildcard repo/include/BirdGame.h),)
   $(shell git clone --depth=1 git@github.com:NJU-ProjectN/sdlbird.git $(REPO_PATH))
 endif
 
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
+
 NAME = bird
 SRCS = $(shell find $(REPO_PATH)/src/ -name "*.cpp")
 INC_PATH = $(REPO_PATH)/include

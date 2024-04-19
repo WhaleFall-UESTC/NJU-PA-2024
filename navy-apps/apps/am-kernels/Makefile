@@ -3,6 +3,7 @@ ifeq ($(wildcard $(AM_KERNELS_PATH)/tests/am-tests/src),)
   $(error Please set $$AM_KERNELS_PATH in the Makefile to a valid path of an am-kernels repo)
 endif
 
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
 BENCHMARKS = coremark dhrystone
 KERNELS    = typing-game
 APP_PATH   = $(AM_KERNELS_PATH)/$(if $(findstring $(1), $(BENCHMARKS)),benchmarks,kernels)/$(1)

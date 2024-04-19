@@ -1,3 +1,4 @@
+NAVY_HOME = /home/whalefall/Courses/NJU-PA/ics2023/navy-apps
 ifeq ($(ISA), native)
 build/native.so: src/native.cpp
 	mkdir -p build/
