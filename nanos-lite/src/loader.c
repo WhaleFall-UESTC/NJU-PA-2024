@@ -11,13 +11,23 @@
 
 #define BUF 256
 
+static void printEhdr(Elf_Ehdr ehdr);
+
 static uintptr_t loader(PCB *pcb, const char *filename)
 {
   Elf_Ehdr ehdr;
   Elf_Phdr phdr;
 
-  ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
+  #ifdef __LP64__
+  printf("Why you 64?\n");
+  #endif
+
+  uint16_t Ehdrsz = 0;
+  ramdisk_read(&Ehdrsz, 28, 2);
+  printf("Ehdr: %d\tSize: %d\n", sizeof(Elf_Ehdr), ehdr);
+  ramdisk_read(&ehdr, 0, Ehdrsz);
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
+  printEhdr(ehdr);
 
   uint16_t e_phoff = ehdr.e_phoff;
   uint16_t e_phentsize = ehdr.e_phentsize;
@@ -54,4 +64,22 @@ void naive_uload(PCB *pcb, const char *filename)
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
+}
+
+
+static void printEhdr(Elf_Ehdr ehdr) {
+  printf("magic = %x\n", *((uint32_t *)(&ehdr.e_ident)));
+  printf("e_type = %x\n", ehdr.e_type);
+  printf("e_machine = %x\n", ehdr.e_machine);
+  printf("e_version = %x\n", ehdr.e_version);
+  printf("e_entry = %x\n", ehdr.e_entry);
+  printf("e_phoff = %x\n", ehdr.e_phoff);
+  printf("e_shoff = %x\n", ehdr.e_shoff);
+  printf("e_flags = %x\n", ehdr.e_flags);
+  printf("e_ehsize = %x\n", ehdr.e_ehsize);
+  printf("e_phentsize = %x\n", ehdr.e_phentsize);
+  printf("e_phnum = %x\n", ehdr.e_phnum);
+  printf("e_shentsize = %x\n", ehdr.e_shentsize);
+  printf("e_shnum = %x\n", ehdr.e_shnum);
+  printf("e_shstrndx = %x\n", ehdr.e_shstrndx);
 }
