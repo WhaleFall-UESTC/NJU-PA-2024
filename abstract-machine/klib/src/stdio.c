@@ -21,8 +21,8 @@ static char *number(char *str, int num, int base, int size, int precision, int t
   
   char c, sign, tmp[36];
   int i = 0;
-  const char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  if (type & SMALL) digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+  char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if (type & SMALL) digits = strcpy(digits, "0123456789abcdefghijklmnopqrstuvwxyz");
 
   if (type & LEFT) type &= ~ZEROPAD;
 
