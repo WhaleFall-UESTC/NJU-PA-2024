@@ -54,7 +54,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   #endif
 
   Elf_Half Ehdrsz = 0;
-  ramdisk_read(&Ehdrsz, 24, 2);
+  ramdisk_read(&Ehdrsz, 28, 2);
   // printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   
   ramdisk_read(&ehdr, 0, Ehdrsz);
