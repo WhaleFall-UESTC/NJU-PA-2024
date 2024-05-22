@@ -50,7 +50,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   ramdisk_read(&Ehdrsz, 28, 2);
   // printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   
-  ramdisk_read(&ehdr, 0, Ehdrsz);
+  ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
   printEhdr(ehdr);
   Elf_Addr entrypoint = (uintptr_t) ehdr.e_entry;
