@@ -25,24 +25,29 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 
   uint16_t Ehdrsz = 0;
   ramdisk_read(&Ehdrsz, 28, 2);
-  printf("Ehdr: %d\tSize: %d\n", sizeof(Elf_Ehdr), ehdr);
+  printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   ramdisk_read(&ehdr, 0, Ehdrsz);
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
   printEhdr(ehdr);
   uintptr_t entrypoint = (uintptr_t) ehdr.e_entry;
 
-  uint16_t e_phoff = ehdr.e_phoff;
+  uint32_t e_phoff = ehdr.e_phoff;
   uint16_t e_phentsize = ehdr.e_phentsize;
   uint16_t e_phnum = ehdr.e_phnum;
+
+  uint32_t base = e_phoff + e_phnum * e_phentsize;
+
 
   for (int i = 0; i < e_phnum; i++)
   {
     ramdisk_read(&phdr, e_phentsize, e_phoff + i * e_phentsize);
-    printPhdr(phdr);
-    if ((uint16_t)phdr.p_type)
+    
+    if ((uint16_t)phdr.p_type != PT_LOAD)
       continue;
-    else 
-      printf("Load this segment\n");
+    else {
+      printf("\nLoad this segment\n");
+      printPhdr(phdr);
+    }
 
     char buf_tmp[BUF];
     uint32_t filesz = phdr.p_filesz, offset = phdr.p_offset;
@@ -51,7 +56,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     while (nread)
     {
       read = (nread < BUF) ? nread : BUF;
-      ramdisk_read(buf_tmp, offset, read);
+      ramdisk_read(buf_tmp, base + offset, read);
       nread -= read;
       offset += read;
       memcpy((void *)vaddr, buf_tmp, read);
@@ -90,7 +95,6 @@ static void printEhdr(Elf_Ehdr ehdr) {
 }
 
 static void printPhdr(Elf_Phdr phdr) {
-  printf("\n");
   printf("p_type = %#08x\n", phdr.p_type);
   printf("p_offset = %#08x\n", phdr.p_offset);
   printf("p_vaddr = %#08x\n", phdr.p_vaddr);
