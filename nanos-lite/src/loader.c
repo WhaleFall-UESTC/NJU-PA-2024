@@ -23,6 +23,7 @@
 #define Elf_Half Elf64_Half
 #define Elf_Off Elf64_Off
 #define Elf_Addr Elf64_Addr
+#define EhdrSize 
 #else
 #define Elf_Ehdr Elf32_Ehdr
 #define Elf_Phdr Elf32_Phdr
@@ -30,6 +31,12 @@
 #define Elf_Half Elf32_Half
 #define Elf_Off Elf32_Off
 #define Elf_Addr Elf32_Addr
+#define EhdrSize 28
+#endif
+
+#ifdef __LP64__
+#define Elf_Ehdr Elf64_Ehdr
+#define Elf_Phdr Elf64_Phdr
 #endif
 
 #define BUF 256
@@ -47,10 +54,10 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   #endif
 
   Elf_Half Ehdrsz = 0;
-  ramdisk_read(&Ehdrsz, 28, 2);
+  ramdisk_read(&Ehdrsz, 24, 2);
   // printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   
-  ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
+  ramdisk_read(&ehdr, 0, Ehdrsz);
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
   printEhdr(ehdr);
   Elf_Addr entrypoint = (uintptr_t) ehdr.e_entry;
