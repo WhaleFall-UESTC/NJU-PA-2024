@@ -12,6 +12,7 @@
 #define BUF 256
 
 static void printEhdr(Elf_Ehdr ehdr);
+static void printPhdr(Elf_Phdr phdr);
 
 static uintptr_t loader(PCB *pcb, const char *filename)
 {
@@ -39,6 +40,8 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     ramdisk_read(&phdr, e_phentsize, e_phoff + i * e_phentsize);
     if (phdr.p_type != PT_LOAD)
       continue;
+
+    printPhdr(phdr);
 
     char buf_tmp[BUF];
     uint32_t filesz = phdr.p_filesz, offset = phdr.p_offset;
@@ -69,6 +72,7 @@ void naive_uload(PCB *pcb, const char *filename)
 
 
 static void printEhdr(Elf_Ehdr ehdr) {
+  printf("\n");
   printf("magic = %#08x\n", *((uint32_t *)(&ehdr.e_ident)));
   printf("e_type = %#08x\n", ehdr.e_type);
   printf("e_machine = %#08x\n", ehdr.e_machine);
@@ -83,4 +87,15 @@ static void printEhdr(Elf_Ehdr ehdr) {
   printf("e_shentsize = %#08x\n", ehdr.e_shentsize);
   printf("e_shnum = %#08x\n", ehdr.e_shnum);
   printf("e_shstrndx = %#08x\n", ehdr.e_shstrndx);
+}
+
+static void printPhdr(Elf_Phdr phdr) {
+  printf("p_type = %#08x\n", phdr.p_type);
+  printf("p_offset = %#08x\n", phdr.p_offset);
+  printf("p_vaddr = %#08x\n", phdr.p_vaddr);
+  printf("p_paddr = %#08x\n", phdr.p_paddr);
+  printf("p_filesz = %#08x\n", phdr.p_filesz);
+  printf("p_memsz = %#08x\n", phdr.p_memsz);
+  printf("p_flags = %#08x\n", phdr.p_flags);
+  printf("p_align = %#08x\n", phdr.p_align);
 }
