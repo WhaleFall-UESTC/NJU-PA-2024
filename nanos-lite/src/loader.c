@@ -39,7 +39,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   {
     ramdisk_read(&phdr, e_phentsize, e_phoff + i * e_phentsize);
     printPhdr(phdr);
-    if (phdr.p_type != PT_LOAD)
+    if ((uint16_t)phdr.p_type)
       continue;
     else 
       printf("Load this segment\n");
@@ -73,7 +73,6 @@ void naive_uload(PCB *pcb, const char *filename)
 
 
 static void printEhdr(Elf_Ehdr ehdr) {
-  printf("\n");
   printf("magic = %#08x\n", *((uint32_t *)(&ehdr.e_ident)));
   printf("e_type = %#08x\n", ehdr.e_type);
   printf("e_machine = %#08x\n", ehdr.e_machine);
@@ -91,6 +90,7 @@ static void printEhdr(Elf_Ehdr ehdr) {
 }
 
 static void printPhdr(Elf_Phdr phdr) {
+  printf("\n");
   printf("p_type = %#08x\n", phdr.p_type);
   printf("p_offset = %#08x\n", phdr.p_offset);
   printf("p_vaddr = %#08x\n", phdr.p_vaddr);
