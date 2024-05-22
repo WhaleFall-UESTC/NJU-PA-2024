@@ -40,7 +40,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 
   for (int i = 0; i < e_phnum; i++)
   {
-    ramdisk_read(&phdr, e_phentsize, e_phoff + i * e_phentsize);
+    ramdisk_read(&phdr, e_phoff + i * e_phentsize, e_phentsize);
     
     if ((uint16_t)phdr.p_type != PT_LOAD)
       continue;
