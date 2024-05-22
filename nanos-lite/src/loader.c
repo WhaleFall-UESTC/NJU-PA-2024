@@ -28,6 +28,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   ramdisk_read(&ehdr, 0, Ehdrsz);
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
   printEhdr(ehdr);
+  uintptr_t entrypoint = (uintptr_t) ehdr.e_entry;
 
   uint16_t e_phoff = ehdr.e_phoff;
   uint16_t e_phentsize = ehdr.e_phentsize;
@@ -56,8 +57,8 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     memset((void *)vaddr, 0, phdr.p_memsz - filesz);
   }
 
-  printf("\nreturn e_entry = %#08x\n", ehdr.e_entry);
-  return (uintptr_t) ehdr.e_entry;
+  printf("\nreturn e_entry = %#08x\n", entrypoint);
+  return (uintptr_t) entrypoint;
 }
 
 void naive_uload(PCB *pcb, const char *filename)
