@@ -47,7 +47,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     while (nread)
     {
       read = (nread < BUF) ? nread : BUF;
-      ramdisk_read(buf_tmp, read, offset);
+      ramdisk_read(buf_tmp, offset, read);
       nread -= read;
       offset += read;
       memcpy((void *)vaddr, buf_tmp, read);
@@ -57,7 +57,6 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     memset((void *)vaddr, 0, phdr.p_memsz - filesz);
   }
 
-  printf("\nreturn e_entry = %#08x\n", entrypoint);
   return (uintptr_t) entrypoint;
 }
 
