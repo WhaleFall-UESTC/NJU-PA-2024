@@ -56,7 +56,8 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     memset((void *)vaddr, 0, phdr.p_memsz - filesz);
   }
 
-  return ehdr.e_entry;
+  printf("\nreturn e_entry = %#08x\n", ehdr.e_entry);
+  return (uintptr_t) ehdr.e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename)
