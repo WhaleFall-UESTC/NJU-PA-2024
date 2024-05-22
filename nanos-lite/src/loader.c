@@ -59,7 +59,8 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
 
-  Elf_Addr base = e_phoff + e_phnum * e_phentsize;
+  // Elf_Addr base = e_phoff + e_phnum * e_phentsize;
+  Elf_Addr base = 0;
 
 
   for (int i = 0; i < e_phnum; i++)
