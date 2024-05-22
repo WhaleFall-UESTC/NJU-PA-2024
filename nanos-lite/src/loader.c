@@ -38,10 +38,11 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   for (int i = 0; i < e_phnum; i++)
   {
     ramdisk_read(&phdr, e_phentsize, e_phoff + i * e_phentsize);
+    printPhdr(phdr);
     if (phdr.p_type != PT_LOAD)
       continue;
-
-    printPhdr(phdr);
+    else 
+      printf("Load this segment\n");
 
     char buf_tmp[BUF];
     uint32_t filesz = phdr.p_filesz, offset = phdr.p_offset;
