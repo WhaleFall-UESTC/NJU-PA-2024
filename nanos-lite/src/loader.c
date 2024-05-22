@@ -40,7 +40,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 
   uint16_t Ehdrsz = 0;
   ramdisk_read(&Ehdrsz, 28, 2);
-  printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
+  // printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   ramdisk_read(&ehdr, 0, Ehdrsz);
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
   // printEhdr(ehdr);
@@ -67,7 +67,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     char buf_tmp[BUF];
     uint32_t filesz = phdr.p_filesz, offset = phdr.p_offset;
     uint32_t nread = filesz, read = 0;
-    uint32_t vaddr = phdr.p_vaddr;
+    uintptr_t vaddr = phdr.p_vaddr;
     while (nread)
     {
       read = (nread < BUF) ? nread : BUF;
