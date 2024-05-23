@@ -11,12 +11,12 @@ void do_syscall(Context *c) {
   a[2] = c->GPR3;
   a[3] = c->GPR4;
 
+  printf("Syscall ID = %02d\t, Arguments: %2d, %2d, %2d\tRet: ", a[0], a[1], a[2], a[3]);
+
   switch (a[0]) {
-    case SYS_exit:  /*printf("SYS_exit\n");*/ c->GPRx = 0; halt(0); break;
-    case SYS_yield:  /*printf("SYS_yield\n");*/ c->GPRx = 0; yield(); break;
+    case SYS_exit:  printf("0\n"); c->GPRx = 0; halt(0); break;
+    case SYS_yield:  printf("0\n"); c->GPRx = 0; yield(); break;
 
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
-
-  printf("Syscall ID = %02d\t, Arguments: %2d, %2d, %2d\t, Ret :%d\n", a[0], a[1], a[2], a[3], c->GPRx);
 }
