@@ -18,10 +18,15 @@ void do_syscall(Context *c) {
     case SYS_yield:  c->GPRx = 0; yield(); break;
 
     case SYS_write: {
-      char *buf = (char *) c->GPR2;
-      int len = c->GPR3;
-      for (int i = 0; i < len; i++)
-        putch(*buf++);
+      int fd = c->GPR2;
+      char *buf = (char *) c->GPR3;
+      int len = c->GPR4;
+
+      if (fd == 1 || fd == 2) {
+        for (int i = 0; i < len; i++)
+          putch(*buf++);
+      }
+      
       break;
     }
 
