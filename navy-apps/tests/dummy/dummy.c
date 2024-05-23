@@ -10,6 +10,5 @@ extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main() {
   // puts("This is dummy");
-  _syscall_(1, 0, 0, 0);
-  return 0;
+  return _syscall_(SYS_yield, 1, 1, 1);;
 }
