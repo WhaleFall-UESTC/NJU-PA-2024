@@ -66,7 +66,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
 
-  Elf_Addr base = e_phoff + e_phnum * e_phentsize;
+  // Elf_Addr base = e_phoff + e_phnum * e_phentsize;
   // Elf_Addr base = 0;
 
 
@@ -89,7 +89,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     while (nread)
     {
       read = (nread < BUF) ? nread : BUF;
-      ramdisk_read(buf_tmp, base + offset, read);
+      ramdisk_read(buf_tmp, offset, read);
       nread -= read;
       offset += read;
       memcpy((void *)vaddr, buf_tmp, read);
