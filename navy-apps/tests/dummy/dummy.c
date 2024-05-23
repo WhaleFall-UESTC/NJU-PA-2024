@@ -1,5 +1,4 @@
 #include <stdint.h>
-// #include <stdio.h>
 
 #ifdef __ISA_NATIVE__
 #error can not support ISA=native
@@ -10,7 +9,5 @@ extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main()
 {
-  asm volatile ("ecall");
-  // return _syscall_(SYS_yield, 1, 1, 1);
-  // return 0;
+  return _syscall_(SYS_yield, 1, 1, 1);
 }

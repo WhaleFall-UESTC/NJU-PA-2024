@@ -41,8 +41,8 @@
 
 #define BUF 256
 
-static void printEhdr(Elf_Ehdr ehdr);
-static void printPhdr(Elf_Phdr phdr);
+// static void printEhdr(Elf_Ehdr ehdr);
+// static void printPhdr(Elf_Phdr phdr);
 
 static uintptr_t loader(PCB *pcb, const char *filename)
 {
@@ -55,20 +55,16 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 
   Elf_Half Ehdrsz = 0;
   ramdisk_read(&Ehdrsz, EhdrSize, 2);
-  printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
+  // printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   
   ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
-  printEhdr(ehdr);
+  // printEhdr(ehdr);
   Elf_Addr entrypoint = (uintptr_t) ehdr.e_entry;
 
   Elf_Off e_phoff = ehdr.e_phoff;
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
-
-  // Elf_Addr base = e_phoff + e_phnum * e_phentsize;
-  // Elf_Addr base = 0;
-
 
   for (int i = 0; i < e_phnum; i++)
   {
@@ -76,28 +72,33 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     
     if ((Elf_Half)phdr.p_type != PT_LOAD)
       continue;
-    else {
-      printf("\nLoad this segment\n");
-      printPhdr(phdr);
-    }
 
-    char buf_tmp[BUF];
-    Elf_Word filesz = phdr.p_filesz;
-    Elf_Off offset = phdr.p_offset;
-    Elf_Word nread = filesz, read = 0;
-    Elf_Addr vaddr = phdr.p_vaddr;
-    while (nread)
-    {
-      read = (nread < BUF) ? nread : BUF;
-      ramdisk_read(buf_tmp, offset, read);
-      nread -= read;
-      offset += read;
-      memcpy((void *)vaddr, buf_tmp, read);
-      vaddr += read;
-    }
+    ramdisk_read((void *)phdr.p_vaddr, phdr.p_offset, phdr.p_memsz);
+    memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
 
-    memset((void *)vaddr, 0, phdr.p_memsz - filesz);
   }
+    // else {
+    //   printf("\nLoad this segment\n");
+    //   printPhdr(phdr);
+    // }
+
+  //   char buf_tmp[BUF];
+  //   Elf_Word filesz = phdr.p_filesz;
+  //   Elf_Off offset = phdr.p_offset;
+  //   Elf_Word nread = filesz, read = 0;
+  //   Elf_Addr vaddr = phdr.p_vaddr;
+  //   while (nread)
+  //   {
+  //     read = (nread < BUF) ? nread : BUF;
+  //     ramdisk_read(buf_tmp, offset, read);
+  //     nread -= read;
+  //     offset += read;
+  //     memcpy((void *)vaddr, buf_tmp, read);
+  //     vaddr += read;
+  //   }
+
+  //   memset((void *)vaddr, 0, phdr.p_memsz - filesz);
+  // }
 
   return (Elf_Addr) entrypoint;
 }
@@ -110,30 +111,30 @@ void naive_uload(PCB *pcb, const char *filename)
 }
 
 
-static void printEhdr(Elf_Ehdr ehdr) {
-  printf("magic = %#08x\n", *((uint32_t *)(&ehdr.e_ident)));
-  printf("e_type = %#08x\n", ehdr.e_type);
-  printf("e_machine = %#08x\n", ehdr.e_machine);
-  printf("e_version = %#08x\n", ehdr.e_version);
-  printf("e_entry = %#08x\n", ehdr.e_entry);
-  printf("e_phoff = %#08x\n", ehdr.e_phoff);
-  printf("e_shoff = %#08x\n", ehdr.e_shoff);
-  printf("e_flags = %#08x\n", ehdr.e_flags);
-  printf("e_ehsize = %#08x\n", ehdr.e_ehsize);
-  printf("e_phentsize = %#08x\n", ehdr.e_phentsize);
-  printf("e_phnum = %#08x\n", ehdr.e_phnum);
-  printf("e_shentsize = %#08x\n", ehdr.e_shentsize);
-  printf("e_shnum = %#08x\n", ehdr.e_shnum);
-  printf("e_shstrndx = %#08x\n", ehdr.e_shstrndx);
-}
+// static void printEhdr(Elf_Ehdr ehdr) {
+//   printf("magic = %#08x\n", *((uint32_t *)(&ehdr.e_ident)));
+//   printf("e_type = %#08x\n", ehdr.e_type);
+//   printf("e_machine = %#08x\n", ehdr.e_machine);
+//   printf("e_version = %#08x\n", ehdr.e_version);
+//   printf("e_entry = %#08x\n", ehdr.e_entry);
+//   printf("e_phoff = %#08x\n", ehdr.e_phoff);
+//   printf("e_shoff = %#08x\n", ehdr.e_shoff);
+//   printf("e_flags = %#08x\n", ehdr.e_flags);
+//   printf("e_ehsize = %#08x\n", ehdr.e_ehsize);
+//   printf("e_phentsize = %#08x\n", ehdr.e_phentsize);
+//   printf("e_phnum = %#08x\n", ehdr.e_phnum);
+//   printf("e_shentsize = %#08x\n", ehdr.e_shentsize);
+//   printf("e_shnum = %#08x\n", ehdr.e_shnum);
+//   printf("e_shstrndx = %#08x\n", ehdr.e_shstrndx);
+// }
 
-static void printPhdr(Elf_Phdr phdr) {
-  printf("p_type = %#08x\n", phdr.p_type);
-  printf("p_offset = %#08x\n", phdr.p_offset);
-  printf("p_vaddr = %#08x\n", phdr.p_vaddr);
-  printf("p_paddr = %#08x\n", phdr.p_paddr);
-  printf("p_filesz = %#08x\n", phdr.p_filesz);
-  printf("p_memsz = %#08x\n", phdr.p_memsz);
-  printf("p_flags = %#08x\n", phdr.p_flags);
-  printf("p_align = %#08x\n", phdr.p_align);
-}
+// static void printPhdr(Elf_Phdr phdr) {
+//   printf("p_type = %#08x\n", phdr.p_type);
+//   printf("p_offset = %#08x\n", phdr.p_offset);
+//   printf("p_vaddr = %#08x\n", phdr.p_vaddr);
+//   printf("p_paddr = %#08x\n", phdr.p_paddr);
+//   printf("p_filesz = %#08x\n", phdr.p_filesz);
+//   printf("p_memsz = %#08x\n", phdr.p_memsz);
+//   printf("p_flags = %#08x\n", phdr.p_flags);
+//   printf("p_align = %#08x\n", phdr.p_align);
+// }
