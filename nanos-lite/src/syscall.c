@@ -7,9 +7,9 @@
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
-  a[1] = c->GPR2;
-  a[2] = c->GPR3;
-  a[3] = c->GPR4;
+  // a[1] = c->GPR2;
+  // a[2] = c->GPR3;
+  // a[3] = c->GPR4;
 
   // printf("Syscall ID = %02d\t, Arguments: %2d, %#08x, %2d\tRet: ", a[0], a[1], a[2], a[3]);
   // printf("%c", *((char *)a[2]));
@@ -18,14 +18,10 @@ void do_syscall(Context *c) {
     case SYS_yield:  c->GPRx = 0; yield(); break;
 
     case SYS_write: {
-      // printf("%c", *((char *)a[2]));
-      // if (a[1] == 1 || a[1] == 2) {
-      //   // for (int i = 0; i < a[3]; i++) 
-      //   printf("%c", *((char *)a[2]));
-      // } else {
-        
-      // }
-      // // printf("%d\n", a[3]); 
+      char *buf = (char *) c->GPR2;
+      int len = c->GPR3;
+      for (int i = 0; i < len; i++)
+        putch(*buf++);
       break;
     }
 
