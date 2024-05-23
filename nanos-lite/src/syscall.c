@@ -17,6 +17,16 @@ void do_syscall(Context *c) {
     case SYS_exit:  printf("0\n"); c->GPRx = 0; halt(0); break;
     case SYS_yield:  printf("0\n"); c->GPRx = 0; yield(); break;
 
+    case SYS_write: {
+      char *buf = (char *) a[2];
+      if (a[1] == 1 || a[1] == 2) {
+        for (int i = 0; i < a[3]; i++) putch(buf[i]);
+      } else {
+        
+      }
+      printf("%d\n", a[3]); c->GPRx = a[3]; break;
+    }
+
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
