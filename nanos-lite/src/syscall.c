@@ -18,7 +18,8 @@ void do_syscall(Context *c) {
     case SYS_yield:  c->GPRx = 0; yield(); break;
 
     case SYS_write: {
-      printf("%c", *((char *)a[2]));
+      printf("shit");
+      // printf("%c", *((char *)a[2]));
       // if (a[1] == 1 || a[1] == 2) {
       //   // for (int i = 0; i < a[3]; i++) 
       //   printf("%c", *((char *)a[2]));
