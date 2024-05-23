@@ -11,15 +11,15 @@ void do_syscall(Context *c) {
   a[2] = c->GPR3;
   a[3] = c->GPR4;
 
-  printf("Syscall ID = %02d\t, Arguments: %2d, %#08x, %2d\tRet: ", a[0], a[1], a[2], a[3]);
-  printf("%c", *((char *)a[2]));
+  // printf("Syscall ID = %02d\t, Arguments: %2d, %#08x, %2d\tRet: ", a[0], a[1], a[2], a[3]);
+  // printf("%c", *((char *)a[2]));
   switch (a[0]) {
     case SYS_exit:  printf("0\n"); c->GPRx = 0; halt(0); break;
     case SYS_yield:  printf("0\n"); c->GPRx = 0; yield(); break;
 
     case SYS_write: {
       if (a[1] == 1 || a[1] == 2) {
-        for (int i = 0; i < a[3]; i++) putch(*((char *)(a[2] + i)));
+        for (int i = 0; i < a[3]; i++) putch(*((char *)(a[2])));
       } else {
         
       }
