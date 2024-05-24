@@ -25,6 +25,9 @@ void do_syscall(Context *c) {
       if (fd == 1 || fd == 2) {
         for (int i = 0; i < len; i++)
           putch(*buf++);
+      } else {
+        c->GPRx = -1;
+        break;
       }
 
       c->GPRx = len;
