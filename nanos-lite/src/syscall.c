@@ -26,7 +26,8 @@ void do_syscall(Context *c) {
         for (int i = 0; i < len; i++)
           putch(*buf++);
       }
-      
+
+      c->GPRx = len;
       break;
     }
 
