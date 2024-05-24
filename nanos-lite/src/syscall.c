@@ -30,6 +30,12 @@ void do_syscall(Context *c) {
         break;
       }
 
+      case SYS_brk: {
+        c->GPRx = 0; 
+        // yield();
+        break;
+      }
+
       c->GPRx = len;
       break;
     }
