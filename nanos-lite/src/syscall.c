@@ -16,17 +16,18 @@ void do_syscall(Context *c) {
     case SYS_yield: c->GPRx = 0; yield(); break;
 
     case SYS_write: {
-      // int fd = c->GPR2;
-      // char *buf = (char *) c->GPR3;
+      printf("Call write\n");
+      int fd = c->GPR2;
+      char *buf = (char *) c->GPR3;
       int len = c->GPR4;
 
-      // if (fd == 1 || fd == 2) {
-      //   for (int i = 0; i < len; i++)
-      //     putch(*buf++);
-      // } else {
-      //   c->GPRx = -1;
-      //   break;
-      // }
+      if (fd == 1 || fd == 2) {
+        for (int i = 0; i < len; i++)
+          putch(*buf++);
+      } else {
+        c->GPRx = -1;
+        break;
+      }
 
       c->GPRx = len;
       break;
