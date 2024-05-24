@@ -1,4 +1,5 @@
 #include <common.h>
+// #include "strace.h"
 
 void init_mm(void);
 void init_device(void);
@@ -12,6 +13,7 @@ int main() {
   printf("%s", logo);
   Log("'Hello World!' from Nanos-lite");
   Log("Build time: %s, %s", __TIME__, __DATE__);
+  // strace_init();
 
   init_mm();
 
