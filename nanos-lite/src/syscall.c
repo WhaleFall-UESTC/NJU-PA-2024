@@ -16,7 +16,7 @@ void do_syscall(Context *c) {
     case SYS_yield: c->GPRx = 0; yield(); break;
 
     case SYS_write: {
-      printf("Call write\n");
+      // printf("Call write\n");
       int fd = c->GPR2;
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
