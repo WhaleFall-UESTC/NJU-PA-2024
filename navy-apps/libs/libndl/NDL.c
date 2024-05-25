@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <assert.h>
+#include <fcntl.h>
 
 static int evtdev = -1;
 static int fbdev = -1;
@@ -51,10 +52,8 @@ void NDL_OpenCanvas(int *w, int *h) {
 
   free(buf);
 
-  screen_w = width;
-  screen_h = height;
-  *w = screen_w;
-  *h = screen_h;
+  *w = width;
+  *h = height;
   canvas_w = width;
   canvas_h = height;
   canvas_x = (screen_w - canvas_w) / 2;
