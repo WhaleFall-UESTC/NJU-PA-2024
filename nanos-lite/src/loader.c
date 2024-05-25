@@ -62,7 +62,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   // printEhdr(ehdr);
   Elf_Addr entrypoint = (uintptr_t) ehdr.e_entry;
 
-  Elf_Off e_phoff = ehdr.e_phoff;
+  // Elf_Off e_phoff = ehdr.e_phoff;
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
 
@@ -70,7 +70,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   for (int i = 0; i < e_phnum; i++)
   {
     // ramdisk_read(&phdr, e_phoff + i * e_phentsize, e_phentsize);
-    fs_lseek(fd, e_phoff + i * e_phentsize, SEEK_SET);
+    // fs_lseek(fd, e_phoff + i * e_phentsize, SEEK_SET);
     fs_read(fd, &phdr, e_phentsize);
     // printf("\n");
     // printPhdr(phdr);
