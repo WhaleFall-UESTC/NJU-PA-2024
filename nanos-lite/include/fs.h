@@ -10,7 +10,7 @@ enum {SEEK_SET, SEEK_CUR, SEEK_END};
 #endif
 
 
-int fs_open(char *filename);
+int fs_open(const char *filename);
 size_t fs_read(int fd, void *buf, size_t len);
 size_t fs_write(int fd, void *buf, size_t count);
 int fs_close();

@@ -1,5 +1,6 @@
 #include <proc.h>
 #include <elf.h>
+#include <fs.h>
 
 #if defined (__ISA_AM_NATIVE__)
 # define EXPECT_TYPE EM_X86_64
@@ -50,55 +51,39 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   Elf_Phdr phdr;
 
   #ifdef __LP64__
-  printf("Why you 64?\n");
+  // printf("Why you 64?\n");
   #endif
 
-  Elf_Half Ehdrsz = 0;
-  ramdisk_read(&Ehdrsz, EhdrSize, 2);
+  int fd = fs_open(filename);
+
+  // Elf_Half Ehdrsz = 0;
+  // ramdisk_read(&Ehdrsz, EhdrSize, 2);
   // printf("Ehdr: %d\tGet Size: %d\n", sizeof(Elf_Ehdr), Ehdrsz);
   
-  ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
+  fs_read(fd, &ehdr, sizeof(Elf_Ehdr));
+  // ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
   assert(*((uint32_t *)(&ehdr.e_ident)) == 0x464c457f);
   // printEhdr(ehdr);
   Elf_Addr entrypoint = (uintptr_t) ehdr.e_entry;
 
-  Elf_Off e_phoff = ehdr.e_phoff;
+  // Elf_Off e_phoff = ehdr.e_phoff;
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
 
   for (int i = 0; i < e_phnum; i++)
   {
-    ramdisk_read(&phdr, e_phoff + i * e_phentsize, e_phentsize);
+    // ramdisk_read(&phdr, e_phoff + i * e_phentsize, e_phentsize);
+    fs_read(fd, &phdr, e_phentsize);
     
     if ((Elf_Half)phdr.p_type != PT_LOAD)
       continue;
 
-    ramdisk_read((void *)phdr.p_vaddr, phdr.p_offset, phdr.p_memsz);
+    // ramdisk_read((void *)phdr.p_vaddr, phdr.p_offset, phdr.p_memsz);
+    fs_lseek(fd, phdr.p_offset, SEEK_SET);
+    fs_read(fd, (void *)phdr.p_vaddr, phdr.p_memsz);
     memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
 
   }
-    // else {
-    //   printf("\nLoad this segment\n");
-    //   printPhdr(phdr);
-    // }
-
-  //   char buf_tmp[BUF];
-  //   Elf_Word filesz = phdr.p_filesz;
-  //   Elf_Off offset = phdr.p_offset;
-  //   Elf_Word nread = filesz, read = 0;
-  //   Elf_Addr vaddr = phdr.p_vaddr;
-  //   while (nread)
-  //   {
-  //     read = (nread < BUF) ? nread : BUF;
-  //     ramdisk_read(buf_tmp, offset, read);
-  //     nread -= read;
-  //     offset += read;
-  //     memcpy((void *)vaddr, buf_tmp, read);
-  //     vaddr += read;
-  //   }
-
-  //   memset((void *)vaddr, 0, phdr.p_memsz - filesz);
-  // }
 
   return (Elf_Addr) entrypoint;
 }

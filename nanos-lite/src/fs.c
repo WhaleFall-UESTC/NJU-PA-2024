@@ -39,7 +39,7 @@ void init_fs() {
 }
 
 
-int fs_open(char *filename) {
+int fs_open(const char *filename) {
   int i;
   for (i = 0; i < sizeof(file_table) / sizeof(file_table[0]); i ++) {
     if (strcmp(filename, file_table[i].name) == 0) {
