@@ -70,11 +70,14 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   {
     // ramdisk_read(&phdr, e_phoff + i * e_phentsize, e_phentsize);
     fs_read(fd, &phdr, e_phentsize);
+    printf("\n");
+    printPhdr(phdr);
     
     if ((Elf_Half)phdr.p_type != PT_LOAD)
       continue;
-    printPhdr(phdr);
+    Log("load this");
     
+
     // ramdisk_read((void *)phdr.p_vaddr, phdr.p_offset, phdr.p_memsz);
     fs_lseek(fd, phdr.p_offset, SEEK_SET);
     fs_read(fd, (void *)phdr.p_vaddr, phdr.p_memsz);
