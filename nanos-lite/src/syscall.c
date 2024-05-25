@@ -74,7 +74,7 @@ void do_syscall(Context *c) {
       tv->tv_usec = us % 1000000;
 
       c->GPRx = 0;
-      Log("SYS_gettimeofday, time: %ld", (long) tv->tv_sec * 1000000 + (long) tv->tv_usec);
+      Log("SYS_gettimeofday");
       break;
     }
 
