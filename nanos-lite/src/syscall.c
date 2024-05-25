@@ -11,30 +11,22 @@ void do_syscall(Context *c) {
   a[3] = c->GPR4;
   
   switch (a[0]) {
-    case SYS_exit:  c->GPRx = 0; halt(0); break;
-    case SYS_yield: c->GPRx = 0; yield(); break;
+    case SYS_exit:  c->GPRx = 0; halt(0); Log("SYS_exit"); break;
+    case SYS_yield: c->GPRx = 0; yield(); Log("SYS_yield");break;
 
     case SYS_write: {
       int fd = c->GPR2;
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
 
-      
-
-      // if (fd == 1 || fd == 2) {
-      //   for (int i = 0; i < len; i++)
-      //     putch(*buf++);
-      // } else {
-      //   c->GPRx = -1;
-      //   break;
-      // }
-
-      c->GPRx = fs_write(fd, buf, len);;
+      c->GPRx = fs_write(fd, buf, len);
+      Log("SYS_write fd=%d file:%s", fd, get_filename(fd));
       break;
     }
 
     case SYS_brk: {
       c->GPRx = 0; 
+      Log("SYS_brk");
       break;
     }
 
@@ -43,6 +35,7 @@ void do_syscall(Context *c) {
       int fd = fs_open(filename);
       if (fd < 0) panic("fs_open(%s) returned -1", filename);
       c->GPRx = fd;
+      Log("SYS_open fd=%d file:%s", fd, get_filename(fd));
       break;
     }
 
@@ -51,6 +44,7 @@ void do_syscall(Context *c) {
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
       c->GPRx = fs_read(fd, buf, len);
+      Log("SYS_read fd=%d file:%s", fd, get_filename(fd));
       break;
     }
 
@@ -59,12 +53,14 @@ void do_syscall(Context *c) {
       int offset = c->GPR3;
       int whence = c->GPR4;
       c->GPRx = fs_lseek(fd, offset, whence);
+      Log("SYS_lseek fd=%d file:%s old_off:%p cur_off:%p", fd, get_filename(fd), offset, c->GPRx);
       break;
     }
 
     case SYS_close: {
       // int fd = c->GPR2;
       c->GPRx = fs_close();
+      Log("SYS_close");
       break;
     }
 

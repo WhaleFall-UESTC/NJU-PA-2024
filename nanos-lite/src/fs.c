@@ -139,3 +139,16 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
 
   return file_table[fd].open_offset;
 }
+
+char *get_filename(int fd) {
+  switch (fd) {
+    case FD_STDIN:
+      return "/dev/stdin";
+    case FD_STDOUT:
+      return "/dev/stdout";
+    case FD_STDERR:
+      return "/dev/stderr";
+    default:
+      return file_table[fd].name;
+  }
+}
