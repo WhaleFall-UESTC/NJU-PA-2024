@@ -19,7 +19,7 @@ void do_syscall(Context *c) {
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
 
-      fs_write(fd, buf, len);
+      
 
       // if (fd == 1 || fd == 2) {
       //   for (int i = 0; i < len; i++)
@@ -29,8 +29,8 @@ void do_syscall(Context *c) {
       //   break;
       // }
 
-      // c->GPRx = len;
-      // break;
+      c->GPRx = fs_write(fd, buf, len);;
+      break;
     }
 
     case SYS_brk: {
