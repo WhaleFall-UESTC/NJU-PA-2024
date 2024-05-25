@@ -22,6 +22,10 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 
 size_t events_read(void *buf, size_t offset, size_t len) {
   AM_INPUT_KEYBRD_T in = io_read(AM_INPUT_KEYBRD);
+  if (in.keycode == AM_KEY_NONE) {
+    *(char *)buf = '\0';
+    return 0;
+  }
   return snprintf((char *)buf, len, "%s %s\n", in.keydown ? "kd" : "ku", keyname[in.keydown]);
 }
 
