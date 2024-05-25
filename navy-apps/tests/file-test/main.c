@@ -18,16 +18,16 @@ int main() {
   }
   printf("Pass s2\n");
 
-  // fseek(fp, 0, SEEK_SET);
-  // for (i = 0; i < 500; i ++) {
-  //   fprintf(fp, "%4d\n", i + 1 + 1000);
-  // }
+  fseek(fp, 0, SEEK_SET);
+  for (i = 0; i < 500; i ++) {
+    fprintf(fp, "%4d\n", i + 1 + 1000);
+  }
 
-  // for (i = 500; i < 1000; i ++) {
-  //   fscanf(fp, "%d", &n);
-  //   assert(n == i + 1);
-  // }
-  // printf("Pass s3\n");
+  for (i = 500; i < 1000; i ++) {
+    fscanf(fp, "%d", &n);
+    assert(n == i + 1);
+  }
+  printf("Pass s3\n");
 
   fseek(fp, 0, SEEK_SET);
   for (i = 0; i < 500; i ++) {
