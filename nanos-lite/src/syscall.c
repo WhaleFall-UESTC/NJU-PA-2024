@@ -1,7 +1,6 @@
 #include <common.h>
 #include "syscall.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <fs.h>
 
 
 void do_syscall(Context *c) {
@@ -16,25 +15,56 @@ void do_syscall(Context *c) {
     case SYS_yield: c->GPRx = 0; yield(); break;
 
     case SYS_write: {
-      // printf("Call write\n");
       int fd = c->GPR2;
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
 
-      if (fd == 1 || fd == 2) {
-        for (int i = 0; i < len; i++)
-          putch(*buf++);
-      } else {
-        c->GPRx = -1;
-        break;
-      }
+      fs_write(fd, buf, len);
 
-      c->GPRx = len;
-      break;
+      // if (fd == 1 || fd == 2) {
+      //   for (int i = 0; i < len; i++)
+      //     putch(*buf++);
+      // } else {
+      //   c->GPRx = -1;
+      //   break;
+      // }
+
+      // c->GPRx = len;
+      // break;
     }
 
     case SYS_brk: {
       c->GPRx = 0; 
+      break;
+    }
+
+    case SYS_open: {
+      char *filename = (char *) c->GPR2;
+      int fd = fs_open(filename);
+      if (fd < 0) panic("fs_open(%s) returned -1", filename);
+      c->GPRx = fd;
+      break;
+    }
+
+    case SYS_read: {
+      int fd = c->GPR2;
+      char *buf = (char *) c->GPR3;
+      int len = c->GPR4;
+      c->GPRx = fs_read(fd, buf, len);
+      break;
+    }
+
+    case SYS_lseek: {
+      int fd = c->GPR2;
+      int offset = c->GPR3;
+      int whence = c->GPR4;
+      c->GPRx = fs_lseek(fd, offset, whence);
+      break;
+    }
+
+    case SYS_close: {
+      // int fd = c->GPR2;
+      c->GPRx = fs_close();
       break;
     }
 
