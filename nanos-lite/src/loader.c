@@ -62,9 +62,11 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   printEhdr(ehdr);
   Elf_Addr entrypoint = (uintptr_t) ehdr.e_entry;
 
-  // Elf_Off e_phoff = ehdr.e_phoff;
+  Elf_Off e_phoff = ehdr.e_phoff;
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
+
+  fs_lseek(fd, e_phoff, SEEK_SET);
 
   for (int i = 0; i < e_phnum; i++)
   {
