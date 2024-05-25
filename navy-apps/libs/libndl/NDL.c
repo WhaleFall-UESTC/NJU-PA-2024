@@ -9,6 +9,8 @@
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
+static int canvas_w = 0, canvas_h = 0;
+static int canvas_x = 0, canvas_y = 0;
 
 uint32_t NDL_GetTicks() {
   struct timeval *tv;
@@ -18,10 +20,47 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  return 0;
+  int fd = open("/dev/events", 0, 0);
+  int ret = read(fd, buf, len);
+  assert(close(fd) == 0);
+  return ret == 0 ? 0 : 1;
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
+  int buf_size = 1024;
+  char* buf = (char *) malloc(buf_size * sizeof(char));
+  int fd = open("/proc/dispinfo", 0, 0);
+  int ret = read(fd, buf, buf_size);
+  assert(ret < buf_size);
+  assert(close(fd) == 0);
+
+  int i = 0;
+  int width = 0, height = 0;
+  char* width_str = strstr(buf, "WIDTH");
+  char* height_str = strstr(buf, "HEIGHT");
+
+  if (width_str) {
+    width_str = strchr(width_str, ':') + 1;
+    width = atoi(width_str);
+  }
+  if (height_str) {
+    height_str = strchr(height_str, ':') + 1;
+    height = atoi(height_str);
+  }
+  assert(height != 0 && width != 0);
+
+  free(buf);
+
+  screen_w = width;
+  screen_h = height;
+  *w = screen_w;
+  *h = screen_h;
+  canvas_w = width;
+  canvas_h = height;
+  canvas_x = (screen_w - canvas_w) / 2;
+  canvas_y = (screen_h - canvas_h) / 2;
+
+
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;

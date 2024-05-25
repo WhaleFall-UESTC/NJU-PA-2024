@@ -21,11 +21,13 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  AM_INPUT_KEYBRD_T in = io_read(AM_INPUT_KEYBRD);
+  return snprintf((char *)buf, len, "%s %s\n", in.keydown ? "kd" : "ku", keyname[in.keydown]);
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  AM_GPU_CONFIG_T gpu_info = io_read(AM_GPU_CONFIG);
+  return snprintf((char *)buf, len, "WIDTH:%d\nHEIGHT:%d\n", gpu_info.width, gpu_info.height);
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
