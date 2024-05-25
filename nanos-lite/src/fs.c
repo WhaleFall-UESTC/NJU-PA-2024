@@ -133,7 +133,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
       break;
     default:
       Log("[fs_lseek] invalid whence");
-      return 0;
+      return -1;
   }
 
   return file_table[fd].open_offset;
