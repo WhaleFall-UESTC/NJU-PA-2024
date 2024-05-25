@@ -66,11 +66,11 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   Elf_Half e_phentsize = ehdr.e_phentsize;
   Elf_Half e_phnum = ehdr.e_phnum;
 
-  fs_lseek(fd, e_phoff, SEEK_SET);
 
   for (int i = 0; i < e_phnum; i++)
   {
     // ramdisk_read(&phdr, e_phoff + i * e_phentsize, e_phentsize);
+    fs_lseek(fd, e_phoff + i * e_phentsize, SEEK_SET);
     fs_read(fd, &phdr, e_phentsize);
     printf("\n");
     printPhdr(phdr);
