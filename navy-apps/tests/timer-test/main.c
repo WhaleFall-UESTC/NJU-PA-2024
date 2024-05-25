@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <sys/time.h>
-#include <NDL.h>
 
 int main() {
-    // struct timeval tv;
+    struct timeval tv;
     int cnt = 15;
-    uint32_t time_new = 0, time_old = 0;
-
+    long time_new = 0, time_old = 0;
     while(cnt) {
-        printf("Get time\n");
-        time_new = NDL_GetTicks();
-        if (time_new - time_old < 500)
+        gettimeofday(&tv, NULL);
+        time_new = tv.tv_sec * 1000000 + tv.tv_usec;
+        if (time_new - time_old < 500000)
             continue;
         else {
             printf("cnt: %d\n", cnt--);
