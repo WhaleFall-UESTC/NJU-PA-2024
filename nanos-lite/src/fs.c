@@ -86,16 +86,17 @@ size_t fs_write(int fd, void *buf, size_t count) {
   size_t file_size = file_table[fd].size;
   size_t file_offset = file_table[fd].disk_offset;
   size_t open_offset = file_table[fd].open_offset;
+  size_t write_len = count;
 
   if (open_offset > file_size) {
     return 0;
-  } else if (open_offset + count > file_size) {
-    count = file_size - open_offset;
+  } else if (open_offset + write_len > file_size) {
+    write_len = file_size - open_offset;
   }
 
-  ramdisk_write(buf, file_offset + open_offset, count);
-  file_table[fd].open_offset += count;
-  return count;
+  ramdisk_write(buf, file_offset + open_offset, write_len);
+  file_table[fd].open_offset += write_len;
+  return write_len;
 }
 
 // 这个文件系统没有所谓打开状态
