@@ -55,7 +55,7 @@ void NDL_OpenCanvas(int *w, int *h)
     close(fbctl);
   }
 
-  int buf_size = 1024;
+  int buf_size = 64;
   char *buf = (char *)malloc(buf_size * sizeof(char));
   // int fd = open("/proc/dispinfo", 0, 0);
   int ret = read(-1, buf, buf_size);
