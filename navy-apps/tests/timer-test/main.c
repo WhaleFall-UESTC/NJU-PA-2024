@@ -5,7 +5,7 @@
 int main() {
     struct timeval tv;
     int cnt = 15;
-    long time_new = 0, time_old = 0;
+    uint32_t time_new = 0, time_old = 0;
     while(cnt) {
         time_new = NDL_GetTicks();
         if (time_new - time_old < 500)
