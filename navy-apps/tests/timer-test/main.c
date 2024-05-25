@@ -16,6 +16,6 @@ int main() {
         }
     }
     
-    printf("Over");
+    printf("PASS!!!\n");
     return 0;
 }
