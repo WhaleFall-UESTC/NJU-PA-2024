@@ -14,6 +14,7 @@
 #include <SDL2/SDL.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include "native.h"
 
 //#define MODE_800x600
 

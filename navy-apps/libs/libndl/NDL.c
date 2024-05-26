@@ -5,8 +5,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <assert.h>
-// #include <native.cpp>
-#include <fcntl.h>
+// #include <native.h>
+// #include <fcntl.h>
 
 static int evtdev = -1;
 static int fbdev = -1;
@@ -60,7 +60,7 @@ void NDL_OpenCanvas(int *w, int *h)
   int buf_size = 64;
   char *buf = (char *)malloc(buf_size * sizeof(char));
   int fd = open("/proc/dispinfo", 0, 0);
-  printf("fd: %d\n", fd);
+  printf("fd_dispinfo: %d\n", fd);
   int ret = read(fd, buf, buf_size);
   printf("buf: %s\n", buf);
   assert(ret < buf_size);
@@ -98,8 +98,8 @@ void NDL_OpenCanvas(int *w, int *h)
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h)
 {
-  int fd = open("/dev/fd", 0, 0);
-  printf("fd: %d\n", fd);
+  int fd = open("/dev/fb", 0, 0);
+  printf("fd_fb: %d\n", fd);
   for (int i = 0; i < h && i + y < canvas_h; i++) {
     lseek(fd, ((y + canvas_y + i) * screen_w + (x + canvas_x)) * 4, SEEK_SET);
     write(fd, pixels + i * w, 4 * (w < canvas_x - x ? w : canvas_w - x));

@@ -67,6 +67,7 @@ void _yield() {
   while (1);
 }
 
+
 int _open(const char *path, int flags, mode_t mode) {
   return _syscall_(SYS_open, (intptr_t)path, 0, 0);
 }

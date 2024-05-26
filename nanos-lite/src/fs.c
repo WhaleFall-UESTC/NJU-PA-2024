@@ -1,5 +1,6 @@
 #include <fs.h>
 #include <common.h>
+#include <device.h>
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
@@ -13,7 +14,7 @@ typedef struct {
   size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_DISPINFO};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -43,8 +44,13 @@ void init_fs() {
   file_table[FD_FB].size = width * height * 4;
 }
 
-
 int fs_open(const char *filename) {
+  if (strcmp(filename, "/proc/dispinfo") == 0) {
+    return FD_DISPINFO;
+  } else if (strcmp(filename, "/dev/fb") == 0) {
+    return FD_FB;
+  }
+
   int i;
   for (i = 0; i < sizeof(file_table) / sizeof(file_table[0]); i ++) {
     if (strcmp(filename, file_table[i].name) == 0) {
@@ -56,6 +62,9 @@ int fs_open(const char *filename) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
+  if (fd == FD_DISPINFO)
+    return dispinfo_read(buf, 0, len);
+
   ReadFn read_fn = file_table[fd].read;
   if (read_fn != NULL) {
     return read_fn(buf, 0, len);
@@ -86,7 +95,9 @@ size_t fs_write(int fd, void *buf, size_t count) {
   if (fd == 0) {
     Log("[fs_write] fd = 0, ret 0");
     return 0;
-  }
+  } else if (fd == FD_FB) {
+    return fb_write(buf, 0, count);
+  } 
 
   WriteFn write_fn = file_table[fd].write;
   if (write_fn != NULL) {
