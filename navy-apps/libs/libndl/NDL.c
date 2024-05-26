@@ -68,6 +68,7 @@ void NDL_OpenCanvas(int *w, int *h)
 
   int i = 0;
   int width = 300, height = 400;
+  
   char *width_str = strstr(buf, "WIDTH");
   char *height_str = strstr(buf, "HEIGHT");
 
@@ -98,6 +99,7 @@ void NDL_OpenCanvas(int *w, int *h)
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h)
 {
   int fd = open("/dev/fd", 0, 0);
+  rintf("fd: %d\n", fd);
   for (int i = 0; i < h && i + y < canvas_h; i++) {
     lseek(fd, ((y + canvas_y + i) * screen_w + (x + canvas_x)) * 4, SEEK_SET);
     write(fd, pixels + i * w, 4 * (w < canvas_x - x ? w : canvas_w - x));
