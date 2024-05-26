@@ -88,8 +88,12 @@ void NDL_OpenCanvas(int *w, int *h)
 
   free(buf);
 
-  *w = width;
-  *h = height;
+  screen_w = width;
+  screen_h = height;
+  if (*w == 0 && *h == 0) {
+    *w = screen_w;
+    *h = screen_h;
+  }
   canvas_w = *w;
   canvas_h = *h;
   canvas_x = (screen_w - canvas_w) / 2;
