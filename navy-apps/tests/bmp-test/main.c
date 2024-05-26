@@ -20,6 +20,6 @@ int main() {
   // free(bmp);
   printf("free\n");
   NDL_Quit();
-  while (1);
+  // while (1);
   return 0;
 }
