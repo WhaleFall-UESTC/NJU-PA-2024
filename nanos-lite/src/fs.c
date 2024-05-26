@@ -65,18 +65,15 @@ int fs_open(const char *filename) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
-  // if (fd == FD_DISPINFO)
+  if (fd == FD_EVENT) {
+    Log("Read Events");
   //   return dispinfo_read(buf, 0, len);
+  }
 
   ReadFn read_fn = file_table[fd].read;
   if (read_fn != NULL) {
     return read_fn(buf, 0, len);
   }
-
-  // if (fd <= 2){
-  //   Log("[fs_read] fd should be greater than 2");
-  //   return 0;
-  // } 
 
   size_t file_size = file_table[fd].size;
   size_t file_offset = file_table[fd].disk_offset;
@@ -98,9 +95,7 @@ size_t fs_write(int fd, void *buf, size_t count) {
   // if (fd == 0) {
   //   Log("[fs_write] fd = 0, ret 0");
   //   return 0;
-  // } else if (fd == FD_FB) {
-  //   return fb_write(buf, 0, count);
-  // } 
+  // }
 
   WriteFn write_fn = file_table[fd].write;
   if (write_fn != NULL) {
@@ -130,7 +125,7 @@ int fs_close() {
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
   if (fd <= 2) {
-    // Log("[fs_lseek] fd should be greater than 2");
+    Log("[fs_lseek] fd should be greater than 2");
     return 0;
   }
 

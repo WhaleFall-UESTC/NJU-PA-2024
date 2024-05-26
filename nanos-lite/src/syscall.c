@@ -21,7 +21,7 @@ void do_syscall(Context *c) {
       int len = c->GPR4;
 
       c->GPRx = fs_write(fd, buf, len);
-      // Log("SYS_write fd=%d file:%s", fd, get_filename(fd));
+      Log("SYS_write fd=%d file:%s", fd, get_filename(fd));
       break;
     }
 
@@ -36,7 +36,7 @@ void do_syscall(Context *c) {
       int fd = fs_open(filename);
       if (fd < 0) panic("fs_open(%s) returned -1", filename);
       c->GPRx = fd;
-      // Log("SYS_open fd=%d file:%s", fd, get_filename(fd));
+      Log("SYS_open fd=%d file:%s", fd, get_filename(fd));
       break;
     }
 
@@ -45,7 +45,7 @@ void do_syscall(Context *c) {
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
       c->GPRx = fs_read(fd, buf, len);
-      // Log("SYS_read fd=%d file:%s", fd, get_filename(fd));
+      Log("SYS_read fd=%d file:%s", fd, get_filename(fd));
       break;
     }
 
@@ -54,14 +54,14 @@ void do_syscall(Context *c) {
       int offset = c->GPR3;
       int whence = c->GPR4;
       c->GPRx = fs_lseek(fd, offset, whence);
-      // Log("SYS_lseek fd=%d file:%s old_off:%p cur_off:%p", fd, get_filename(fd), offset, c->GPRx);
+      Log("SYS_lseek fd=%d file:%s old_off:%p cur_off:%p", fd, get_filename(fd), offset, c->GPRx);
       break;
     }
 
     case SYS_close: {
       // int fd = c->GPR2;
       c->GPRx = fs_close();
-      // Log("SYS_close");
+      Log("SYS_close");
       break;
     }
 
@@ -74,7 +74,7 @@ void do_syscall(Context *c) {
       tv->tv_usec = us % 1000000;
 
       c->GPRx = 0;
-      // Log("SYS_gettimeofday");
+      Log("SYS_gettimeofday");
       break;
     }
 

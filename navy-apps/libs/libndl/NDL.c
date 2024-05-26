@@ -25,6 +25,7 @@ uint32_t NDL_GetTicks()
 int NDL_PollEvent(char *buf, int len)
 {
   int fd = open("/dev/events", 0, 0);
+  printf("Get fd: %d\n", fd);
   int ret = read(fd, buf, len);
   assert(close(fd) == 0);
   return ret == 0 ? 0 : 1;
