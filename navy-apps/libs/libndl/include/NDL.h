@@ -23,3 +23,10 @@ int NDL_QueryAudio();
 #endif
 
 #endif
+
+
+FILE *fopen(const char *path, const char *mode);
+int open(const char *path, int flags, ...);
+ssize_t read(int fd, void *buf, size_t count);
+ssize_t write(int fd, const void *buf, size_t count);
+int execve(const char *filename, char *const argv[], char *const envp[]);

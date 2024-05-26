@@ -258,7 +258,7 @@ struct Init {
     dummy_fd = memfd_create("dummy", 0);
     assert(dummy_fd != -1);
     dispinfo_fd = dummy_fd;
-    printf("dispinfo_fd: %d\n", dispinfo_fd);
+    // printf("dispinfo_fd: %d\n", dispinfo_fd);
 
     char *navyhome = getenv("NAVY_HOME");
     assert(navyhome);
