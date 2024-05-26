@@ -62,7 +62,7 @@ void NDL_OpenCanvas(int *w, int *h)
   int fd = open("/proc/dispinfo", 0, 0);
   printf("fd_dispinfo: %d\n", fd);
   int ret = read(fd, buf, buf_size);
-  printf("buf: %s\n", buf);
+  // printf("buf: %s\n", buf);
   assert(ret < buf_size);
   // assert(close(fd) == 0);
 
@@ -98,6 +98,7 @@ void NDL_OpenCanvas(int *w, int *h)
   canvas_h = *h;
   canvas_x = (screen_w - canvas_w) / 2;
   canvas_y = (screen_h - canvas_h) / 2;
+  printf("canvas_x: %d, canvas_y: %d\ncanvas_w: %d, canvas_h: %d", canvas_x, canvas_y, canvas_w, canvas_h);
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h)
