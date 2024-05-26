@@ -21,7 +21,7 @@ void do_syscall(Context *c) {
       int len = c->GPR4;
 
       c->GPRx = fs_write(fd, buf, len);
-      Log("SYS_write fd=%d file:%s", fd, get_filename(fd));
+      Log("SYS_write fd=%d file:%s, %dbytes", fd, get_filename(fd), len);
       break;
     }
 
