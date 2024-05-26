@@ -5,17 +5,17 @@
 #include <BMP.h>
 
 int main() {
-  printf("Start, enter main()\n");
+  // printf("Start, enter main()\n");
   NDL_Init(0);
-  printf("Init\n");
+  // printf("Init\n");
   int w, h;
   void *bmp = BMP_Load("/share/pictures/projectn.bmp", &w, &h);
   assert(bmp);
-  printf("Load\n");
+  // printf("Load\n");
   NDL_OpenCanvas(&w, &h);
-  printf("Open\n");
+  // printf("Open\n");
   NDL_DrawRect(bmp, 0, 0, w, h);
-  printf("Draw\n");
+  // printf("Draw\n");
   free(bmp);
   NDL_Quit();
   printf("Test ends! Spinning...\n");
