@@ -56,36 +56,36 @@ void NDL_OpenCanvas(int *w, int *h)
     close(fbctl);
   }
 
-  // int buf_size = 64;
-  // char *buf = (char *)malloc(buf_size * sizeof(char));
-  // int fd = open("/proc/dispinfo", 0, 0);
-  // int ret = read(fd, buf, buf_size);
-  // // assert(ret < buf_size);
-  // // assert(close(fd) == 0);
+  int buf_size = 64;
+  char *buf = (char *)malloc(buf_size * sizeof(char));
+  int fd = open("/proc/dispinfo", 0, 0);
+  int ret = read(fd, buf, buf_size);
+  // assert(ret < buf_size);
+  // assert(close(fd) == 0);
 
-  // int i = 0;
-  // int width = 0, height = 0;
-  // char *width_str = strstr(buf, "WIDTH");
-  // char *height_str = strstr(buf, "HEIGHT");
+  int i = 0;
+  int width = 0, height = 0;
+  char *width_str = strstr(buf, "WIDTH");
+  char *height_str = strstr(buf, "HEIGHT");
 
-  // if (width_str)
-  // {
-  //   width_str = strchr(width_str, ':') + 1;
-  //   width = atoi(width_str);
-  //   printf("width: %d\n", width);
-  // }
-  // if (height_str)
-  // {
-  //   height_str = strchr(height_str, ':') + 1;
-  //   height = atoi(height_str);
-  //   printf("height: %d\n", height);
-  // }
-  // assert(height != 0 && width != 0);
+  if (width_str)
+  {
+    width_str = strchr(width_str, ':') + 1;
+    width = atoi(width_str);
+    printf("width: %d\n", width);
+  }
+  if (height_str)
+  {
+    height_str = strchr(height_str, ':') + 1;
+    height = atoi(height_str);
+    printf("height: %d\n", height);
+  }
+  assert(height != 0 && width != 0);
 
-  // free(buf);
+  free(buf);
 
-  // *w = width;
-  // *h = height;
+  *w = width;
+  *h = height;
   canvas_w = *w;
   canvas_h = *h;
   canvas_x = (screen_w - canvas_w) / 2;
