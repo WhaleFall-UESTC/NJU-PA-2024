@@ -65,10 +65,10 @@ int fs_open(const char *filename) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
-  if (fd == FD_EVENT) {
-    Log("Read Events");
-  //   return dispinfo_read(buf, 0, len);
-  }
+  // if (fd == FD_EVENT) {
+  //   Log("Read Events");
+  // //   return dispinfo_read(buf, 0, len);
+  // }
 
   ReadFn read_fn = file_table[fd].read;
   if (read_fn != NULL) {
