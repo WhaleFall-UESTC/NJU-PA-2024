@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <assert.h>
 // #include <native.cpp>
-// #include <fcntl.h>
+#include <fcntl.h>
 
 static int evtdev = -1;
 static int fbdev = -1;
@@ -59,9 +59,9 @@ void NDL_OpenCanvas(int *w, int *h)
 
   int buf_size = 64;
   char *buf = (char *)malloc(buf_size * sizeof(char));
-  // int fd = open("/proc/dispinfo", 0, 0);
-  // printf("fd: %d\n", fd);
-  int ret = read(-111, buf, buf_size);
+  int fd = open("/proc/dispinfo", 0, 0);
+  printf("fd: %d\n", fd);
+  int ret = read(fd, buf, buf_size);
   printf("buf: %s\n", buf);
   assert(ret < buf_size);
   // assert(close(fd) == 0);
