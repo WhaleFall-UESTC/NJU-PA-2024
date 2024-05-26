@@ -16,9 +16,10 @@ int main() {
   // printf("Open\n");
   NDL_DrawRect(bmp, 0, 0, w, h);
   // printf("Draw\n");
-  free(bmp);
-  NDL_Quit();
   printf("Test ends! Spinning...\n");
+  free(bmp);
+  printf("free\n");
+  NDL_Quit();
   while (1);
   return 0;
 }
