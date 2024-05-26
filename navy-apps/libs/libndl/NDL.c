@@ -57,11 +57,11 @@ void NDL_OpenCanvas(int *w, int *h)
     close(fbctl);
   }
 
-  int buf_size = 64;
-  char *buf = (char *)malloc(buf_size * sizeof(char));
-  // int fd = open("/proc/dispinfo");
-  int ret = read(1, buf, buf_size);
-  printf("buf: %s\n", buf);
+  // int buf_size = 64;
+  // char *buf = (char *)malloc(buf_size * sizeof(char));
+  // // int fd = open("/proc/dispinfo");
+  // int ret = read(1, buf, buf_size);
+  // printf("buf: %s\n", buf);
   // assert(ret < buf_size);
   // assert(close(fd) == 0);
 
@@ -84,7 +84,7 @@ void NDL_OpenCanvas(int *w, int *h)
   // }
   // assert(height != 0 && width != 0);
 
-  free(buf);
+  // free(buf);
 
   *w = width;
   *h = height;
