@@ -116,7 +116,7 @@ int fs_close() {
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
   if (fd <= 2) {
-    Log("[fs_lseek] fd should be greater than 2");
+    // Log("[fs_lseek] fd should be greater than 2");
     return 0;
   }
 
