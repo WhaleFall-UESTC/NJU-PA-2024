@@ -14,7 +14,7 @@ typedef struct {
   size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_DISPINFO};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_DINFO};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -33,6 +33,8 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write},
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
+  [FD_FB]     = {"/dev/fb", 0, 0, invalid_read, fb_write},
+  [FD_DINFO]  = {"/proc/dispinfo", 0, 0, dispinfo_read, serial_write},
 #include "files.h"
 };
 
@@ -45,11 +47,11 @@ void init_fs() {
 }
 
 int fs_open(const char *filename) {
-  if (strcmp(filename, "/proc/dispinfo") == 0) {
-    return FD_DISPINFO;
-  } else if (strcmp(filename, "/dev/fb") == 0) {
-    return FD_FB;
-  }
+  // if (strcmp(filename, "/proc/dispinfo") == 0) {
+  //   return FD_DISPINFO;
+  // } else if (strcmp(filename, "/dev/fb") == 0) {
+  //   return FD_FB;
+  // }
 
   int i;
   for (i = 0; i < sizeof(file_table) / sizeof(file_table[0]); i ++) {
@@ -62,8 +64,8 @@ int fs_open(const char *filename) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
-  if (fd == FD_DISPINFO)
-    return dispinfo_read(buf, 0, len);
+  // if (fd == FD_DISPINFO)
+  //   return dispinfo_read(buf, 0, len);
 
   ReadFn read_fn = file_table[fd].read;
   if (read_fn != NULL) {
@@ -92,12 +94,12 @@ size_t fs_read(int fd, void *buf, size_t len) {
 }
 
 size_t fs_write(int fd, void *buf, size_t count) {
-  if (fd == 0) {
-    Log("[fs_write] fd = 0, ret 0");
-    return 0;
-  } else if (fd == FD_FB) {
-    return fb_write(buf, 0, count);
-  } 
+  // if (fd == 0) {
+  //   Log("[fs_write] fd = 0, ret 0");
+  //   return 0;
+  // } else if (fd == FD_FB) {
+  //   return fb_write(buf, 0, count);
+  // } 
 
   WriteFn write_fn = file_table[fd].write;
   if (write_fn != NULL) {
