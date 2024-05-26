@@ -106,15 +106,16 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h)
 {
   int fd = open("/dev/fb", 0, 0);
   printf("fd_fb: %d\n", fd);
-  // for (int i = 0; i < h && i + y < canvas_h; i++) {
-  //   lseek(fd, ((y + canvas_y + i) * screen_w + (x + canvas_x)) * 4, SEEK_SET);
-  //   write(fd, pixels + i * w, 4 * (w < canvas_w - x ? w : canvas_w - x));
-  // }
-
-  for (int i = 0; i < h; i++) {
-    lseek(fd, i * w * 4, SEEK_SET);
-    write(fd, pixels + i * w, 4 * w);
+  for (int i = 0; i < h && i + y < canvas_h; i++) {
+    lseek(fd, ((y + canvas_y + i) * screen_w + (x + canvas_x)) * 4, SEEK_SET);
+    write(fd, pixels + i * w, 4 * (w < canvas_w - x ? w : canvas_w - x));
+    printf("Load %d rows\n", i);
   }
+
+  // for (int i = 0; i < h; i++) {
+  //   lseek(fd, i * w * 4, SEEK_SET);
+  //   write(fd, pixels + i * w, 4 * w);
+  // }
   
   free(pixels);
   assert(close(fd) == 0);

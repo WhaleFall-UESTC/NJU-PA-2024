@@ -41,10 +41,10 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  AM_GPU_CONFIG_T t = io_read(AM_GPU_CONFIG);
-  int width = t.width;
-  int height = t.height;
-  file_table[FD_FB].size = width * height * 4;
+  // AM_GPU_CONFIG_T t = io_read(AM_GPU_CONFIG);
+  // int width = t.width;
+  // int height = t.height;
+  // file_table[FD_FB].size = width * height * 4;
 }
 
 int fs_open(const char *filename) {
@@ -72,7 +72,9 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
   ReadFn read_fn = file_table[fd].read;
   if (read_fn != NULL) {
-    return read_fn(buf, 0, len);
+    int read_len = read_fn(buf, file_table[fd].open_offset, len);
+    file_table[fd].open_offset += read_len;
+    return read_len;
   }
 
   size_t file_size = file_table[fd].size;
@@ -99,7 +101,9 @@ size_t fs_write(int fd, void *buf, size_t count) {
 
   WriteFn write_fn = file_table[fd].write;
   if (write_fn != NULL) {
-    return write_fn(buf, 0, count);
+    int write_len = write_fn(buf, file_table[fd].open_offset, count);
+    file_table[fd].open_offset += write_len;
+    return write_len;
   }
 
   size_t file_size = file_table[fd].size;
