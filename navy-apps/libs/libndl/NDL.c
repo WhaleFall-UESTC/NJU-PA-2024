@@ -59,12 +59,12 @@ void NDL_OpenCanvas(int *w, int *h)
 
   int buf_size = 64;
   char *buf = (char *)malloc(buf_size * sizeof(char));
-  int fd = open("/proc/dispinfo", 0, 0);
-  printf("fd: %d\n", fd);
-  int ret = read(fd, buf, buf_size);
+  // int fd = open("/proc/dispinfo", 0, 0);
+  // printf("fd: %d\n", fd);
+  int ret = read(-111, buf, buf_size);
   printf("buf: %s\n", buf);
   assert(ret < buf_size);
-  assert(close(fd) == 0);
+  // assert(close(fd) == 0);
 
   int i = 0;
   int width = 300, height = 400;
@@ -99,7 +99,7 @@ void NDL_OpenCanvas(int *w, int *h)
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h)
 {
   int fd = open("/dev/fd", 0, 0);
-  rintf("fd: %d\n", fd);
+  printf("fd: %d\n", fd);
   for (int i = 0; i < h && i + y < canvas_h; i++) {
     lseek(fd, ((y + canvas_y + i) * screen_w + (x + canvas_x)) * 4, SEEK_SET);
     write(fd, pixels + i * w, 4 * (w < canvas_x - x ? w : canvas_w - x));
