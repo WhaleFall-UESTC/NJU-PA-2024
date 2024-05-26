@@ -65,24 +65,24 @@ void NDL_OpenCanvas(int *w, int *h)
   // assert(ret < buf_size);
   // assert(close(fd) == 0);
 
-  int i = 0;
-  int width = 0, height = 0;
-  char *width_str = strstr(buf, "WIDTH");
-  char *height_str = strstr(buf, "HEIGHT");
+  // int i = 0;
+  int width = 300, height = 400;
+  // char *width_str = strstr(buf, "WIDTH");
+  // char *height_str = strstr(buf, "HEIGHT");
 
-  if (width_str)
-  {
-    width_str = strchr(width_str, ':') + 1;
-    width = atoi(width_str);
-    printf("width: %d\n", width);
-  }
-  if (height_str)
-  {
-    height_str = strchr(height_str, ':') + 1;
-    height = atoi(height_str);
-    printf("height: %d\n", height);
-  }
-  assert(height != 0 && width != 0);
+  // if (width_str)
+  // {
+  //   width_str = strchr(width_str, ':') + 1;
+  //   width = atoi(width_str);
+  //   printf("width: %d\n", width);
+  // }
+  // if (height_str)
+  // {
+  //   height_str = strchr(height_str, ':') + 1;
+  //   height = atoi(height_str);
+  //   printf("height: %d\n", height);
+  // }
+  // assert(height != 0 && width != 0);
 
   free(buf);
 
