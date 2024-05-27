@@ -45,7 +45,7 @@ void do_syscall(Context *c) {
       char *buf = (char *) c->GPR3;
       int len = c->GPR4;
       c->GPRx = fs_read(fd, buf, len);
-      Log("SYS_read fd=%d file:%s", fd, get_filename(fd));
+      Log("SYS_read fd=%d file:%s read:%4s...", fd, get_filename(fd), buf);
       break;
     }
 
