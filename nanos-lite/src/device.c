@@ -54,6 +54,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   // return snprintf((char *)buf, len, "%s %s\n", in.keydown ? "kd" : "ku", keyname[in.keydown]);
   if (has_uart);
   if (has_key) {
+    update_keybrd();
     if (keybrd_head != keybrd_tail) {
       AM_INPUT_KEYBRD_T ev = keybrd_queue[keybrd_head++];
       keybrd_head %= 256;
