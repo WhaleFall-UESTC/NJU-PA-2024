@@ -51,7 +51,11 @@ void do_syscall(Context *c) {
       break;
     }
 
-    case SYS_brk: c->GPRx = 0; break;
+    case SYS_brk: {
+      
+      c->GPRx = 0; 
+      break;
+    }
 
     case SYS_gettimeofday: {
       uint64_t us = io_read(AM_TIMER_UPTIME).us;
