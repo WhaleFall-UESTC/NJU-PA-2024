@@ -25,6 +25,7 @@ void update_keybrd() {
   if (has_key) {
     while(1) {
       AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
+      printf("keycode: %d\n", ev.keycode);
       if (ev.keycode != AM_KEY_NONE) {
         // if (ev.keydown) {}
         keybrd_queue[keybrd_tail++] = ev;
