@@ -3,13 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
+static uint32_t timer_start = 0;
 uint32_t NDL_GetTicks() {
-  return 0;
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return ((uint32_t)tv.tv_sec) * 1000 + ((uint32_t)tv.tv_usec / 1000 - timer_start;
 }
 
 int NDL_PollEvent(char *buf, int len) {
@@ -61,4 +65,7 @@ int NDL_Init(uint32_t flags) {
 }
 
 void NDL_Quit() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  timer_start = ((uint32_t)tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
