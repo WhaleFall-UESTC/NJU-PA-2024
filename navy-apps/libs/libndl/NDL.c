@@ -13,11 +13,11 @@ static uint32_t timer_start = 0;
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  return ((uint32_t)tv.tv_sec) * 1000 + ((uint32_t)tv.tv_usec / 1000 - timer_start;
+  return ((uint32_t)tv.tv_sec) * 1000 + ((uint32_t)tv.tv_usec) / 1000 - timer_start;
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  return 0;
+  return read(evtdev, buf, len);
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
