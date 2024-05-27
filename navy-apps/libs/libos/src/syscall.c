@@ -84,18 +84,15 @@ void *_sbrk(intptr_t increment) {
     program_break += increment;
     return (void *)old;
   }
-  
   return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {
-  _syscall_(SYS_read, fd, (intptr_t)buf, count);
-  return 0;
+  return _syscall_(SYS_read, fd, (intptr_t)buf, count);;
 }
 
 int _close(int fd) {
-  _syscall_(SYS_close, 0, 0, 0);
-  return 0;
+  return _syscall_(SYS_close, 0, 0, 0);;
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
@@ -103,8 +100,7 @@ off_t _lseek(int fd, off_t offset, int whence) {
 }
 
 int _gettimeofday(struct timeval *tv, struct timezone *tz) {
-  _syscall_(SYS_gettimeofday, (intptr_t)tv, (intptr_t)tz, 0);
-  return 0;
+  return _syscall_(SYS_gettimeofday, (intptr_t)tv, (intptr_t)tz, 0);;
 }
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
