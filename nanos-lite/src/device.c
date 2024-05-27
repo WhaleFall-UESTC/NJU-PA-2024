@@ -53,13 +53,14 @@ void init_device() {
   Log("Initializing devices...");
   ioe_init();
 
-  AM_GPU_CONFIG_T gpu_info = io_read(AM_GPU_CONFIG);
-  gpu_cfg = gpu_info.present;
-  if (gpu_cfg) {
-    screen_W = gpu_info.width;
-    screen_H = gpu_info.height;
-    Log("Initializing screen %dx%d\n", screen_W, screen_H);
-  }
+  // AM_GPU_CONFIG_T gpu_info = io_read(AM_GPU_CONFIG);
+  // gpu_cfg = gpu_info.present;
+  // if (gpu_cfg) {
+  //   screen_W = gpu_info.width;
+  //   screen_H = gpu_info.height;
+  //   Log("Initializing screen %dx%d\n", screen_W, screen_H);
+  // }
+  if (gpu_cfg);
 
   if (io_read(AM_INPUT_CONFIG).present) {
     input_cfg = 1;
