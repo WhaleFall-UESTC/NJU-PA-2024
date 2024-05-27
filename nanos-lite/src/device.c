@@ -14,23 +14,56 @@ static const char *keyname[256] __attribute__((used)) = {
   AM_KEYS(NAME)
 };
 
+static int screen_H = 0, screen_W = 0;
+static bool gpu_cfg = 0, input_cfg = 0;
+
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  return 0;
+  for (size_t i = 0; i < len; i++) {
+    putch(((char *)buf)[i]);
+  }
+  return len;
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
+  if (ev.keycode == AM_KEY_NONE) {
+    return 0;
+  } else {
+    return snprintf(buf, len, "k%c %s\n", ev.keydown ? 'd' : 'u', keyname[ev.keycode]);
+  }
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  return snprintf(buf, len, "WIDTH: %d\nHEIGHT: %d\n", screen_W, screen_H);
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  return 0;
+  assert((offset & 3) == 0 && (len & 3) == 0);
+  int x = offset / 4 % screen_W;
+  int y = offset / 4 / screen_W;
+  io_write(AM_GPU_FBDRAW, x, y, (void *)buf, len / 4, 1, 1);
+  return len;
+}
+
+size_t get_dispinfo() {
+  return screen_H * screen_W * 4;
 }
 
 void init_device() {
   Log("Initializing devices...");
   ioe_init();
+
+  AM_GPU_CONFIG_T gpu_info = io_read(AM_GPU_CONFIG);
+  gpu_cfg = gpu_info.present;
+  if (gpu_cfg) {
+    screen_W = gpu_info.width;
+    screen_H = gpu_info.height;
+    Log("Initializing screen %dx%d\n", screen_W, screen_H);
+  }
+
+  if (io_read(AM_INPUT_CONFIG).present) {
+    input_cfg = 1;
+    Log("Initializing input");
+  }
+  
 }
