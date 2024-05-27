@@ -31,8 +31,6 @@ void update_keybrd() {
         keybrd_tail %= 256;
         if (keybrd_tail == keybrd_head)
           keybrd_head = (keybrd_head + 1) % 256;
-      }
-      else {
         break;
       }
     }
