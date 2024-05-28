@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define CreateRectFromSurface(suf, rect) SDL_Rect rect = {.x = 0, .y = 0, .w = suf->w, .h = suf->h}
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
@@ -30,12 +31,12 @@ static inline SDL_Rect *SDL_RectIntersect(SDL_Rect *dst, SDL_Rect *src) {
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
-  uint8_t dst_pixel_bits = dst->format->BitsPerPixel;
-  if (dst_pixel_bits == 8) {
+  if (dst->format->BitsPerPixel == 8) {
     assert(dst->format->palette->ncolors == 256);
     assert(src->format->palette->ncolors == 256);
     memcpy(dst->format->palette->colors, src->format->palette->colors, 256);
   } 
+  printf("Pass assert\n");
 
   CreateRectFromSurface(src, srect);
   SDL_RectIntersect(&srect, srcrect);
@@ -46,7 +47,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   SDL_Rect r = {.x = dstrect->x, .y = dstrect->y, .w = srect.w, .h = srect.h};
   SDL_RectIntersect(dstrect, &r);
   int dw = dst->w, sw = src->w;
-  if (dst_pixel_bits == 8) {
+  if (dst->format->BitsPerPixel == 8) {
     int off_dst = dstrect->y * dw + dstrect->x;
     int off_src = srect.y * sw + srect.x;
     for (int i = 0; i < dstrect->h; i++, off_dst += dw, off_src += sw) {
