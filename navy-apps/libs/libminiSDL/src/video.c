@@ -36,7 +36,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
     assert(src->format->palette->ncolors == 256);
     memcpy(dst->format->palette->colors, src->format->palette->colors, 256);
   } 
-  printf("Pass assert\n");
 
   CreateRectFromSurface(src, srect);
   SDL_RectIntersect(&srect, srcrect);
