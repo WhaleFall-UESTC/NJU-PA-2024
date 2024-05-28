@@ -62,15 +62,14 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-  uint8_t bits_per_pixel = dst->format->BitsPerPixel;
-  // assert(bits_per_pixel == 8 || bits_per_pixel == 32);
+  assert(dst->format->BitsPerPixel == 8 || dst->format->BitsPerPixel == 32);
   int w = dst->w;
   CreateRectFromSurface(dstrect, rect);
   SDL_Rect *r = SDL_RectIntersect(dstrect, &rect);
 
   for (int i = 0; i < r->h; i++) {
     for (int j = 0; j < r->w; j++) {
-      if (bits_per_pixel == 32) 
+      if (dst->format->BitsPerPixel == 32) 
         ((uint32_t *)dst->pixels)[w * (r->y + i) + r->x + j] = color;
       else
         ((uint8_t *)dst->pixels)[w * (r->y + i) + r->x + j] = color;
@@ -79,12 +78,11 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-  uint8_t bits_per_pixel = s->format->BitsPerPixel;
-  assert(bits_per_pixel == 8 || bits_per_pixel == 32);
+  assert(s->format->BitsPerPixel == 8 || s->format->BitsPerPixel == 32);
   if (w == 0) w = s->w;
   if (h == 0) h = s->h;
 
-  if (bits_per_pixel == 32) {
+  if (s->format->BitsPerPixel == 32) {
     NDL_DrawRect((uint32_t *)s->pixels, x, y, w, h);
   }
   else {
