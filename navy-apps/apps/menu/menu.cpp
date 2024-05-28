@@ -72,11 +72,14 @@ int main(int argc, char *argv[], char *envp[]) {
   screen = SDL_SetVideoMode(0, 0, 32, SDL_HWSURFACE);
 
   font = new BDF_Font(font_fname);
+  printf("Load BMP\n");
   logo_sf = SDL_LoadBMP("/share/pictures/projectn.bmp");
   assert(logo_sf);
+  printf("Finish loading\n");
   set_i_max();
 
   while (1) {
+    printf("Display menu\n");
     display_menu(i_max);
 
     SDL_Event e;
