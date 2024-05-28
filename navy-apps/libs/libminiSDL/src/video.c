@@ -40,7 +40,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   CreateRectFromSurface(src, srect);
   SDL_RectIntersect(&srect, srcrect);
   CreateRectFromSurface(dst, drect);
-  SDL_RectIntersect(dstrect, &drect);
+  dstrect = SDL_RectIntersect(dstrect, &drect);
   dstrect->w = dst->w - dstrect->x;
   dstrect->h = dst->h - dstrect->y;
   SDL_Rect r = {.x = dstrect->x, .y = dstrect->y, .w = srect.w, .h = srect.h};
@@ -63,6 +63,10 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   // assert(dst->format->BitsPerPixel == 32 || dst->format->BitsPerPixel == 8);
+  if (dstrect == NULL) {
+    SDL_Rect dstrect_t = {.x = 0, .y = 0, .w = dst->w, .h = dst->h};
+    dstrect = &dstrect_t;
+  }
   CreateRectFromSurface(dstrect, rect);
   SDL_Rect *r = SDL_RectIntersect(dstrect, &rect);
 
