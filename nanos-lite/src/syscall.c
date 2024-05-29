@@ -12,7 +12,7 @@ void do_syscall(Context *c) {
   a[0] = c->GPR1;
   
   switch (a[0]) {
-    case SYS_exit:  c->GPRx = 0; halt(0); break;
+    case SYS_exit:  c->GPRx = 0; naive_uload(NULL, "/bin/menu"); break;
     case SYS_yield:  c->GPRx = 0; yield(); break;
 
     case SYS_open: {
@@ -77,7 +77,6 @@ void do_syscall(Context *c) {
       // char **envp = (char **) c->GPR4;
 
       naive_uload(NULL, path);
-
       break;
     }
 
