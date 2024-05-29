@@ -3,11 +3,14 @@
 #include <assert.h>
 
 #define keyname(k) #k,
+#define def_keystate(k) [k] = 1;
 
 static const char *keyname[] = {
   "NONE",
   _KEYS(keyname)
 };
+
+static inline uint8_t keystate[256];
 
 int SDL_PushEvent(SDL_Event *ev) {
   return 0;
@@ -24,6 +27,7 @@ static inline uint8_t find_key(char *name) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {
+  InvokeAudioCallbask();
   if (ev == NULL) return 0;
 
   char buf[64];
@@ -31,8 +35,8 @@ int SDL_PollEvent(SDL_Event *ev) {
   if (ret) {
     ev->type = (buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN);
     ev->key.keysym.sym = find_key(buf + 3);
-    
-  }
+    keystate[ev->key.keysym.sym] = ev->type == SDL_KEYDOWN;
+  } 
   return ret;
 }
 
@@ -46,5 +50,5 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
 }
 
 uint8_t* SDL_GetKeyState(int *numkeys) {
-  return NULL;
+  return keystate;
 }

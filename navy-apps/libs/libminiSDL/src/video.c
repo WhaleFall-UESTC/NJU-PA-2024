@@ -1,4 +1,5 @@
 #include <NDL.h>
+#include <SDL.h>
 #include <sdl-video.h>
 #include <assert.h>
 #include <string.h>
@@ -11,7 +12,6 @@
 #define SDL_CreateRectFromSurface(suf, rect)                                   \
   SDL_Rect rect = {.x = 0, .y = 0, .w = suf->w, .h = suf->h}
 
-uint32_t *gbPixels = NULL;
 
 static inline SDL_Rect *SDL_RectIntersect(SDL_Rect *dst, SDL_Rect *src) {
   if (dst == NULL) return src;

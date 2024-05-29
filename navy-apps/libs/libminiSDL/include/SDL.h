@@ -62,3 +62,5 @@ typedef uint64_t Uint64;
 #define SDLK_z   SDLK_Z
 
 #endif
+
+uint32_t *gbPixels = NULL;
