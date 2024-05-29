@@ -1,5 +1,6 @@
 #include <NDL.h>
 #include <sdl-timer.h>
+#include <sdl-event.h>
 #include <stdio.h>
 
 SDL_TimerID SDL_AddTimer(uint32_t interval, SDL_NewTimerCallback callback, void *param) {
@@ -15,4 +16,8 @@ uint32_t SDL_GetTicks() {
 }
 
 void SDL_Delay(uint32_t ms) {
+  uint32_t time = NDL_GetTicks() + ms;
+  while (NDL_GetTicks() < time) {
+    SDL_PollEvent(NULL);
+  }
 }

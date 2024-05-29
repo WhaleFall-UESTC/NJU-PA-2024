@@ -40,7 +40,7 @@ void do_syscall(Context *c) {
       int len = c->GPR4;
 
       c->GPRx = fs_read(fd, buf, len);
-      // Log("sys read from fd: %d, len = %d", fd, len);
+      Log("sys read from fd: %d, len = %d", fd, len);
       break;
     }
 

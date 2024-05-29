@@ -1,6 +1,7 @@
 #include <NDL.h>
 #include <SDL.h>
 #include <assert.h>
+#include <string.h>
 
 #define keyname(k) #k,
 #define def_keystate(k) [k] = 1;
@@ -10,7 +11,7 @@ static const char *keyname[] = {
   _KEYS(keyname)
 };
 
-static inline uint8_t keystate[256];
+static uint8_t keystate[SDLK_LAST];
 
 int SDL_PushEvent(SDL_Event *ev) {
   return 0;
