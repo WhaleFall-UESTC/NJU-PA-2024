@@ -7,7 +7,8 @@ int SDL_Init(uint32_t flags) {
 
 void SDL_Quit() {
   NDL_Quit();
-  // if (gbPixels) free(gbPixels);
+  extern uint32_t* gbPixels;
+  if (gbPixels) free(gbPixels);
 }
 
 char *SDL_GetError() {
