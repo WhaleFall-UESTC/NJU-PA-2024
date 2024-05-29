@@ -27,7 +27,7 @@ static inline uint8_t find_key(char *name) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {
-  InvokeAudioCallbask();
+  // InvokeAudioCallbask();
   if (ev == NULL) return 0;
 
   char buf[64];
