@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fs.h>
 #include <sys/time.h>
+#include <proc.h>
 
 
 void do_syscall(Context *c) {
@@ -69,6 +70,16 @@ void do_syscall(Context *c) {
     }
 
     case SYS_close: c->GPRx = 0; break;
+
+    case SYS_execve: {
+      char *path = (char *) c->GPR2;
+      // char **argv = (char **) c->GPR3;
+      // char **envp = (char **) c->GPR4;
+
+      naive_uload(NULL, path);
+
+      break;
+    }
 
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
