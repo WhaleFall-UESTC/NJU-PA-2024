@@ -23,6 +23,26 @@ static void sh_prompt() {
 }
 
 static void sh_handle_cmd(const char *cmd) {
+  char *c = strdup(cmd);
+  c = strtok(c, " \n");
+  if (strcmp(c, "exit") == 0) {
+    exit(0);
+  }
+  setenv("PATH", "/bin:/usr/bin", 0);
+  const int max_argc = 16;
+  char *argv[max_argc] = {};
+  argv[0] = c;
+  int i;
+  for (i = 1; i < max_argc; i++) {
+    argv[i] = strtok(NULL, " \n");
+    if (argv[i] == NULL) break;
+  }
+  if (i == max_argc) {
+    term->write("Too many arguments\n", 19);
+    return;
+  }
+  execvp(c, argv);
+  // sh_printf("%s: %s\n", tmp, strerror(errno));
 }
 
 void builtin_sh_run() {
