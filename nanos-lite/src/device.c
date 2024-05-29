@@ -14,6 +14,7 @@ static const char *keyname[256] __attribute__((used)) = {
   AM_KEYS(NAME)
 };
 
+static int sbsize = 0;
 static int screen_H = 0, screen_W = 0;
 static bool gpu_cfg = 0, input_cfg = 0;
 
@@ -67,4 +68,19 @@ void init_device() {
     Log("Initializing input");
   }
   
+}
+
+size_t sb_write(const void *buf, size_t offset, size_t len) {
+  io_write(AM_AUDIO_PLAY, (Area){.start = (void *)buf, .end = (void *)(buf + len)});
+  return len;
+}
+
+size_t sbctl_write(const void *buf, size_t offset, size_t len) {
+  assert(len == 12);
+  io_write(AM_AUDIO_CTRL, .freq = *(int *)buf, .channels = *(int *)(buf + 4), .samples = *(int *)(buf + 8));
+  return len;
+}
+
+size_t sbctl_read(void *buf, size_t offset, size_t len) {
+  return snprintf(buf, len, "%d", sbsize - io_read(AM_AUDIO_STATUS).count);
 }
