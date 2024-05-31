@@ -1,7 +1,7 @@
 #include <common.h>
 
 void do_syscall(Context *c);
-extern Context* schedule(Context *prev);
+Context* schedule(Context *prev);
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
