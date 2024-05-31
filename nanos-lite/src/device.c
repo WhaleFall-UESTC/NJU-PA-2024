@@ -16,7 +16,7 @@ static const char *keyname[256] __attribute__((used)) = {
 
 static int sbsize = 0;
 static int screen_H = 0, screen_W = 0;
-static bool gpu_cfg = 0;
+static bool gpu_cfg = 1;
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   yield();
@@ -61,7 +61,7 @@ void init_device() {
     AM_GPU_CONFIG_T gpu_info = io_read(AM_GPU_CONFIG);
     screen_W = gpu_info.width;
     screen_H = gpu_info.height;
-    Log("Initializing screen %dx%d\n", screen_W, screen_H);
+    Log("Initializing screen %dx%d", screen_W, screen_H);
   }
 
   if (io_read(AM_INPUT_CONFIG).present) {
