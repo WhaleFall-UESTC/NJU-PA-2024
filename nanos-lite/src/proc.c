@@ -31,7 +31,7 @@ void init_proc() {
 }
 
 Context* schedule(Context *prev) {
-  Log("Switch to process");
+  // Log("Switch process");
   current->cp = prev;
   current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
