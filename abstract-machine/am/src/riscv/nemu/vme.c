@@ -70,5 +70,10 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  return NULL;
+  Context *new_c = (Context *) kstack.end - 1;
+  // printf("Loading... Stack_end: %#08x, and Context: %#08x, entry: %#08x, sizeof Context is %d\n", kstack.end, new_c, entry, sizeof(Context));
+  new_c->gpr[2] = (uintptr_t) kstack.end;
+  new_c->mepc = (uintptr_t) entry;
+  new_c->mstatus = 0x1800;
+  return new_c;
 }

@@ -92,6 +92,20 @@ void naive_uload(PCB *pcb, const char *filename)
   ((void (*)())entry)();
 }
 
+void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
+  pcb->cp = kcontext((Area) { pcb->stack, pcb + 1}, entry, arg);
+}
+
+void context_uload(PCB *pcb, const char *filename) {
+  uintptr_t entry = loader(pcb, filename);
+  if (!entry) {
+    pcb->cp = NULL;
+    return;
+  }
+  pcb->cp = ucontext(NULL, (Area) { heap.end, pcb + 1 }, (void *)entry);
+  pcb->cp->GPRx = (uintptr_t) heap.end;
+}
+
 
 // static void printEhdr(Elf_Ehdr ehdr) {
 //   printf("magic = %#08x\n", *((uint32_t *)(&ehdr.e_ident)));
