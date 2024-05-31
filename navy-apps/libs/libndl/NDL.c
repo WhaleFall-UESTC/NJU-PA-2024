@@ -9,6 +9,7 @@
 
 static int evtdev = -1;
 static int fbdev = -1;
+static int sbdev = -1, sbctldev = -1;
 static int screen_w = 0, screen_h = 0;
 static int canvas_x = 0, canvas_y = 0;
 
@@ -20,10 +21,7 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  int fd = open("/dev/events", 0, 0);
-  int ret = read(fd, buf, len);
-  assert(close(fd) == 0);
-  return ret;
+  return read(evtdev, buf, len);
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
@@ -52,26 +50,29 @@ void NDL_OpenCanvas(int *w, int *h) {
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-  int fd = open("/dev/fb", 0, 0);
   for (int i = 0; i < h; i++) {
-    lseek(fd, ((canvas_y + y + i) * screen_w + x + canvas_x) * 4, SEEK_SET);
-    write(fd, pixels + i * w, w * 4);
+    lseek(fbdev, ((canvas_y + y + i) * screen_w + x + canvas_x) * 4, SEEK_SET);
+    write(fbdev, pixels + i * w, w * 4);
   }
-  assert(close(fd) == 0);
 }
 
+
 void NDL_OpenAudio(int freq, int channels, int samples) {
+  int spec[3] = {freq, channels, samples};
+  write(sbctldev, spec, sizeof(spec));
 }
 
 void NDL_CloseAudio() {
 }
 
 int NDL_PlayAudio(void *buf, int len) {
-  return 0;
+  return write(sbdev, buf, len);
 }
 
 int NDL_QueryAudio() {
-  return 0;
+  char buf[16];
+  read(sbctldev, buf, sizeof(buf));
+  return atoi(buf);
 }
 
 void init_ticks() {
@@ -81,8 +82,8 @@ void init_ticks() {
 }
 
 void init_display() {
-  int fd = open("/proc/dispinfo", 0, 0);
   char buf[64];
+  int fd = open("/proc/dispinfo", 0, 0);
   int nread = read(fd, buf, sizeof(buf));
   assert(nread > 0 && nread < sizeof(buf));
 
@@ -99,7 +100,6 @@ void init_display() {
     screen_h = atoi(h_s);
   }
 
-  assert(close(fd) == 0);
   printf("Get screen size %dx%d\n", screen_w, screen_h);
 }
 
@@ -107,6 +107,11 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+
+  fbdev = open("/dev/fb", 0, 0);
+  evtdev = open("/dev/events", 0, 0);
+  sbdev = open("/dev/sb", 0, 0);
+  sbctldev = open("/dev/sbctl", 0, 0);
 
   init_ticks();
   init_display();
