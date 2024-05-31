@@ -2,6 +2,11 @@
 #include <riscv/riscv.h>
 #include <klib.h>
 
+#define CONTEXT_SIZE  ((NR_REGS + 3) * XLEN)
+#define XLEN  4
+#define NR_REGS 32
+
+
 static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
@@ -41,7 +46,10 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+  Context *new_c = (Context *) kstack.end - 1;
+  new_c->mepc = (uintptr_t) entry;
+  new_c->GPR2 = (uintptr_t) arg;
+  return new_c;
 }
 
 void yield() {
