@@ -48,8 +48,10 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   Context *new_c = (Context *) kstack.end - 1;
   printf("Loading... Stack_end: %#08x, and Context: %#08x, entry: %#08x, sizeof Context is %d\n", kstack.end, new_c, entry, sizeof(Context));
+  new_c->gpr[2] = (uintptr_t) kstack.end;
   new_c->mepc = (uintptr_t) entry;
-  new_c->GPR2 = (uintptr_t) arg;
+  new_c->gpr[10] = (uintptr_t) arg;
+  new_c->mstatus = 0x1800;
   return new_c;
 }
 
