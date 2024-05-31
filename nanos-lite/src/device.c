@@ -16,7 +16,7 @@ static const char *keyname[256] __attribute__((used)) = {
 
 static int sbsize = 0;
 static int screen_H = 0, screen_W = 0;
-static bool gpu_cfg = 1;
+static bool gpu_cfg = 0;
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   for (size_t i = 0; i < len; i++) {
