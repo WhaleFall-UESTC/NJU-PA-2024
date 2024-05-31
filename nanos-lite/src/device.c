@@ -16,7 +16,7 @@ static const char *keyname[256] __attribute__((used)) = {
 
 static int sbsize = 0;
 static int screen_H = 0, screen_W = 0;
-static bool gpu_cfg = 0, input_cfg = 0;
+static bool gpu_cfg = 1;
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   for (size_t i = 0; i < len; i++) {
@@ -62,7 +62,6 @@ void init_device() {
   }
 
   if (io_read(AM_INPUT_CONFIG).present) {
-    input_cfg = 1;
     Log("Initializing input");
   }
   
