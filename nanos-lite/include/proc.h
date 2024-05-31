@@ -6,6 +6,14 @@
 
 #define STACK_SIZE (8 * PGSIZE)
 
+/* AddrSpace defined in am-origin.h
+typedef struct {
+  int pgsize;
+  Area area;
+  void *ptr;
+} AddrSpace;
+*/
+
 typedef union {
   uint8_t stack[STACK_SIZE] PG_ALIGN;
   struct {
