@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <SDL.h>
+#include <errno.h>
 
 char handle_key(SDL_Event *ev);
 
@@ -34,15 +35,19 @@ static void sh_handle_cmd(const char *cmd) {
   argv[0] = c;
   int i;
   for (i = 1; i < max_argc; i++) {
-    argv[i] = strtok(NULL, " \n");
+    argv[i] = strtok(c, " \n");
     if (argv[i] == NULL) break;
+  }
+  printf("pass cmd: %s", c);
+  for(i--; i >= 0; i--) {
+    printf("argv[%d] = %s", i, argv[i]);
   }
   if (i == max_argc) {
     term->write("Too many arguments\n", 19);
     return;
   }
   execvp(c, argv);
-  // sh_printf("%s: %s\n", tmp, strerror(errno));
+  sh_printf("%s: %s\n", c, strerror(errno));
 }
 
 void builtin_sh_run() {
