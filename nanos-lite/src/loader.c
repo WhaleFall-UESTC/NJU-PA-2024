@@ -108,8 +108,13 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   void *sp = page + NR_USTACKPG * PGSIZE;
 
   int argc, envc;
-  for (argc = 0; argv[argc] != NULL ; argc++);
-  for (envc = 0; envp[envc] != NULL ; envc++);
+      // int argc, envc;
+  for (argc = 0; argv[argc]!= NULL; argc++) 
+    Log("argv[%d]: %s", argc, argv[argc]);
+  for (envc = 0; envp[envc]!= NULL; envc++)
+    Log("envp[%d]: %s", envc, envp[envc]);
+  // for (argc = 0; argv[argc] != NULL ; argc++);
+  // for (envc = 0; envp[envc] != NULL ; envc++);
   Log("Get argc: %d, envc: %d", argc, envc);
   const int const_argc = argc, const_envc = envc;
   char* argv_pt[const_argc];
