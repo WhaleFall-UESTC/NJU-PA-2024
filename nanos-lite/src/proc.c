@@ -7,6 +7,7 @@ static PCB pcb_boot = {};
 PCB *current = NULL;
 
 void switch_boot_pcb() {
+  Log("switch boot pcb");
   current = &pcb_boot;
 }
 
