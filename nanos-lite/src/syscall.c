@@ -81,7 +81,8 @@ void do_syscall(Context *c) {
         break;
       }
 
-       Log("SYS_execve: %s", path);
+      Log("argv: %p, rnvp: %p", argv, envp);
+      Log("SYS_execve: %s", path);
       int argc, envc;
       for (argc = 0; argv[argc]!= NULL; argc++) 
         Log("argv[%d]: %s", argc, argv[argc]);

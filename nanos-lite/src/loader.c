@@ -104,6 +104,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     return;
   }
 
+  Log("argv: %p, rnvp: %p", argv, envp);
+
   void *page = new_page(NR_USTACKPG);
   void *sp = page + NR_USTACKPG * PGSIZE;
 
