@@ -36,7 +36,7 @@ static void sh_handle_cmd(const char *cmd) {
   argv[0] = c;
   int i;
   for (i = 1; i < max_argc; i++) {
-    argv[i] = strtok(c, " \n");
+    argv[i] = strtok(NULL, " \n");
     if (argv[i] == NULL) break;
   }
   printf("pass cmd: %s", c);
