@@ -22,7 +22,7 @@ void hello_fun(void *arg) {
 void init_proc() {
   Log("Initializing processes...");
   context_kload(&pcb[0], hello_fun, (void *) 1);
-  context_uload(&pcb[1], "/bin/menu");
+  context_uload(&pcb[1], "/bin/exec-test", (char *const[]){"/bin/exec-test", "114514", NULL}, (char *const[]){NULL});
   switch_boot_pcb();
 
 

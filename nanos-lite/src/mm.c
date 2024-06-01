@@ -3,7 +3,11 @@
 static void *pf = NULL;
 
 void* new_page(size_t nr_page) {
-  return NULL;
+  void *p = pf;
+  pf += nr_page * PGSIZE;
+  if (!IN_RANGE(pf, heap))
+    panic("out of memory: p = %p, nr_page = %d, reach to %p", p, nr_page, pf);
+  return p;
 }
 
 #ifdef HAS_VME

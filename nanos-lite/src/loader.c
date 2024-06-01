@@ -1,6 +1,7 @@
 #include <proc.h>
 #include <elf.h>
 #include <fs.h>
+#include <memory.h>
 
 #if defined (__ISA_AM_NATIVE__)
 # define EXPECT_TYPE EM_X86_64
@@ -15,7 +16,6 @@
 #else
 # error Unsupported ISA
 #endif
-
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -97,14 +97,58 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   pcb->cp = kcontext((Area) { pcb->stack, pcb + 1}, entry, arg);
 }
 
-void context_uload(PCB *pcb, const char *filename) {
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
   if (!entry) {
     pcb->cp = NULL;
     return;
   }
-  pcb->cp = ucontext(NULL, (Area) { heap.end, pcb + 1 }, (void *)entry);
-  pcb->cp->GPRx = (uintptr_t) heap.end;
+
+  void *page = new_page(NR_USTACKPG);
+  void *sp = page + NR_USTACKPG * PGSIZE;
+
+  int argc, envc;
+  for (argc = 0; argv[argc]; argc++);
+  for (envc = 0; envp[envc]; envc++);
+  const int const_argc = argc, const_envc = envc;
+  char* argv_pt[const_argc];
+  char* envp_pt[const_envc];
+  for (int i = 0; i < argc; i++) {
+    sp -= strlen(argv[i]) + 1;
+    memcpy(sp, argv[i], strlen(argv[i]) + 1);
+    argv_pt[i] = sp;
+  }
+
+  for (int i = 0; i < envc; i++) {
+    sp -= strlen(envp[i]) + 1;
+    memcpy(sp, envp[i], strlen(envp[i]) + 1);
+    envp_pt[i] = sp;
+  }
+
+  sp -= sizeof(void *);
+  *((uintptr_t *)sp) = 0UL;
+
+  for (int i = envc - 1; i >=0; i--) {
+    sp -= sizeof(char *);
+    *((uintptr_t *)sp) = (uintptr_t) envp_pt[i];
+  }
+
+  sp -= sizeof(void *);
+  *((uintptr_t *)sp) = 0UL;
+
+  for (int i = argc - 1; i >= 0; i--) {
+    sp -= sizeof(char *);
+    *((uintptr_t *)sp) = (uintptr_t) argv_pt[i];
+  }
+
+  sp -= sizeof(void *);
+  *((uintptr_t *)sp) = argc;
+
+  free(argv_pt);
+  free(envp_pt);
+
+  pcb->cp = ucontext(NULL, (Area) { pcb, pcb + 1 }, (void *)entry);
+  pcb->cp->GPRx = (uintptr_t) sp;
 }
 
 

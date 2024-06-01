@@ -73,10 +73,17 @@ void do_syscall(Context *c) {
 
     case SYS_execve: {
       char *path = (char *) c->GPR2;
-      // char **argv = (char **) c->GPR3;
-      // char **envp = (char **) c->GPR4;
+      char **argv = (char **) c->GPR3;
+      char **envp = (char **) c->GPR4;
+      context_uload(current, path, argv, envp);
 
-      naive_uload(NULL, path);
+      if (current->cp == NULL) {
+        panic("Warning execve failed");
+      } else {
+        switch_boot_pcb();
+        yield();
+        assert(0);
+      }
       break;
     }
 
