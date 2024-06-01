@@ -5,6 +5,7 @@
 #include <time.h>
 #include "syscall.h"
 #include <stdio.h>
+#include <errno.h>
 
 // helper macros
 #define _concat(x, y) x ## y
@@ -78,6 +79,14 @@ int _write(int fd, void *buf, size_t count) {
 extern int end;
 static intptr_t program_break = (intptr_t)&end;
 
+
+#define SYSTEM_CALL(...)                    \
+    int ret = _syscall_(__VA_ARGS__);   \
+    if (ret < 0 && ret > -4096) {       \
+      errno = -ret;                     \
+      ret = -1;                         \
+    }                                   \
+
 void *_sbrk(intptr_t increment) {
   if (_syscall_(SYS_brk, increment, 0, 0) == 0) {
     intptr_t old = program_break;
@@ -105,7 +114,8 @@ int _gettimeofday(struct timeval *tv, struct timezone *tz) {
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
   // _exit(SYS_execve);
-  return _syscall_(SYS_execve, (intptr_t)fname, (intptr_t)argv, (intptr_t)envp);
+  SYSTEM_CALL(SYS_execve, (intptr_t)fname, (intptr_t)argv, (intptr_t)envp);
+  return ret;
 }
 
 // Syscalls below are not used in Nanos-lite.
