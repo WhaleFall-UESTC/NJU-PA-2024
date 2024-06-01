@@ -77,6 +77,11 @@ void do_syscall(Context *c) {
       char **envp = (char **) c->GPR4;
 
       Log("SYS_execve: %s", path);
+      int argc, envc;
+      for (argc = 0; argv[argc]!= NULL; argc++) 
+        Log("argv[%d]: %s", argc, argv[argc]);
+      for (envc = 0; envp[envc]!= NULL; envc++)
+        Log("envp[%d]: %s", envc, envp[envc]);
       if (fs_open(path, 0, 0) == -1) {
         c->GPRx = -2;
         break;
