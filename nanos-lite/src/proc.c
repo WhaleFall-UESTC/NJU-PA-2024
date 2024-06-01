@@ -21,7 +21,7 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   Log("Initializing processes...");
-  context_uload(&pcb[0], "/bin/exec-test", (char *const[]){"/bin/exec-test", "1919810", NULL}, (char *const[]){NULL});
+  context_uload(&pcb[0], "/bin/menu", (char *const[]){"/bin/menu", NULL}, (char *const[]){NULL});
   context_uload(&pcb[1], "/bin/exec-test", (char *const[]){"/bin/exec-test", "114514", NULL}, (char *const[]){NULL});
   switch_boot_pcb();
 

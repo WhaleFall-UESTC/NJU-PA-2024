@@ -73,6 +73,11 @@ void do_syscall(Context *c) {
 
     case SYS_execve: {
       char *path = (char *) c->GPR2;
+      if (fs_open(path, 0, 0) == -1) {
+        c->GPRx = -2;
+        break;
+      }
+
       char **argv = (char **) c->GPR3;
       char **envp = (char **) c->GPR4;
       context_uload(current, path, argv, envp);
