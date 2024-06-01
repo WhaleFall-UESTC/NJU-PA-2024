@@ -82,12 +82,13 @@ void do_syscall(Context *c) {
         Log("argv[%d]: %s", argc, argv[argc]);
       for (envc = 0; envp[envc]!= NULL; envc++)
         Log("envp[%d]: %s", envc, envp[envc]);
+
       if (fs_open(path, 0, 0) == -1) {
         c->GPRx = -2;
         break;
       }
 
-      context_uload(current, path, argv, envp);
+      context_uload(current, path, (char **)c->GPR3, (char **)c->GPR4);
 
       if (current->cp == NULL) {
         panic("Warning execve failed");
