@@ -24,6 +24,7 @@ static void sh_prompt() {
 }
 
 static void sh_handle_cmd(const char *cmd) {
+  printf("Handle the cmd\n");
   char *c = strdup(cmd);
   c = strtok(c, " \n");
   if (strcmp(c, "exit") == 0) {
