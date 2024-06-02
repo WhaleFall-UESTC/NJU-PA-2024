@@ -13,13 +13,13 @@ void do_syscall(Context *c) {
   
   switch (a[0]) {
     case SYS_exit:  
-      context_uload(current, "/bin/nterm", (char* const[]){"/bin/nterm", NULL}, (char* const[]){NULL});
-      switch_boot_pcb();
-      yield();
-      assert(0); 
+      // context_uload(current, "/bin/nterm", (char* const[]){"/bin/nterm", NULL}, (char* const[]){NULL});
+      // switch_boot_pcb();
+      // yield();
+      // assert(0); 
       // halt(c->GPR2);
-      // c->GPRx = 0;
-      // break;
+      c->GPRx = 0;
+      break;
     case SYS_yield:  c->GPRx = 0; yield(); break;
 
     case SYS_open: {
