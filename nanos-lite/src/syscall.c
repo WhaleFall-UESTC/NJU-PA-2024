@@ -17,7 +17,8 @@ void do_syscall(Context *c) {
       // switch_boot_pcb();
       // yield();
       // assert(0); 
-      halt(c->GPR2);
+      // halt(c->GPR2);
+      c->GPRx = 0;
       break;
     case SYS_yield:  c->GPRx = 0; yield(); break;
 
@@ -27,7 +28,7 @@ void do_syscall(Context *c) {
       int mode = c->GPR4;
 
       c->GPRx = fs_open(path, flags, mode);
-      Log("sys open %s, fd = %d", path, c->GPRx);
+      // Log("sys open %s, fd = %d", path, c->GPRx);
       break;
     }
 
@@ -37,7 +38,7 @@ void do_syscall(Context *c) {
       int len = c->GPR4;
 
       c->GPRx = fs_write(fd, buf, len);
-      Log("sys write to fd:%d %s, len = %d", fd, get_filename(fd), len);
+      // Log("sys write to fd:%d %s, len = %d", fd, get_filename(fd), len);
       break;
     }
 
@@ -47,7 +48,7 @@ void do_syscall(Context *c) {
       int len = c->GPR4;
 
       c->GPRx = fs_read(fd, buf, len);
-      Log("sys read from fd: %d %s, len = %d", fd, get_filename(fd), len);
+      // Log("sys read from fd: %d %s, len = %d", fd, get_filename(fd), len);
       break;
     }
 
@@ -57,7 +58,7 @@ void do_syscall(Context *c) {
       int whence = c->GPR4;
 
       c->GPRx = fs_lseek(fd, offset, whence);
-      Log("sys lseek fd:%d %s, offset switch to %d", fd, get_filename(fd), c->GPRx);
+      // Log("sys lseek fd:%d %s, offset switch to %d", fd, get_filename(fd), c->GPRx);
       break;
     }
 
