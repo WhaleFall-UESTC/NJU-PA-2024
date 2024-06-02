@@ -98,13 +98,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
-  uintptr_t entry = loader(pcb, filename);
-  if (!entry) {
-    pcb->cp = NULL;
-    return;
-  }
-
-  Log("argv: %p, rnvp: %p", argv, envp);
+  Log("argv: %p, envp: %p", argv, envp);
 
   void *page = new_page(NR_USTACKPG);
   void *sp = page + NR_USTACKPG * PGSIZE;
@@ -151,6 +145,12 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   free(argv_pt);
   free(envp_pt);
+
+  uintptr_t entry = loader(pcb, filename);
+  if (!entry) {
+    pcb->cp = NULL;
+    return;
+  }
 
   pcb->cp = ucontext(NULL, (Area) { pcb, pcb + 1 }, (void *)entry);
   pcb->cp->GPRx = (uintptr_t) sp;
