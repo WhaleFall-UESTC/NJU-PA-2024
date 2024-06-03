@@ -37,7 +37,6 @@ Context* schedule(Context *prev) {
   // Log("Switch process");
   current->cp = prev;
   current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  Log("scheduling... prev: %p\tret: %p", prev, current->cp);
   return current->cp;
 }
 
