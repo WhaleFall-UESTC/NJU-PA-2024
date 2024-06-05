@@ -15,7 +15,7 @@
 
 #include <isa.h>
 #include <utils.h>
-
+#include <cpu/cpu.h>
 
 // enum {
 //   mstatus, misa, meedleg, mideleg, mie, mtvec, mcounteren, mstatush, 
@@ -37,14 +37,25 @@
 //   }
 // }
 
-enum { mepc, mcause, mstatus, mtvec };
+enum { mepc, mcause, mstatus, mtvec, satp };
 word_t trap_csr[4] = {};
 
-void set_trap_csr(int i, word_t value) { trap_csr[i] = value; }
-word_t get_trap_csr(int i) { return trap_csr[i]; }
+void set_trap_csr(int i, word_t value) { 
+  if (i == satp) {
+    cpu.satp = value;
+  }
+  trap_csr[i] = value; 
+}
+word_t get_trap_csr(int i) { 
+  if (i == satp) {
+    return cpu.satp;
+  }
+  return trap_csr[i]; 
+}
 
 
 int csr_register(word_t imm) {
+  if (imm == 0x180) return satp;
   switch (imm) {
     case 0x341: return mepc; //&(cpu.csr.mepc);
     case 0x342: return mcause; //&(cpu.csr.mcause);

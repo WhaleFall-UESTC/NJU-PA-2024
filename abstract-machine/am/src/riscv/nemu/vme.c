@@ -1,11 +1,16 @@
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>
+#include "../riscv.h"
 
 static AddrSpace kas = {};
 static void* (*pgalloc_usr)(int) = NULL;
 static void (*pgfree_usr)(void*) = NULL;
 static int vme_enable = 0;
+
+#define OFFSET 12
+#define PAGE_SIZE (1ul << OFFSET)
+#define PAGE_MASK (PAGE_SIZE - 1)
 
 static Area segments[] = {      // Kernel memory mappings
   NEMU_PADDR_SPACE
@@ -66,7 +71,20 @@ void __am_switch(Context *c) {
   }
 }
 
+
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  PTE *p = as->ptr;
+  p += ((uintptr_t)va >> 22);
+  PTE *pdir = NULL;
+
+  if (!(*p & PTE_V)) {
+    pdir = pgalloc_usr(PGSIZE);
+    *p = ((uintptr_t)pdir >> 2) | PTE_V;
+  } else {
+    pdir = (PTE *)((*p << 2) & ~PAGE_MASK);
+  }
+
+  pdir[((uintptr_t)va >> OFFSET) & 0x3ff] = (((uintptr_t)pa & ~PAGE_MASK) >> 2) | PTE_FLAGS;
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {

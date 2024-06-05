@@ -11,8 +11,11 @@ void* new_page(size_t nr_page) {
 }
 
 #ifdef HAS_VME
+// 分配 n 字节的物理页
 static void* pg_alloc(int n) {
-  return NULL;
+  void *p = new_page(ROUNDUP(n, PGSIZE) / PGSIZE);
+  memset(p, 0, n);
+  return p;
 }
 #endif
 

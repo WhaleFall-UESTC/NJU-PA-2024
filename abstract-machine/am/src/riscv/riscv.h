@@ -18,6 +18,7 @@ static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)a
 #define PTE_U 0x10
 #define PTE_A 0x40
 #define PTE_D 0x80
+#define PTE_FLAGS (PTE_V | PTE_R | PTE_W | PTE_X | PTE_U | PTE_A | PTE_D)
 
 enum { MODE_U, MODE_S, MODE_M = 3 };
 #define MSTATUS_MXR  (1 << 19)
