@@ -179,7 +179,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     map(&pcb->as, vpage + PGSIZE * i, page + PGSIZE * i, MMAP_READ | MMAP_WRITE);
   }
 
-  pcb->cp = ucontext(NULL, (Area) { pcb, pcb + 1 }, (void *)entry);
+  pcb->cp = ucontext(&pcb->as, (Area) { pcb, pcb + 1 }, (void *)entry);
   pcb->cp->GPRx = (uintptr_t) sp + vpage - page;
 }
 
