@@ -51,7 +51,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
 step2:
   pte.val = paddr_read(a + vpn(vaddr, i) * sizeof(pte_t), sizeof(pte_t));
-  if (pte.v == 0) NEMUTRAP(cpu.pc, 114514);
+  if (pte.v == 0) set_nemu_state(NEMU_ABORT, cpu.pc, 114514);
 // step3:
   if (pte.v == 0 || (pte.r == 0 && pte.w == 1))
     return MEM_RET_FAIL;
