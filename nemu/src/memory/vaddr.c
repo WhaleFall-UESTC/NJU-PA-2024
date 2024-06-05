@@ -54,7 +54,7 @@ void vaddr_write(vaddr_t addr, int len, word_t data) {
       paddr_t pa = (res & ~PAGE_MASK) | (addr & PAGE_MASK);
       return paddr_write(pa, len, data);
     }
-    Log("vaddr_read_r: error vaddr = %08x, len=%d, type=%d, mmu ret: %08x", addr, len, MEM_TYPE_WRITE, res);
+    Log("vaddr_write: error vaddr = %08x, len=%d, type=%d, mmu ret: %08x", addr, len, MEM_TYPE_WRITE, res);
     set_nemu_state(NEMU_ABORT, cpu.pc, ABORT_MEMIO);
     return paddr_write(addr, len, data);
   }
