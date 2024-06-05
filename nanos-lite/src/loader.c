@@ -2,6 +2,7 @@
 #include <elf.h>
 #include <fs.h>
 #include <memory.h>
+#include <am.h>
 
 #if defined (__ISA_AM_NATIVE__)
 # define EXPECT_TYPE EM_X86_64
@@ -24,6 +25,7 @@
 #define Elf_Half Elf64_Half
 #define Elf_Off Elf64_Off
 #define Elf_Addr Elf64_Addr
+#define Elf_Memz Elf64_Xword
 #define EhdrSize 0x34
 #else
 #define Elf_Ehdr Elf32_Ehdr
@@ -32,6 +34,7 @@
 #define Elf_Half Elf32_Half
 #define Elf_Off Elf32_Off
 #define Elf_Addr Elf32_Addr
+#define Elf_Memz Elf32_Word
 #define EhdrSize 0x28
 #endif
 
@@ -74,12 +77,30 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     if ((Elf_Word)phdr.p_type != PT_LOAD)
       continue;
     
-    // printPhdr(phdr);
 
-    // ramdisk_read((void *)phdr.p_vaddr, phdr.p_offset, phdr.p_memsz);
-    fs_lseek(fd, phdr.p_offset, SEEK_SET);
-    fs_read(fd, (void *)phdr.p_vaddr, phdr.p_memsz);
-    memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
+    Elf_Memz memsz = phdr.p_memsz;
+    Elf_Memz nread = PGSIZE, pt;
+    Elf_Off phoff = phdr.p_offset;
+    void *pa = NULL;
+    void *va = (void *)phdr.p_vaddr;
+
+    int port = (phdr.p_flags & PF_R ? MMAP_READ : 0)  |
+               (phdr.p_flags & PF_W ? MMAP_WRITE : 0) |  
+               (phdr.p_flags & PF_X ? MMAP_EXEC : 0);
+
+    for (pt = 0; pt <= memsz; pt += PGSIZE) {
+      if (memsz - pt < PGSIZE)
+        nread = memsz - pt;
+
+      pa = new_page(1);
+      map(&pcb->as, va, pa, port);
+      fs_lseek(fd, phoff + pt, SEEK_SET);
+      fs_read(fd, pa, nread);
+    }
+
+    memset(((void *)pt - PGSIZE), 0, nread);
+    // fs_read(fd, (void *)phdr.p_vaddr, phdr.p_memsz);
+    // memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
   }
 
   Log("Loaded. Get entry: %08x", entrypoint);
@@ -99,6 +120,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   Log("argv: %p, envp: %p", argv, envp);
+  protect(&pcb->as);
 
   void *page = new_page(NR_USTACKPG);
   void *sp = page + NR_USTACKPG * PGSIZE;
@@ -152,8 +174,13 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     return;
   }
 
+  void *vpage = pcb->as.area.end - NR_USTACKPG * PGSIZE;
+  for (int i = 0; i < NR_USTACKPG; i++) {
+    map(&pcb->as, vpage + PGSIZE * i, page + PGSIZE * i, MMAP_READ | MMAP_WRITE);
+  }
+
   pcb->cp = ucontext(NULL, (Area) { pcb, pcb + 1 }, (void *)entry);
-  pcb->cp->GPRx = (uintptr_t) sp;
+  pcb->cp->GPRx = (uintptr_t) sp + vpage - page;
 }
 
 
