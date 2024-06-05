@@ -22,6 +22,7 @@
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
+#define ABORT_MEMIO 1
 
 typedef struct {
   int state;

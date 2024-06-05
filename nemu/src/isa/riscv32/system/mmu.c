@@ -85,8 +85,11 @@ step6:
   // 翻译成功
   paddr_t pgaddr = ((pte.val >> 10) << 12) & 0xfffff000;
   if (i > 0) { // 说明这是个一级页表，组成时还要加上 VPN[0]
-    pgaddr += vpn(vaddr, 0) << 12;
+    pgaddr = (pgaddr & 0xffc00000) | (vpn(vaddr, 0) << 12);
   }
+  // paddr_t paddr = pgaddr | (vaddr & 0x00000fff);
+  // // assert(paddr == vaddr);
+  // Log("vaddr: %08x\ttranslate paddr: %08x", vaddr, paddr);
   return pgaddr | MEM_RET_OK;
 }
 

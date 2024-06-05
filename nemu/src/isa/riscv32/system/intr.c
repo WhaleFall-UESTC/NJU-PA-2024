@@ -43,7 +43,7 @@ word_t trap_csr[4] = {};
 
 void set_trap_csr(int i, word_t value) { 
   if (i == satp) {
-    Log("get satp: %08x", value);
+    Log("set satp: %08x", value);
     cpu.satp = value;
     return;
   }
