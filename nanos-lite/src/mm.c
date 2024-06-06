@@ -29,6 +29,7 @@ void free_page(void *p) {
 int mm_brk(uintptr_t brk) {
   if (current->max_brk < brk) {
     int nrpage = ROUNDUP(brk - current->max_brk, PGSIZE) / PGSIZE;
+    Log("alloc %d pages for %08x", nrpage, brk - current->max_brk);
     void *p = new_page(nrpage);
     for (int i = 0; i < nrpage; i++) {
       map(&current->as, (void *)(current->max_brk + i * PGSIZE), p + i * PGSIZE, MMAP_READ | MMAP_WRITE);

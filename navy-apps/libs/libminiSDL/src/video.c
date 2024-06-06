@@ -184,6 +184,7 @@ void SDL_FreeSurface(SDL_Surface *s) {
 SDL_Surface* SDL_SetVideoMode(int width, int height, int bpp, uint32_t flags) {
   if (flags & SDL_HWSURFACE) NDL_OpenCanvas(&width, &height);
   if (gbPixels) free(gbPixels);
+  printf("malloc gbPixels %d\n", width * height * sizeof(uint32_t));
   gbPixels = (uint32_t *) malloc(width * height * sizeof(uint32_t));
   return SDL_CreateRGBSurface(flags, width, height, bpp,
       DEFAULT_RMASK, DEFAULT_GMASK, DEFAULT_BMASK, DEFAULT_AMASK);
