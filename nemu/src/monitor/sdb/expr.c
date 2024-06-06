@@ -25,7 +25,7 @@ enum {
   TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEX, TK_NEQ, TK_AND, TK_OR, 
               TK_LE, TK_L, TK_GE, TK_G, 
               DEREF,
-              TK_PC, TK_RA
+              TK_PC, TK_RA, TK_SP
 
   /* TODO: Add more token types */
 
@@ -63,7 +63,8 @@ static struct rule {
   {"\\|\\|", TK_OR},
 
   {"\\$pc", TK_PC},
-  {"\\$ra", TK_RA}
+  {"\\$ra", TK_RA},
+  {"\\$sp", TK_SP}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -302,6 +303,8 @@ word_t eval(int p, int q) {
         return cpu.pc;
       case TK_RA:
         return cpu.gpr[1];
+      case TK_SP:
+        return cpu.gpr[2];
       default: 
         printf("Not a number: %d\n", p); assert(0);
     }
