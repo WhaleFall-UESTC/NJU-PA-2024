@@ -88,6 +88,7 @@ static intptr_t program_break = (intptr_t)&end;
     }                                   \
 
 void *_sbrk(intptr_t increment) {
+  printf("sbrk, inc: %08x\n", increment);
   if (_syscall_(SYS_brk, increment + program_break, 0, 0) == 0) {
     intptr_t old = program_break;
     program_break += increment;
