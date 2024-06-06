@@ -94,8 +94,10 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 
       pa = new_page(1);
       map(&pcb->as, va, pa, port);
+      Log("New page at pa %p, mapped to va %p", pa, va);
       fs_lseek(fd, phoff + pt, SEEK_SET);
       fs_read(fd, pa, nread);
+      va += PGSIZE;
     }
 
     memset(((void *)(pa + nread)), 0, PGSIZE - nread);
