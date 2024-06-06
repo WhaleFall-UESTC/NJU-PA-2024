@@ -27,6 +27,7 @@ void free_page(void *p) {
 /* The brk() system call handler. */
 // max_brk 指向进程数据段终止处 .bss
 int mm_brk(uintptr_t brk) {
+  Log("Call mm_brk, brk: %p", brk);
   if (current->max_brk < brk) {
     int nrpage = ROUNDUP(brk - current->max_brk, PGSIZE) / PGSIZE;
     void *p = new_page(nrpage);
