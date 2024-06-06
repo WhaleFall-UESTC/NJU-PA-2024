@@ -85,9 +85,10 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     void *pa = NULL;
     void *va = (void *)phdr.p_vaddr;
 
-    int port = (phdr.p_flags & PF_R ? MMAP_READ : 0)  |
-               (phdr.p_flags & PF_W ? MMAP_WRITE : 0) |  
-               (phdr.p_flags & PF_X ? MMAP_EXEC : 0);
+    // int port = (phdr.p_flags & PF_R ? MMAP_READ : 0)  |
+    //            (phdr.p_flags & PF_W ? MMAP_WRITE : 0) |  
+    //            (phdr.p_flags & PF_X ? MMAP_EXEC : 0);
+    int port = MMAP_READ | MMAP_EXEC | MMAP_WRITE;
 
     for (pt = 0; pt <= memsz; pt += PGSIZE) {
       if (memsz - pt < PGSIZE)
