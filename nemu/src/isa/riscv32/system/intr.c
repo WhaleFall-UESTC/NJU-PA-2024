@@ -60,7 +60,7 @@ word_t get_trap_csr(int i) {
 
 int csr_register(word_t imm) {
   if (imm == 0x180) {
-    Log("Detect satp");
+    // Log("Detect satp");
     return satp;
   }
   switch (imm) {
