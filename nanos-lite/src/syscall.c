@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <proc.h>
 
+extern int mm_brk(uintptr_t brk);
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -63,8 +64,7 @@ void do_syscall(Context *c) {
     }
 
     case SYS_brk: {
-      
-      c->GPRx = 0; 
+      c->GPRx = mm_brk(c->GPR2); 
       break;
     }
 

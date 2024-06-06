@@ -57,6 +57,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   Log("Loading Elf64");
   #endif
 
+  pcb->max_brk = 0;
   int fd = fs_open(filename, 0, 0);
   fs_read(fd, &ehdr, sizeof(Elf_Ehdr));
   // printEhdr(ehdr);
@@ -101,8 +102,9 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     }
 
     memset(((void *)(pa + nread)), 0, PGSIZE - nread);
-    // fs_read(fd, (void *)phdr.p_vaddr, phdr.p_memsz);
-    // memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
+    if (phdr.p_vaddr + phdr.p_memsz > pcb->max_brk)
+      pcb->max_brk = phdr.p_vaddr + phdr.p_memsz;
+    pcb->max_brk = ROUNDUP(pcb->max_brk, PGSIZE);
   }
 
   Log("Loaded. Get entry: %08x", entrypoint);
