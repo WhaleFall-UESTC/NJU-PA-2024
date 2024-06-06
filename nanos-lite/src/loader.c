@@ -184,6 +184,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   }
 
   pcb->cp = ucontext(&pcb->as, (Area) { pcb, pcb + 1 }, (void *)entry);
+  Log("sp from area.end = %08x\t", (uintptr_t)(page + NR_USTACKPG * PGSIZE - sp));
   pcb->cp->GPRx = (uintptr_t) sp + vpage - page;
 }
 
