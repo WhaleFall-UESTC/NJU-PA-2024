@@ -31,6 +31,7 @@ Context* __am_irq_handle(Context *c) {
     assert(c != NULL);
   }
 
+  // 将硬件 satp 寄存器指向调度进程的页表
   __am_switch(c);
   return c;
 }

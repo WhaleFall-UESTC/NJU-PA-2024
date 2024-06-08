@@ -125,8 +125,10 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   Log("argv: %p, envp: %p", argv, envp);
+  // 为新进程创建上下文页表，并复制内核页表
   protect(&pcb->as);
 
+  // 参数入栈底
   void *page = new_page(NR_USTACKPG);
   void *sp = page + NR_USTACKPG * PGSIZE;
 
@@ -173,19 +175,24 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   free(argv_pt);
   free(envp_pt);
 
+  // 分页机制写入加载好的页表，获取入口点虚拟地址
   uintptr_t entry = loader(pcb, filename);
   if (!entry) {
     pcb->cp = NULL;
     return;
   }
 
+  // 栈空间实现分页，写入到内核栈的上下文
   void *vpage = pcb->as.area.end - NR_USTACKPG * PGSIZE;
   for (int i = 0; i < NR_USTACKPG; i++) {
     map(&pcb->as, vpage + PGSIZE * i, page + PGSIZE * i, MMAP_READ | MMAP_WRITE);
   }
 
+  // 为内核栈（pcb[0],[1]...）加载上下文（本来pcb就是这些）
+  // 包括程序入口点，sp，mepc，pdir（来自as）
   pcb->cp = ucontext(&pcb->as, (Area) { pcb, pcb + 1 }, (void *)entry);
-  Log("sp from area.end = %08x\t", (uintptr_t)(page + NR_USTACKPG * PGSIZE - sp));
+  Log("sp = %08x\t", (uintptr_t) sp + vpage - page);
+  // 将 pcb 上下文的返回值 a0 设为当前栈顶的虚拟地址
   pcb->cp->GPRx = (uintptr_t) sp + vpage - page;
 }
 
