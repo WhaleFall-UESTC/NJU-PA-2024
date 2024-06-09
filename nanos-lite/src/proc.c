@@ -34,13 +34,16 @@ void init_proc() {
   // naive_uload(NULL, "/bin/menu"); 
 }
 
+static int cnt = 0;
+#define SWITCH_CNT 50
 Context* schedule(Context *prev) {
-  // Log("Switch process");
-  current->cp = prev;
-  // current = &pcb[0];
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  Log("Secheduled to %p, entering %p", current, current->cp);
-  return current->cp;
+  if (cnt++ == SWITCH_CNT) {
+    current->cp = prev;
+    // current = &pcb[0];
+    current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+    Log("Secheduled to %p, entering %p", current, current->cp);
+    cnt = 0;
+    return current->cp;
+  }
+  return prev;
 }
-
-
