@@ -161,7 +161,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   }
 
   sp -= sizeof(void *);
-  *((uintptr_t *)sp) = 0UL;
+  *((uintptr_t *)sp) = 0;
 
   for (int i = envc - 1; i >=0; i--) {
     sp -= sizeof(char *);
@@ -169,7 +169,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   }
 
   sp -= sizeof(void *);
-  *((uintptr_t *)sp) = 0UL;
+  *((uintptr_t *)sp) = 0;
 
   for (int i = argc - 1; i >= 0; i--) {
     sp -= sizeof(char *);
