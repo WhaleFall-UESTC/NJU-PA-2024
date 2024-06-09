@@ -17,6 +17,8 @@
 #include <utils.h>
 #include <cpu/cpu.h>
 
+#define IRQ_TIMER 0x80000007
+
 
 // enum {
 //   mstatus, misa, meedleg, mideleg, mie, mtvec, mcounteren, mstatush, 
@@ -46,6 +48,9 @@ void set_trap_csr(int i, word_t value) {
     // Log("set satp: %08x", value);
     cpu.satp = value;
     return;
+  } else if (i == mstatus) {
+    cpu.mstatus = value;
+    return;
   }
   trap_csr[i] = value; 
 }
@@ -53,6 +58,9 @@ word_t get_trap_csr(int i) {
   if (i == satp) {
     // Log("get satp: %08x", cpu.satp);
     return cpu.satp;
+  } else if (i == mstatus) {
+    // Log("get mstatus: %08x", cpu.mstatus);
+    return cpu.mstatus;
   }
   return trap_csr[i]; 
 }
@@ -88,9 +96,20 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   etrace_log(NO, epc);
   trap_csr[mcause] = NO;
   trap_csr[mepc] = epc;
+  
+  cpu.mpie = cpu.mie;
+  cpu.mie = 0;
+
   return trap_csr[mtvec];
 }
 
+
+
 word_t isa_query_intr() {
+  // return INTR_EMPTY;
+  if (cpu.mie) {
+    cpu.INTR = 0;
+    return IRQ_TIMER;
+  }
   return INTR_EMPTY;
 }

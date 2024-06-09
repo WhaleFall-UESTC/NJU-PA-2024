@@ -2,6 +2,7 @@
 #include <riscv/riscv.h>
 #include <klib.h>
 
+#define IRQ_TIMER 0x80000007
 #define CONTEXT_SIZE  ((NR_REGS + 3) * XLEN)
 #define XLEN  4
 #define NR_REGS 32
@@ -19,6 +20,7 @@ Context* __am_irq_handle(Context *c) {
       case 0:case 1:case 2:case 3:case 4:case 5:case 6:case 7:case 8:case 9:case 10:
       case 11:case 12:case 13:case 14:case 15:case 16:case 17:case 18:case 19:
        ev.event = EVENT_SYSCALL; break;
+      case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
       default: ev.event = EVENT_ERROR; break;
     }
 
@@ -56,7 +58,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   new_c->gpr[2] = (uintptr_t) kstack.end;
   new_c->mepc = (uintptr_t) entry;
   new_c->GPR2 = (uintptr_t) arg;
-  new_c->mstatus = 0x1800;
+  new_c->mstatus = 0x1880;
   new_c->pdir = NULL;
   return new_c;
 }

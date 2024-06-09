@@ -30,6 +30,20 @@ typedef struct {
       word_t mode : 1;
     };
   };
+
+  union {
+    word_t mstatus;
+    struct {
+      word_t : 3;
+      word_t mie : 1;
+      word_t : 3;
+      word_t mpie : 1;
+      word_t : 3;
+      word_t mpp : 2;
+    };
+  };
+
+  bool INTR;
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode
