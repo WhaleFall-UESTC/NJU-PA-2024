@@ -64,7 +64,7 @@ void do_syscall(Context *c) {
     }
 
     case SYS_brk: {
-      Log("inc: %08x, pb: %08x", (uintptr_t)c->GPR3, (uintptr_t)c->GPR4);
+      Log("inc: %08x, pb: %08x", (int)c->GPR3, (uintptr_t)c->GPR4);
       c->GPRx = mm_brk(c->GPR2); 
       break;
     }
