@@ -76,8 +76,8 @@ int _write(int fd, void *buf, size_t count) {
   return _syscall_(SYS_write, fd, (intptr_t)buf, count);
 }
 
-extern int end;
-static intptr_t program_break = (intptr_t)&end;
+extern int _end;
+static intptr_t program_break = (intptr_t)&_end;
 
 
 #define SYSTEM_CALL(...)                    \
@@ -88,6 +88,7 @@ static intptr_t program_break = (intptr_t)&end;
     }                                   \
 
 void *_sbrk(intptr_t increment) {
+  // 下面这条代码永远钉在耻辱柱上
   // printf("sbrk, inc: %08x\n", increment);
   if (_syscall_(SYS_brk, increment + program_break, 0, 0) == 0) {
     intptr_t old = program_break;
