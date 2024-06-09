@@ -31,6 +31,8 @@ typedef struct {
     };
   };
 
+  word_t mscratch, mepc;
+  word_t mcause, mtvec;
   union {
     word_t mstatus;
     struct {
@@ -43,7 +45,7 @@ typedef struct {
     };
   };
 
-  bool INTR;
+  int prv;
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode

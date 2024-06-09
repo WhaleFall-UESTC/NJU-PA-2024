@@ -16,6 +16,12 @@
 #include <isa.h>
 #include <utils.h>
 #include <cpu/cpu.h>
+#include <device/intr.h>
+
+const word_t IRQ_NO[NR_INTR] = {
+  [INTR_TIMER] = 0x80000007,
+  [INTR_IODEV] = 0x8000000b
+};
 
 #define IRQ_TIMER 0x80000007
 
@@ -41,28 +47,47 @@
 // }
 
 enum { mepc, mcause, mstatus, mtvec, satp };
-word_t trap_csr[4] = {};
+// word_t trap_csr[4] = {};
 
 void set_trap_csr(int i, word_t value) { 
-  if (i == satp) {
-    // Log("set satp: %08x", value);
-    cpu.satp = value;
-    return;
-  } else if (i == mstatus) {
-    cpu.mstatus = value;
-    return;
+  switch (i) {
+    case mepc: cpu.mepc = value; break;
+    case mcause: cpu.mcause = value; break;
+    case mstatus: cpu.mstatus = value; break;
+    case mtvec: cpu.mtvec = value; break;
+    case satp: cpu.satp = value; break;
+    default: panic("unknown csr");
   }
-  trap_csr[i] = value; 
+
+  // if (i == satp) {
+  //   // Log("set satp: %08x", value);
+  //   cpu.satp = value;
+  //   return;
+  // } else if (i == mstatus) {
+  //   cpu.mstatus = value;
+  //   return;
+  // }
+  // trap_csr[i] = value; 
 }
+
 word_t get_trap_csr(int i) { 
-  if (i == satp) {
-    // Log("get satp: %08x", cpu.satp);
-    return cpu.satp;
-  } else if (i == mstatus) {
-    // Log("get mstatus: %08x", cpu.mstatus);
-    return cpu.mstatus;
+  switch (i) {
+    case mepc: return cpu.mepc;
+    case mcause: return cpu.mcause;
+    case mstatus: return cpu.mstatus;
+    case mtvec: return cpu.mtvec;
+    case satp: return cpu.satp;
+    default: panic("unknown csr");
   }
-  return trap_csr[i]; 
+
+  // if (i == satp) {
+  //   // Log("get satp: %08x", cpu.satp);
+  //   return cpu.satp;
+  // } else if (i == mstatus) {
+  //   // Log("get mstatus: %08x", cpu.mstatus);
+  //   return cpu.mstatus;
+  // }
+  // return trap_csr[i]; 
 }
 
 
@@ -80,6 +105,7 @@ int csr_register(word_t imm) {
   }
 }
 
+
 word_t ecall(word_t sys_call, vaddr_t epc) {
   switch(sys_call) {
     case -1: return isa_raise_intr(1, epc); // EVENT_YIELD
@@ -93,14 +119,29 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
-  etrace_log(NO, epc);
-  trap_csr[mcause] = NO;
-  trap_csr[mepc] = epc;
+  // etrace_log(NO, epc);
+  // trap_csr[mcause] = NO;
+  // trap_csr[mepc] = epc;
+
+  cpu.mcause = NO;
+  cpu.mepc = epc;
   
   cpu.mpie = cpu.mie;
   cpu.mie = 0;
 
-  return trap_csr[mtvec];
+  cpu.mpp = cpu.prv;
+  cpu.prv = 3;
+
+  if (cpu.mtvec & 0x3) {
+    word_t base = BITS(cpu.mtvec, 31, 2);
+    word_t interrupt = BITS(NO, 31, 31);
+    word_t ecode = BITS(NO, 30, 0);
+    if (interrupt) return base + (ecode << 2);
+    else return base;
+  }
+
+  return cpu.mtvec;
+  // return trap_csr[mtvec];
 }
 
 
@@ -108,8 +149,12 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 word_t isa_query_intr() {
   // return INTR_EMPTY;
   if (cpu.mie) {
-    cpu.INTR = 0;
-    return IRQ_TIMER;
+    for (int i = 0; i < NR_INTR; i++) {
+      if (INTR[i]) {
+        INTR[i] = false;
+        return IRQ_NO[i];
+      }
+    }
   }
   return INTR_EMPTY;
 }

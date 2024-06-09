@@ -3,6 +3,7 @@
 #include <klib.h>
 
 #define IRQ_TIMER 0x80000007
+#define IRQ_IODEV 0x8000000b
 #define CONTEXT_SIZE  ((NR_REGS + 3) * XLEN)
 #define XLEN  4
 #define NR_REGS 32
@@ -21,6 +22,7 @@ Context* __am_irq_handle(Context *c) {
       case 11:case 12:case 13:case 14:case 15:case 16:case 17:case 18:case 19:
        ev.event = EVENT_SYSCALL; break;
       case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
+      case IRQ_IODEV: ev.event = EVENT_IRQ_IODEV; break;
       default: ev.event = EVENT_ERROR; break;
     }
 
