@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 int main() {
-  char *buf = (char *) malloc(100 * sizeof(char));
+  char *buf = (char *) malloc(100);
   write(1, "Hello World!\n", 13);
   printf("Hello, %s\n", buf);
   write(1, "Hello World!\n", 13);
