@@ -71,6 +71,7 @@ static int sptr = 0;
 
 void ftrace_init(const char *ftrace_elf)
 {
+  Log("start ftrace at:\n%s\n\n", ftrace_elf);
   ftrace_log = fopen(ftrace_path, "w");
   fprintf(ftrace_log, "start ftrace at:\n%s\n\n", ftrace_elf);
 

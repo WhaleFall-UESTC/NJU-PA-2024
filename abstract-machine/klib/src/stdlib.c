@@ -51,7 +51,6 @@ void *malloc(size_t size) {
   heap_ptr += size;
   return old;
 #endif
-  Log("klib malloc called");
   if (malloc_init) {
     malloc_init = false;
     heap_ptr = (void *) ROUNDUP(heap.start, 8);
