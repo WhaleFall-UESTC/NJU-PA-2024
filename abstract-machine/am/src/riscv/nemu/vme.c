@@ -75,7 +75,7 @@ void __am_switch(Context *c) {
 
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
-  Log("map va: %p, pa: %p", va, pa);
+  // Log("map va: %p, pa: %p", va, pa);
   assert((uintptr_t)va % PGSIZE == 0);
   assert((uintptr_t)pa % PGSIZE == 0);
   PTE *p = as->ptr;
