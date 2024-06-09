@@ -153,19 +153,19 @@ static int decode_exec(Decode *s) {
   return 0;
 }
 
-static int sp_old, sp_new, sp_init = 1;
+// static int sp_old, sp_new, sp_init = 1;
 int isa_exec_once(Decode *s) {
-  if (sp_init == 1) {
-    sp_init = 0;
-    sp_old = cpu.gpr[2];
-    sp_new = sp_old;
-  } else {
-    sp_new = cpu.gpr[2];
-    if (sp_new != sp_old) {
-      Log("sp change in %08x", cpu.pc - 4);
-      sp_old = sp_new;
-    }
-  }
+  // if (sp_init == 1) {
+  //   sp_init = 0;
+  //   sp_old = cpu.gpr[2];
+  //   sp_new = sp_old;
+  // } else {
+  //   sp_new = cpu.gpr[2];
+  //   if (sp_new != sp_old) {
+  //     Log("sp change in %08x", cpu.pc - 4);
+  //     sp_old = sp_new;
+  //   }
+  // }
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
   return decode_exec(s);
 }
