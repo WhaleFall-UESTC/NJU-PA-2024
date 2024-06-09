@@ -19,6 +19,7 @@ static int screen_H = 0, screen_W = 0;
 static bool gpu_cfg = 0;
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
+  yield();
   for (size_t i = 0; i < len; i++) {
     putch(((char *)buf)[i]);
   }
@@ -26,6 +27,7 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
+  yield();
   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
@@ -39,6 +41,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
+  yield();
   assert((offset & 3) == 0 && (len & 3) == 0);
   int x = offset / 4 % screen_W;
   int y = offset / 4 / screen_W;
