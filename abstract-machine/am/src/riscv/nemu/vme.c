@@ -75,6 +75,8 @@ void __am_switch(Context *c) {
 
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  assert((uintptr_t)va % PGSIZE == 0);
+  assert((uintptr_t)pa % PGSIZE == 0);
   PTE *p = as->ptr;
   p += ((uintptr_t)va >> 22);
   PTE *pdir = NULL;
