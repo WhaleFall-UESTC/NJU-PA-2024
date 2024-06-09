@@ -91,10 +91,11 @@ void *_sbrk(intptr_t increment) {
   // 下面这条代码永远钉在耻辱柱上
   // printf("sbrk, inc: %08x\n", increment);
   if (_syscall_(SYS_brk, increment + program_break, increment, program_break) == 0) {
-    intptr_t old = program_break;
+    intptr_t old_program_break = program_break;
     program_break += increment;
-    return (void *)old;
+    return (void *)old_program_break;
   }
+  errno = ENOMEM;
   return (void *)-1;
 }
 
