@@ -51,7 +51,17 @@ void *malloc(size_t size) {
   heap_ptr += size;
   return old;
 #endif
-  return NULL;
+  Log("klib malloc called");
+  if (malloc_init) {
+    malloc_init = false;
+    heap_ptr = (void *) ROUNDUP(heap.start, 8);
+  }
+  size = ROUNDUP(size, 8);
+  void *ret = heap_ptr;
+  if (heap_ptr + size <= heap.end) heap_ptr += size;
+  else panic("Overflow");
+
+  return ret;
 }
 
 void free(void *ptr) {
