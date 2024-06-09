@@ -24,7 +24,7 @@ void hello_fun(void *arg) {
 void init_proc() {
   Log("Initializing processes...");
   context_uload(&pcb[0], "/bin/hello", (char *const[]){"/bin/hello", NULL}, (char *const[]){NULL});
-  // context_kload(&pcb[1], hello_fun, (void *)1);
+  context_kload(&pcb[1], hello_fun, (void *)1);
   // context_uload(&pcb[1], "/bin/exec-test", (char *const[]){"/bin/exec-test", "114514", NULL}, (char *const[]){NULL});
   // context_uload(&pcb[1], "/bin/hello", (char *const[]){"/bin/hello", NULL}, (char *const[]){NULL});
   switch_boot_pcb();
@@ -37,8 +37,8 @@ void init_proc() {
 Context* schedule(Context *prev) {
   // Log("Switch process");
   current->cp = prev;
-  current = &pcb[0];
-  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  // current = &pcb[0];
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   // Log("Secheduled to %p, entering %p", current, current->cp);
   return current->cp;
 }
