@@ -32,7 +32,8 @@ Context* __am_irq_handle(Context *c) {
   }
 
   // 将硬件 satp 寄存器指向调度进程的页表
-  __am_switch(c);
+  if (c->pdir != NULL)
+    __am_switch(c);
   return c;
 }
 
