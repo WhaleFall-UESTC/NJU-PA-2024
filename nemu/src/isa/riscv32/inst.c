@@ -92,7 +92,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 000 ????? 01000 11", sb     , S, Mw(src1 + imm, 1, src2));
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, ECALL(s->dnpc)); 
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, cpu.mie = cpu.mpie, cpu.mpie = 1, cpu.prv = cpu.mpp, cpu.mpp = 0, s->dnpc = GCSR(0) + 4);  // 0x341 is mepc
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, cpu.mie = cpu.mpie, cpu.mpie = 1, cpu.prv = cpu.mpp, cpu.mpp = 0, s->dnpc = cpu.mepc/*GCSR(0) + 4*/);  // 0x341 is mepc
 
   // From RISC-V-READER Page27
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(rd) = imm);
