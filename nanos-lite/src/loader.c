@@ -128,6 +128,13 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // 为新进程创建上下文页表，并复制内核页表
   protect(&pcb->as);
 
+  // 分页机制写入加载好的页表，获取入口点虚拟地址
+  uintptr_t entry = loader(pcb, filename);
+  if (!entry) {
+    pcb->cp = NULL;
+    return;
+  }
+
   // 参数入栈底
   void *page = new_page(NR_USTACKPG);
   void *sp = page + NR_USTACKPG * PGSIZE;
@@ -175,12 +182,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   free(argv_pt);
   free(envp_pt);
 
-  // 分页机制写入加载好的页表，获取入口点虚拟地址
-  uintptr_t entry = loader(pcb, filename);
-  if (!entry) {
-    pcb->cp = NULL;
-    return;
-  }
 
   // 栈空间实现分页，写入到内核栈的上下文
   void *vpage = pcb->as.area.end - NR_USTACKPG * PGSIZE;
