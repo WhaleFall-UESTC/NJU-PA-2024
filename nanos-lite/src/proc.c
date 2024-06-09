@@ -23,7 +23,7 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   Log("Initializing processes...");
-  context_uload(&pcb[0], "/bin/pal", (char *const[]){"/bin/pal", NULL}, (char *const[]){NULL});
+  context_uload(&pcb[0], "/bin/nterm", (char *const[]){"/bin/nterm", NULL}, (char *const[]){NULL});
   context_kload(&pcb[1], hello_fun, (void *)1);
   // context_uload(&pcb[1], "/bin/exec-test", (char *const[]){"/bin/exec-test", "114514", NULL}, (char *const[]){NULL});
   // context_uload(&pcb[1], "/bin/hello", (char *const[]){"/bin/hello", NULL}, (char *const[]){NULL});
