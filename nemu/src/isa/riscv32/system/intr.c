@@ -132,13 +132,13 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.mpp = cpu.prv;
   cpu.prv = 3;
 
-  if (cpu.mtvec & 0x3) {
-    word_t base = BITS(cpu.mtvec, 31, 2);
-    word_t interrupt = BITS(NO, 31, 31);
-    word_t ecode = BITS(NO, 30, 0);
-    if (interrupt) return base + (ecode << 2);
-    else return base;
-  }
+  // if (cpu.mtvec & 0x3) {
+  //   word_t base = BITS(cpu.mtvec, 31, 2);
+  //   word_t interrupt = BITS(NO, 31, 31);
+  //   word_t ecode = BITS(NO, 30, 0);
+  //   if (interrupt) return base + (ecode << 2);
+  //   else return base;
+  // }
 
   return cpu.mtvec;
   // return trap_csr[mtvec];
